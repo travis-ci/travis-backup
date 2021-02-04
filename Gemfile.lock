@@ -178,6 +178,7 @@ GEM
       thor (>= 0.20.3, < 2.0)
     rainbow (3.0.0)
     rake (13.0.3)
+    redis (4.2.5)
     representable (3.0.4)
       declarative (< 0.1.0)
       declarative-option (< 0.2.0)
@@ -252,6 +253,7 @@ DEPENDENCIES
   pg
   pry
   rails (~> 6.0.3)
+  redis
   rspec-activemodel-mocks
   rspec-rails
   rubocop (~> 0.75.1)

@@ -2,9 +2,10 @@
 
 # Config for travis-backup
 class Config
-  attr_reader :limit, :delay, :housekeeping_period, :database_url, :logs_url, :gce_project, :gce_credentials, :gce_bucket
+  attr_reader :limit, :delay, :housekeeping_period, :database_url, :logs_url, :gce_project,
+              :gce_credentials, :gce_bucket, :redis_url
 
-  def initialize # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def initialize # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
     config = YAML.load(File.open('config/settings.yml'))
     connection_details = YAML.load(File.open('config/database.yml'))
 
@@ -16,5 +17,6 @@ class Config
     @gce_project = ENV['GCE_PROJECT'] || config['gce']['project']
     @gce_credentials = eval(ENV['GCE_CREDENTIALS'] || File.read(config['gce']['credentials']))
     @gce_bucket = ENV['GCE_BUCKET'] || config['gce']['bucket']
+    @redis = ENV['REDIS_URL'] || config['redis']['url']
   end
 end

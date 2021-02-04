@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-require 'models/repository'
 require 'config'
-require 'pry'
 require 'google/cloud/storage'
+require 'models/build_backup'
+require 'models/repository'
+require 'redis'
 
 # main travis-backup class
 class Backup
@@ -11,6 +12,7 @@ class Backup
     @config = Config.new
     connect_gce
     connect_db
+    connect_redis
   end
 
   def run
@@ -30,10 +32,13 @@ class Backup
     @bucket = storage.bucket(@config.gce_bucket)
   end
 
+  def connect_redis
+    @redis = Redis.new(url: @config.redis_url)
+  end
+
   def purge
-    @bucket.lifecycle do |lifecycle|
-      lifecycle.clear
-      lifecycle.add_delete_rule(age: @config.housekeeping_period.to_i)
+    BuildBackup.where('created_at < ?', @config.housekeeping_period.days.ago.to_datetime) do |backup|
+      purge_backup(backup)
     end
   end
 
@@ -49,16 +54,30 @@ class Backup
     end
   end
 
-  private
-
-  def process_repo(repository) # rubocop:disable Metrics/AbcSize
-    repository.build.where('created_at < ?', @config.delay.months.ago.to_datetime).in_groups_of(@config.limit) do
-      |builds|
+  def process_repo(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    repository.builds.where('created_at < ?', @config.delay.months.ago.to_datetime)
+              .in_groups_of(@config.limit).map do |builds|
       builds_export = export_builds(builds)
       file_name = "repository_#{repository.id}_builds_#{builds.compact.first.id}-#{builds.compact.last.id}.json"
-      builds.compact.each(&:destroy) if upload(file_name, JSON.pretty_generate(builds_export))
+      pretty_json = JSON.pretty_generate(builds_export)
+      if upload(file_name, pretty_json)
+        BuildBackup.new(repository_id: repository.id, file_name: file_name).save!
+        builds.compact.each(&:destroy)
+      end
+      builds_export
     end
   end
+
+  def purge_backup(backup)
+    begin
+      @bucket.file(backup.file_name).delete
+    rescue
+      print "Unable to remove file #{backup.file_name}\n"
+    end
+    backup.destroy
+  end
+
+  private
 
   def upload(file_name, content) # rubocop:disable Metrics/MethodLength
     uploaded = false
@@ -69,12 +88,19 @@ class Backup
         remote_file = @bucket.create_file(file_name, file_name)
         uploaded = remote_file.name == file_name
       end
-    rescue e
+    rescue => e
       print "Failed to save #{file_name}, error: #{e.inspect}\n"
     ensure
       File.delete(file_name)
     end
     uploaded
+  end
+
+  def generate_log_token(job_id)
+    token = SecureRandom.urlsafe_base64(16)
+    @redis.set("l:#{token}", job_id)
+    @redis.expire("l:#{token}", @config.housekeeping_period.day)
+    token
   end
 
   def export_builds(builds)
@@ -92,6 +118,7 @@ class Backup
       job_export = job.attributes
       job_export[:job_config] = job.job_config.attributes
       job_export[:log_url] = "#{@config.logs_url}/#{job.id}/log.txt"
+      job_export[:log_url] += "?log.token=#{generate_log_token(job.id)}" if job.repository.private?
 
       job_export
     end
