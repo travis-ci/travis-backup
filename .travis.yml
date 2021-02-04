@@ -1,4 +1,4 @@
-rvm: 2.4.9
+rvm: 2.7.2
 cache: bundler
 
 import:
