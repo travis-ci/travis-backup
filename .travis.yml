@@ -8,7 +8,7 @@ services:
   - redis
 
 before_install:
-  - gem install bundler'
+  - gem install bundler
 
 env:
   global:
