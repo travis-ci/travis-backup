@@ -29,3 +29,9 @@ to json files and sends them to GCE.
 * How to run appication
 
 `bundle exec bin/run_backup`
+
+It's also possibe to run console
+
+`bundle exec bin/console`
+and then run export for single user
+`Backup.new.export(user_id)`
