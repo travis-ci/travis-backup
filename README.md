@@ -33,5 +33,5 @@ to json files and sends them to GCE.
 It's also possibe to run console
 
 `bundle exec bin/console`
-and then run export for single user
-`Backup.new.export(user_id)`
+and then run export for single user/organization
+`Backup.new.export(owner_id)`
