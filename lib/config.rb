@@ -15,7 +15,9 @@ class Config
     @housekeeping_period = ENV['BACKUP_HOUSEKEEPING_PERIOD'] || config['backup']['housekeeping_period']
     @database_url = ENV['DATABASE_URL'] || connection_details['development']
     @gce_project = ENV['GCE_PROJECT'] || config['gce']['project']
-    @gce_credentials = JSON.parse(ENV['GCE_CREDENTIALS'] || File.read(config['gce']['credentials']))
+    @gce_credentials = JSON.parse(ENV['GCE_CREDENTIALS'] ||
+                                  File.exist?(config['gce']['credentials']) ?
+                                    File.read(config['gce']['credentials']) : nil)
     @gce_bucket = ENV['GCE_BUCKET'] || config['gce']['bucket']
     @redis = ENV['REDIS_URL'] || config['redis']['url']
   end
