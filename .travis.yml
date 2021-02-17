@@ -17,4 +17,4 @@ env:
 jobs:
   include:
     - stage: "testing time"
-      script: bundle exec rspec
+      script: bundle exec rspec -e test
