@@ -26,6 +26,8 @@ class Backup
   end
 
   def connect_gce
+    return unless @config.gce_project && @config.gce_credentials
+
     storage = Google::Cloud::Storage.new(
       project_id: @config.gce_project,
       credentials: @config.gce_credentials
