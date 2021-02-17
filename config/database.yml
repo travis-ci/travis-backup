@@ -1,0 +1,20 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  min_messages: warning
+  url: 'postgresql://localhost/travis_development'
+  eager_load: true
+
+production:
+  <<: *default
+
+development:
+  <<: *default
+  url: 'postgresql://localhost/travis_development'
+  eager_load: false
+
+test:
+  <<: *default
+  url: 'postgresql://localhost/travis_test'
+  eager_load: false
