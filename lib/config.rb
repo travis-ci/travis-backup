@@ -17,7 +17,7 @@ class Config
     @gce_project = ENV['GCE_PROJECT'] || config['gce']['project']
     @gce_credentials = JSON.parse(ENV['GCE_CREDENTIALS'] ||
                                   File.exist?(config['gce']['credentials']) ?
-                                    File.read(config['gce']['credentials']) : nil)
+                                    File.read(config['gce']['credentials']) : '{}')
     @gce_bucket = ENV['GCE_BUCKET'] || config['gce']['bucket']
     @redis = ENV['REDIS_URL'] || config['redis']['url']
   end
