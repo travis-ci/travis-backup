@@ -1,0 +1,20 @@
+rvm: 2.7.2
+cache: bundler
+
+import:
+  - travis-ci/build-configs:db-setup.yml
+
+services:
+  - redis
+
+before_install:
+  - gem install bundler
+
+env:
+  global:
+    - PATH=/snap/bin:$PATH
+
+jobs:
+  include:
+    - stage: "testing time"
+      script: bundle exec rspec -e test

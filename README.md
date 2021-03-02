@@ -1,24 +1,37 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
+*travis-backup* is a cron application, which export builds and it's correspoonding jobs
+to json files and sends them to GCE.
 
 * Ruby version
+
+2.7.2
 
 * System dependencies
 
 * Configuration
 
-* Database creation
-
-* Database initialization
+`config/settinigs.yml` or env vars like:
+`BACKUP_LIMIT`
+`BACKUP_DELAY`
+`BACKUP_HOUSEKEEPING_PERIOD`
+`LOGS_URL`
+`DATABASE_URL`
+`GCE_PROJECT`
+`GCE_CREDENTIALS`
+`GCE_BUCKET`
+`REDIS_URL`
 
 * How to run the test suite
 
-* Services (job queues, cache servers, search engines, etc.)
+`bundle exec rspec`
 
-* Deployment instructions
+* How to run appication
 
-* ...
+`bundle exec bin/run_backup`
+
+It's also possibe to run console
+
+`bundle exec bin/console`
+and then run export for single user/organization
+`Backup.new.export(owner_id)`

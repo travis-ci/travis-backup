@@ -2,9 +2,10 @@
 
 # Config for travis-backup
 class Config
-  attr_reader :limit, :delay, :housekeeping_period, :database_url, :logs_url, :gce_project, :gce_credentials, :gce_bucket
+  attr_reader :limit, :delay, :housekeeping_period, :database_url, :logs_url, :gce_project,
+              :gce_credentials, :gce_bucket, :redis_url
 
-  def initialize # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def initialize # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
     config = YAML.load(File.open('config/settings.yml'))
     connection_details = YAML.load(File.open('config/database.yml'))
 
@@ -14,7 +15,9 @@ class Config
     @housekeeping_period = ENV['BACKUP_HOUSEKEEPING_PERIOD'] || config['backup']['housekeeping_period']
     @database_url = ENV['DATABASE_URL'] || connection_details['development']
     @gce_project = ENV['GCE_PROJECT'] || config['gce']['project']
-    @gce_credentials = eval(ENV['GCE_CREDENTIALS'] || File.read(config['gce']['credentials']))
+    credentials = ENV['GCE_CREDENTIALS'] || File.exist?(config['gce']['credentials']) ? File.read(config['gce']['credentials']) : nil
+    @gce_credentials = credentials ? JSON.parse(credentials) : nil
     @gce_bucket = ENV['GCE_BUCKET'] || config['gce']['bucket']
+    @redis = ENV['REDIS_URL'] || config['redis']['url']
   end
 end
