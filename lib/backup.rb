@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'active_support/core_ext/array'
+require 'active_support/time'
 require 'config'
 require 'google/cloud/storage'
 require 'models/build_backup'
@@ -40,7 +41,7 @@ class Backup
   end
 
   def purge
-    BuildBackup.where('created_at < ?', @config.housekeeping_period.days.ago.to_datetime) do |backup|
+    BuildBackup.where('created_at < ?', @config.housekeeping_period.to_i.days.ago.to_datetime) do |backup|
       purge_backup(backup)
     end
   end
@@ -58,8 +59,8 @@ class Backup
   end
 
   def process_repo(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    repository.builds.where('created_at < ?', @config.delay.months.ago.to_datetime)
-              .in_groups_of(@config.limit).map do |builds|
+    repository.builds.where('created_at < ?', @config.delay.to_i.months.ago.to_datetime)
+              .in_groups_of(@config.limit.to_i).map do |builds|
       builds_export = export_builds(builds)
       file_name = "repository_#{repository.id}_builds_#{builds.compact.first.id}-#{builds.compact.last.id}.json"
       pretty_json = JSON.pretty_generate(builds_export)
