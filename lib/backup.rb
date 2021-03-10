@@ -122,7 +122,7 @@ class Backup
       job_export = job.attributes
       job_export[:job_config] = job.job_config&.attributes
       job_export[:log_url] = "#{@config.logs_url}/#{job.id}/log.txt"
-      job_export[:log_url] += "?log.token=#{generate_log_token(job.id)}" if job.repository.private?
+      job_export[:log_url] += "?log.token=#{generate_log_token(job.id)}" if job.repository&.private?
 
       job_export
     end
