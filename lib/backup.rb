@@ -103,7 +103,7 @@ class Backup
   def generate_log_token(job_id)
     token = SecureRandom.urlsafe_base64(16)
     @redis.set("l:#{token}", job_id)
-    @redis.expire("l:#{token}", @config.housekeeping_period.day)
+    @redis.expire("l:#{token}", @config.housekeeping_period.to_i * 86400)
     token
   end
 
