@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'active_support/core_ext/array'
+require 'active_support/time'
 require 'config'
 require 'google/cloud/storage'
 require 'models/build_backup'
@@ -40,7 +41,7 @@ class Backup
   end
 
   def purge
-    BuildBackup.where('created_at < ?', @config.housekeeping_period.days.ago.to_datetime) do |backup|
+    BuildBackup.where('created_at < ?', @config.housekeeping_period.to_i.days.ago.to_datetime) do |backup|
       purge_backup(backup)
     end
   end
@@ -58,16 +59,18 @@ class Backup
   end
 
   def process_repo(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    repository.builds.where('created_at < ?', @config.delay.months.ago.to_datetime)
-              .in_groups_of(@config.limit).map do |builds|
-      builds_export = export_builds(builds)
-      file_name = "repository_#{repository.id}_builds_#{builds.compact.first.id}-#{builds.compact.last.id}.json"
-      pretty_json = JSON.pretty_generate(builds_export)
-      if upload(file_name, pretty_json)
-        BuildBackup.new(repository_id: repository.id, file_name: file_name).save!
-        builds.compact.each(&:destroy)
+    repository.builds.where('created_at < ?', @config.delay.to_i.months.ago.to_datetime)
+              .in_groups_of(@config.limit.to_i, false).map do |builds|
+      if builds.count == @config.limit.to_i
+        builds_export = export_builds(builds)
+        file_name = "repository_#{repository.id}_builds_#{builds.first.id}-#{builds.last.id}.json"
+        pretty_json = JSON.pretty_generate(builds_export)
+        if upload(file_name, pretty_json)
+          BuildBackup.new(repository_id: repository.id, file_name: file_name).save!
+          builds.each(&:destroy)
+        end
+        builds_export
       end
-      builds_export
     end
   end
 
@@ -102,12 +105,12 @@ class Backup
   def generate_log_token(job_id)
     token = SecureRandom.urlsafe_base64(16)
     @redis.set("l:#{token}", job_id)
-    @redis.expire("l:#{token}", @config.housekeeping_period.day)
+    @redis.expire("l:#{token}", @config.housekeeping_period.to_i * 86400)
     token
   end
 
   def export_builds(builds)
-    builds.compact.map do |build|
+    builds.map do |build|
       build_export = build.attributes
       build_export[:build_config] = build.build_config&.attributes
       build_export[:jobs] = export_jobs(build.jobs)
@@ -121,7 +124,7 @@ class Backup
       job_export = job.attributes
       job_export[:job_config] = job.job_config&.attributes
       job_export[:log_url] = "#{@config.logs_url}/#{job.id}/log.txt"
-      job_export[:log_url] += "?log.token=#{generate_log_token(job.id)}" if job.repository.private?
+      job_export[:log_url] += "?log.token=#{generate_log_token(job.id)}" if job.repository&.private?
 
       job_export
     end
