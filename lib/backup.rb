@@ -52,8 +52,10 @@ class Backup
         process_repo(repository)
       end
     else
-      Repository.order(:id).each do |repository|
-        process_repo(repository)
+      Repository.find_in_batches.each do |group|
+        group.each do |repository|
+          process_repo(repository)
+        end
       end
     end
   end
