@@ -52,20 +52,24 @@ class Backup
         process_repo(repository)
       end
     else
-      Repository.order(:id).each do |repository|
-        process_repo(repository)
+      Repository.find_in_batches.each do |group|
+        group.each do |repository|
+          process_repo(repository)
+        end
       end
     end
   end
 
   def process_repo(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    puts "Processing repository #{repository.id}"
     repository.builds.where('created_at < ?', @config.delay.to_i.months.ago.to_datetime)
-              .in_groups_of(@config.limit.to_i, false).map do |builds|
+              .find_in_batches(batch_size: @config.limit.to_i) do |builds|
       if builds.count == @config.limit.to_i
         builds_export = export_builds(builds)
         file_name = "repository_#{repository.id}_builds_#{builds.first.id}-#{builds.last.id}.json"
         pretty_json = JSON.pretty_generate(builds_export)
         if upload(file_name, pretty_json)
+          puts "Uploaded file #{file_name}"
           BuildBackup.new(repository_id: repository.id, file_name: file_name).save!
           builds.each(&:destroy)
         end
