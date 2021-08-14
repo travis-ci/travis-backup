@@ -7,6 +7,3 @@ backup:
   housekeeping_period: 150
   # logs URL (the same as via UI)
   logs_url: https://api.travis-ci.org/v3/job
-
-redis: 
-  url: redis://127.0.0.1:6379

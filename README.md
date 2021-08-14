@@ -17,7 +17,6 @@ to json files.
 `BACKUP_HOUSEKEEPING_PERIOD`
 `LOGS_URL`
 `DATABASE_URL`
-`REDIS_URL`
 
 * How to run the test suite
 

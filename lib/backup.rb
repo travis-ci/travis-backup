@@ -6,14 +6,12 @@ require 'config'
 require 'google/cloud/storage'
 require 'models/build_backup'
 require 'models/repository'
-require 'redis'
 
 # main travis-backup class
 class Backup
   def initialize
     @config = Config.new
     connect_db
-    connect_redis
   end
 
   def run
@@ -22,10 +20,6 @@ class Backup
 
   def connect_db
     ActiveRecord::Base.establish_connection(@config.database_url)
-  end
-
-  def connect_redis
-    @redis = Redis.new(url: @config.redis_url)
   end
 
   def export(owner_id = nil)
@@ -72,13 +66,6 @@ class Backup
     uploaded
   end
 
-  def generate_log_token(job_id)
-    token = SecureRandom.urlsafe_base64(16)
-    @redis.set("l:#{token}", job_id)
-    @redis.expire("l:#{token}", @config.housekeeping_period.to_i * 86400)
-    token
-  end
-
   def export_builds(builds)
     builds.map do |build|
       build_export = build.attributes
@@ -94,7 +81,6 @@ class Backup
       job_export = job.attributes
       job_export[:job_config] = job.job_config&.attributes
       job_export[:log_url] = "#{@config.logs_url}/#{job.id}/log.txt"
-      job_export[:log_url] += "?log.token=#{generate_log_token(job.id)}" if job.repository&.private?
 
       job_export
     end

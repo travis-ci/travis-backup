@@ -187,10 +187,4 @@ describe Backup do
     build_export.first.first[:jobs].first[:updated_at] = datetime
     expect(build_export.to_json).to eq(exported_object.to_json)
   end
-
-  it 'for private repository should prepare proper JSON export with token for log urls' do
-    build_export = backup.process_repo(private_repository)
-    log_url = build_export.first.first[:jobs].first[:log_url]
-    expect(log_url).to include('?log.token=')
-  end
 end
