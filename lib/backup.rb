@@ -34,7 +34,8 @@ class Backup
   end
 
   def process_repo(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    repository.builds.where('created_at < ?', @config.delay.to_i.months.ago.to_datetime)
+    delay = @config.delay.to_i.months.ago.to_datetime
+    repository.builds.where('created_at < ? and id != ?', delay, repository.current_build_id)
               .in_groups_of(@config.limit.to_i, false).map do |builds|
       if builds.count == @config.limit.to_i
         builds_export = export_builds(builds)
