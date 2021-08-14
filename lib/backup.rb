@@ -4,7 +4,6 @@ require 'active_support/core_ext/array'
 require 'active_support/time'
 require 'config'
 require 'google/cloud/storage'
-require 'models/build_backup'
 require 'models/repository'
 
 # main travis-backup class
@@ -42,7 +41,6 @@ class Backup
         file_name = "repository_#{repository.id}_builds_#{builds.first.id}-#{builds.last.id}.json"
         pretty_json = JSON.pretty_generate(builds_export)
         if upload(file_name, pretty_json)
-          BuildBackup.new(repository_id: repository.id, file_name: file_name).save!
           builds.each(&:destroy)
         end
         builds_export
