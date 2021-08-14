@@ -12,38 +12,20 @@ require 'redis'
 class Backup
   def initialize
     @config = Config.new
-    connect_gce
     connect_db
     connect_redis
   end
 
   def run
     export
-    purge
   end
 
   def connect_db
     ActiveRecord::Base.establish_connection(@config.database_url)
   end
 
-  def connect_gce
-    return unless @config.gce_project && @config.gce_credentials
-
-    storage = Google::Cloud::Storage.new(
-      project_id: @config.gce_project,
-      credentials: @config.gce_credentials
-    )
-    @bucket = storage.bucket(@config.gce_bucket)
-  end
-
   def connect_redis
     @redis = Redis.new(url: @config.redis_url)
-  end
-
-  def purge
-    BuildBackup.where('created_at < ?', @config.housekeeping_period.to_i.days.ago.to_datetime) do |backup|
-      purge_backup(backup)
-    end
   end
 
   def export(owner_id = nil)
@@ -74,15 +56,6 @@ class Backup
     end
   end
 
-  def purge_backup(backup)
-    begin
-      @bucket.file(backup.file_name).delete
-    rescue
-      print "Unable to remove file #{backup.file_name}\n"
-    end
-    backup.destroy
-  end
-
   private
 
   def upload(file_name, content) # rubocop:disable Metrics/MethodLength
@@ -91,13 +64,10 @@ class Backup
       File.open(file_name, 'w') do |file|
         file.write(content)
         file.close
-        remote_file = @bucket.create_file(file_name, file_name)
-        uploaded = remote_file.name == file_name
+        uploaded = true
       end
     rescue => e
       print "Failed to save #{file_name}, error: #{e.inspect}\n"
-    ensure
-      File.delete(file_name)
     end
     uploaded
   end

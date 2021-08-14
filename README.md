@@ -1,7 +1,7 @@
 # README
 
 *travis-backup* is a cron application, which export builds and it's correspoonding jobs
-to json files and sends them to GCE.
+to json files.
 
 * Ruby version
 
@@ -17,9 +17,6 @@ to json files and sends them to GCE.
 `BACKUP_HOUSEKEEPING_PERIOD`
 `LOGS_URL`
 `DATABASE_URL`
-`GCE_PROJECT`
-`GCE_CREDENTIALS`
-`GCE_BUCKET`
 `REDIS_URL`
 
 * How to run the test suite

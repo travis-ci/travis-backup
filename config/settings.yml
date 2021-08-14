@@ -7,12 +7,6 @@ backup:
   housekeeping_period: 150
   # logs URL (the same as via UI)
   logs_url: https://api.travis-ci.org/v3/job
-  
-# GCE Settings
-gce:
-  project: travis-ci-prod-services-1
-  credentials: config/secrets/travis-ci-prod-services-travis-backup.json
-  bucket: travis-backup-staging
 
 redis: 
   url: redis://127.0.0.1:6379
