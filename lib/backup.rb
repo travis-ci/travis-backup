@@ -61,7 +61,7 @@ class Backup
   def upload(file_name, content) # rubocop:disable Metrics/MethodLength
     uploaded = false
     begin
-      File.open(file_name, 'w') do |file|
+      File.open("dump/#{file_name}", 'w') do |file|
         file.write(content)
         file.close
         uploaded = true

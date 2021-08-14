@@ -1,0 +1,6 @@
+tmp/*
+log/*
+dump/*
+!tmp/.keep
+!log/.keep
+!dump/.keep
