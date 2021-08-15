@@ -14,8 +14,6 @@ to json files.
 `config/settinigs.yml` or env vars like:
 `BACKUP_LIMIT`
 `BACKUP_DELAY`
-`BACKUP_HOUSEKEEPING_PERIOD`
-`LOGS_URL`
 `DATABASE_URL`
 
 * How to run the test suite
