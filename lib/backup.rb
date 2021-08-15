@@ -68,7 +68,6 @@ class Backup
   def export_builds(builds)
     builds.map do |build|
       build_export = build.attributes
-      build_export[:build_config] = build.build_config&.attributes
       build_export[:jobs] = export_jobs(build.jobs)
 
       build_export
@@ -78,7 +77,6 @@ class Backup
   def export_jobs(jobs)
     jobs.map do |job|
       job_export = job.attributes
-      job_export[:job_config] = job.job_config&.attributes
 
       job_export
     end
