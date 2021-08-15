@@ -3,5 +3,3 @@ backup:
   limit: 1000
   # delay in months
   delay: 6
-  # logs URL (the same as via UI)
-  logs_url: https://api.travis-ci.org/v3/job

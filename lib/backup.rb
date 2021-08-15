@@ -79,7 +79,6 @@ class Backup
     jobs.map do |job|
       job_export = job.attributes
       job_export[:job_config] = job.job_config&.attributes
-      job_export[:log_url] = "#{@config.logs_url}/#{job.id}/log.txt"
 
       job_export
     end
