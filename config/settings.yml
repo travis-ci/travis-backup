@@ -3,7 +3,5 @@ backup:
   limit: 1000
   # delay in months
   delay: 6
-  # how long (in days) expoorted files should be kept in storage
-  housekeeping_period: 150
   # logs URL (the same as via UI)
   logs_url: https://api.travis-ci.org/v3/job
