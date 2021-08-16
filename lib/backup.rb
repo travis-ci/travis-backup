@@ -7,8 +7,8 @@ require 'models/repository'
 
 # main travis-backup class
 class Backup
-  def initialize
-    @config = Config.new
+  def initialize(config_args={})
+    @config = Config.new(config_args)
     connect_db
   end
 
@@ -38,7 +38,7 @@ class Backup
     repository.builds.where('created_at < ? and id != ?', delay, current_build_id)
               .in_groups_of(@config.limit.to_i, false).map do |builds_batch|
       if builds_batch.count == @config.limit.to_i
-        @config.if_backup ? save_batch(builds_batch, repository) : builds.each(&:destroy)
+        @config.if_backup ? save_batch(builds_batch, repository) : builds_batch.each(&:destroy)
       end
     end
   end
