@@ -34,7 +34,8 @@ class Backup
 
   def process_repo(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     delay = @config.delay.to_i.months.ago.to_datetime
-    repository.builds.where('created_at < ? and id != ?', delay, repository.current_build_id)
+    current_build_id = repository.current_build_id || -1
+    repository.builds.where('created_at < ? and id != ?', delay, current_build_id)
               .in_groups_of(@config.limit.to_i, false).map do |builds_batch|
       if builds_batch.count == @config.limit.to_i
         @config.if_backup ? save_batch(builds_batch, repository) : builds.each(&:destroy)
