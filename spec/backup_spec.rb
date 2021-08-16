@@ -1,4 +1,5 @@
 $: << 'lib'
+require 'uri'
 require 'backup'
 require 'models/repository'
 require 'support/factories'
