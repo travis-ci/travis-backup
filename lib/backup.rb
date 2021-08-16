@@ -3,7 +3,6 @@
 require 'active_support/core_ext/array'
 require 'active_support/time'
 require 'config'
-require 'google/cloud/storage'
 require 'models/repository'
 
 # main travis-backup class
@@ -36,20 +35,24 @@ class Backup
   def process_repo(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     delay = @config.delay.to_i.months.ago.to_datetime
     repository.builds.where('created_at < ? and id != ?', delay, repository.current_build_id)
-              .in_groups_of(@config.limit.to_i, false).map do |builds|
-      if builds.count == @config.limit.to_i
-        builds_export = export_builds(builds)
-        file_name = "repository_#{repository.id}_builds_#{builds.first.id}-#{builds.last.id}.json"
-        pretty_json = JSON.pretty_generate(builds_export)
-        if upload(file_name, pretty_json)
-          builds.each(&:destroy)
-        end
-        builds_export
+              .in_groups_of(@config.limit.to_i, false).map do |builds_batch|
+      if builds_batch.count == @config.limit.to_i
+        @config.if_backup ? save_batch(builds_batch, repository) : builds.each(&:destroy)
       end
     end
   end
 
   private
+
+  def save_batch(builds_batch, repository)
+    builds_export = export_builds(builds_batch)
+    file_name = "repository_#{repository.id}_builds_#{builds_batch.first.id}-#{builds_batch.last.id}.json"
+    pretty_json = JSON.pretty_generate(builds_export)
+    if upload(file_name, pretty_json)
+      builds_batch.each(&:destroy)
+    end
+    builds_export
+  end
 
   def upload(file_name, content) # rubocop:disable Metrics/MethodLength
     uploaded = false

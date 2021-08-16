@@ -12,6 +12,7 @@ to json files.
 * Configuration
 
 `config/settinigs.yml` or env vars like:
+`IF_BACKUP`
 `BACKUP_LIMIT`
 `BACKUP_DELAY`
 `DATABASE_URL`

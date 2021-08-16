@@ -1,4 +1,6 @@
 backup:
+  # when false, removes data without saving it to file
+  if_backup: true
   # builds limit in file
   limit: 1000
   # delay in months
