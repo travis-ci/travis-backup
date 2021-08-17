@@ -15,6 +15,7 @@ to json files.
 `IF_BACKUP`
 `BACKUP_LIMIT`
 `BACKUP_DELAY`
+`BACKUP_FILES_LOCATION`
 `DATABASE_URL`
 
 * How to run the test suite

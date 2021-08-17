@@ -9,7 +9,8 @@ require 'pry'
 
 describe Backup do
   let!(:config) { Config.new }
-  let!(:backup) { Backup.new }
+  let(:files_location) { "dump/tests" }
+  let!(:backup) { Backup.new(files_location: files_location) }
   let(:datetime) { (config.delay + 1).months.ago.to_time.utc }
   let(:org_id) { rand(100000) }
   let(:com_id) { rand(100000) }
@@ -154,9 +155,19 @@ describe Backup do
         expect(build_export.to_json).to eq(exported_object.to_json)
       end
 
-      it 'should save JSON to file' do
-        expect(File).to receive(:open).once
+      it 'should save JSON to file at proper path' do
+        expect(File).to receive(:open).once.with(Regexp.new(files_location), 'w')
         backup.process_repo(repository)
+      end
+
+      context 'when path with nonexistent folders is given' do
+        let(:random_files_location) { "dump/tests/#{rand(100000)}" }
+        let!(:backup) { Backup.new(files_location: random_files_location) }
+
+        it 'should create needed folders' do
+          expect(FileUtils).to receive(:mkdir_p).once.with(random_files_location).and_call_original
+          backup.process_repo(repository)
+        end
       end
 
       it_behaves_like 'removing builds and jobs'
