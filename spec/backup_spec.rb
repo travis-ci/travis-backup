@@ -25,26 +25,12 @@ describe Backup do
       :repository
     )
   }
-  let(:private_repository) {
-    FactoryBot.create(
-      :repository,
-      private: true
-    )
-  }
   let(:build) {
     FactoryBot.create(
       :build,
       created_at: datetime,
       updated_at: datetime,
       repository: repository
-    )
-  }
-  let(:private_build) {
-    FactoryBot.create(
-      :build,
-      created_at: datetime,
-      updated_at: datetime,
-      repository: private_repository
     )
   }
   let(:job) {
@@ -55,16 +41,6 @@ describe Backup do
       source_id: build.id,
       source_type: 'Build',
       repository: repository
-    )
-  }
-  let(:private_job) {
-    FactoryBot.create(
-      :job,
-      created_at: datetime,
-      updated_at: datetime,
-      source_id: private_build.id,
-      source_type: 'Build',
-      repository: private_repository
     )
   }
 
@@ -133,8 +109,6 @@ describe Backup do
     before do
       build.jobs = [job]
       repository.builds = [build]
-      private_build.jobs = [private_job]
-      private_repository.builds = [private_build]
     end
 
     shared_context 'removing builds and jobs' do
