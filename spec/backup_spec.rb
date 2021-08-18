@@ -8,6 +8,10 @@ require 'support/factories'
 require 'pry'
 
 describe Backup do
+  before(:all) do
+    system("psql '#{Config.new.database_url}' -f db/schema.sql > /dev/null")
+  end
+
   let!(:config) { Config.new }
   let(:files_location) { "dump/tests" }
   let!(:backup) { Backup.new(files_location: files_location) }
