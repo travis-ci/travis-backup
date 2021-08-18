@@ -20,33 +20,17 @@ describe Backup do
   let(:com_id) { rand(100000) }
   let(:private_org_id) { rand(100000) }
   let(:private_com_id) { rand(100000) }
-  let(:repository) {
+  let!(:repository) {
     FactoryBot.create(
-      :repository
-    )
-  }
-  let(:build) {
-    FactoryBot.create(
-      :build,
+      :repository_with_builds,
       created_at: datetime,
-      updated_at: datetime,
-      repository: repository
-    )
-  }
-  let(:job) {
-    FactoryBot.create(
-      :job,
-      created_at: datetime,
-      updated_at: datetime,
-      source_id: build.id,
-      source_type: 'Build',
-      repository: repository
+      updated_at: datetime
     )
   }
 
   describe 'process_repo' do
-    let(:exported_object) {
-      [[{"id"=>build.id,
+    let!(:exported_object) {
+      [[{"id"=>repository.builds.first.id,
         "repository_id"=>repository.id,
         "number"=>nil,
         "started_at"=>nil,
@@ -75,10 +59,10 @@ describe Backup do
         "sender_id"=>nil,
         "sender_type"=>nil,
         :jobs=>
-          [{"id"=>job.id,
+          [{"id"=>repository.builds.first.jobs.first.id,
             "repository_id"=>repository.id,
             "commit_id"=>nil,
-            "source_id"=>build.id,
+            "source_id"=>repository.builds.first.id,
             "source_type"=>"Build",
             "queue"=>nil,
             "type"=>nil,
@@ -106,11 +90,6 @@ describe Backup do
       }]]
     }
 
-    before do
-      build.jobs = [job]
-      repository.builds = [build]
-    end
-
     shared_context 'removing builds and jobs' do
       it 'should delete build' do
         expect do
@@ -128,8 +107,8 @@ describe Backup do
     context 'when if_backup config is set to true' do
       it 'should prepare proper JSON export' do
         build_export = backup.process_repo(repository)
-        build_export.first.first[:updated_at] = datetime
-        build_export.first.first[:jobs].first[:updated_at] = datetime
+        build_export.first.first['updated_at'] = datetime
+        build_export.first.first[:jobs].first['updated_at'] = datetime
         expect(build_export.to_json).to eq(exported_object.to_json)
       end
 
