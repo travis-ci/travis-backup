@@ -19,6 +19,6 @@ class Config
     @limit = args[:limit] || ENV['BACKUP_LIMIT'] || config['backup']['limit']
     @delay = args[:delay] || ENV['BACKUP_DELAY'] || config['backup']['delay']
     @files_location = args[:files_location] || ENV['BACKUP_FILES_LOCATION'] || config['backup']['files_location']
-    @database_url = args[:database_url] || ENV['DATABASE_URL'] || connection_details['development']
+    @database_url = args[:database_url] || ENV['DATABASE_URL'] || connection_details[ENV['RAILS_ENV']]
   end
 end

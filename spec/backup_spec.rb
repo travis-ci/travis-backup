@@ -9,7 +9,7 @@ require 'pry'
 
 describe Backup do
   before(:all) do
-    system("psql '#{Config.new.database_url}' -f db/schema.sql > /dev/null")
+    system("psql '#{Config.new.database_url}' -f db/schema.sql")
   end
 
   after(:each) do

@@ -1,14 +1,8 @@
 rvm: 2.7.2
 cache: bundler
 
-import:
-  - travis-ci/build-configs:db-setup.yml
-
 services:
   - redis
-
-before_install:
-  - gem install bundler
 
 env:
   global:
@@ -17,4 +11,23 @@ env:
 jobs:
   include:
     - stage: "testing time"
-      script: bundle exec rspec -e test
+      script: bundle exec rspec
+
+dist: xenial
+
+before_install:
+  - gem install bundler
+  - sudo apt-get install -yq --no-install-suggests --no-install-recommends postgresql-common
+  - sudo service postgresql stop
+  - sudo apt install -yq --no-install-suggests --no-install-recommends postgresql-11 postgresql-client-11
+  - sed -e 's/^port.*/port = 5432/' /etc/postgresql/11/main/postgresql.conf > postgresql.conf
+  - sudo chown postgres postgresql.conf
+  - sudo mv postgresql.conf /etc/postgresql/11/main
+  - sudo cp /etc/postgresql/{10,11}/main/pg_hba.conf
+  - sudo service postgresql start 11
+
+before_script:
+  - psql --version
+  - psql -c 'CREATE DATABASE travis_test;' -U postgres
+  - psql -t -c "SELECT 1 FROM pg_roles WHERE rolname='travis'" -U postgres | grep 1 || psql -c 'CREATE ROLE travis SUPERUSER LOGIN CREATEDB;' -U postgres
+  - psql -f db/schema.sql -v ON_ERROR_STOP=1 travis_test

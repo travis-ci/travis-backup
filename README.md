@@ -5,7 +5,7 @@ to json files and sends them to GCE.
 
 #### Ruby version
 
-2.7.0
+2.7.2
 
 #### Configuration
 
