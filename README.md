@@ -1,28 +1,32 @@
 # README
 
 *travis-backup* is a cron application, which export builds and it's correspoonding jobs
-to json files.
+to json files and sends them to GCE.
 
-* Ruby version
+#### Ruby version
 
-2.7.2
+2.7.0
 
-* System dependencies
-
-* Configuration
+#### Configuration
 
 `config/settinigs.yml` or env vars like:
-`IF_BACKUP`
 `BACKUP_LIMIT`
 `BACKUP_DELAY`
-`BACKUP_FILES_LOCATION`
+`BACKUP_HOUSEKEEPING_PERIOD`
+`LOGS_URL`
 `DATABASE_URL`
+`GCE_PROJECT`
+`GCE_CREDENTIALS`
+`GCE_BUCKET`
+`REDIS_URL`
 
-* How to run the test suite
+#### How to run the test suite
 
 `bundle exec rspec`
 
-* How to run appication
+To make tests working properly you should also ensure the database connection string for an empty test database. You can set it as `DATABASE_URL` environment variable or in `config/database.yml`.
+
+#### How to run appication
 
 `bundle exec bin/run_backup`
 
