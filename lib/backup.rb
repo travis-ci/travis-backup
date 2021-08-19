@@ -40,7 +40,7 @@ class Backup
       if builds_batch.count == @config.limit.to_i
         @config.if_backup ? save_batch(builds_batch, repository) : builds_batch.each(&:destroy)
       end
-    end
+    end.compact
   end
 
   private

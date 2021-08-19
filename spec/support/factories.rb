@@ -6,7 +6,7 @@ FactoryBot.define do
   factory :repository do
     factory :repository_with_builds do
       transient do
-        builds_count { 1 }
+        builds_count { 3 }
       end
       after(:create) do |repository, evaluator|
         create_list(
@@ -23,7 +23,7 @@ FactoryBot.define do
   factory :build do
     factory :build_with_jobs do
       transient do
-        jobs_count { 1 }
+        jobs_count { 2 }
       end
       after(:create) do |build, evaluator|
         create_list(
