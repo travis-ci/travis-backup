@@ -4,37 +4,102 @@ require 'backup'
 require 'models/repository'
 require 'models/build'
 require 'models/job'
+require 'models/organization'
+require 'models/user'
 require 'support/factories'
 require 'pry'
 
 describe Backup do
   before(:all) do
-    system("psql '#{Config.new.database_url}' -f db/schema.sql")
+    system("psql '#{Config.new.database_url}' -f db/schema.sql > /dev/null")
   end
 
-  after(:each) do
-    Repository.destroy_all
-    Build.destroy_all
-    Job.destroy_all
-  end
-
-  let!(:config) { Config.new }
   let(:files_location) { "dump/tests" }
   let!(:backup) { Backup.new(files_location: files_location, limit: 2) }
-  let(:datetime) { (config.delay + 1).months.ago.to_time.utc }
-  let(:org_id) { rand(100000) }
-  let(:com_id) { rand(100000) }
-  let(:private_org_id) { rand(100000) }
-  let(:private_com_id) { rand(100000) }
-  let!(:repository) {
-    FactoryBot.create(
-      :repository_with_builds,
-      created_at: datetime,
-      updated_at: datetime
-    )
-  }
+
+  describe 'export' do
+    let!(:unassigned_repositories) {
+      (1..3).to_a.map do
+        FactoryBot.create(:repository)    
+      end
+    }
+    let!(:user1) {
+      FactoryBot.create(:user_with_repos)
+    }
+    let!(:user2) {
+      FactoryBot.create(:user_with_repos)
+    }
+    let!(:organization1) {
+      FactoryBot.create(:organization_with_repos)
+    }
+    let!(:organization2) {
+      FactoryBot.create(:organization_with_repos)
+    }
+
+    context 'when no arguments are given' do
+      it 'processes every repository' do
+        Repository.all.each do |repository|
+          expect(backup).to receive(:process_repo).once.with(repository)
+        end
+        backup.export
+      end
+    end
+    context 'when user_id is given' do
+      it 'processes only the repositories of the given user' do
+        processed_repos_ids = []
+        allow(backup).to receive(:process_repo) {|repo| processed_repos_ids.push(repo.id)}
+        user_repos_ids = Repository.where(
+          'owner_id = ? and owner_type = ?',
+          user1.id,
+          'User'
+        ).map(&:id)
+        backup.export(user_id: user1.id)
+        expect(processed_repos_ids).to match_array(user_repos_ids)
+      end
+    end
+    context 'when org_id is given' do
+      it 'processes only the repositories of the given organization' do
+        processed_repos_ids = []
+        allow(backup).to receive(:process_repo) {|repo| processed_repos_ids.push(repo.id)}
+        organization_repos_ids = Repository.where(
+          'owner_id = ? and owner_type = ?',
+          organization1.id,
+          'Organization'
+        ).map(&:id)
+        backup.export(org_id: organization1.id)
+        expect(processed_repos_ids).to match_array(organization_repos_ids)
+      end
+    end
+    context 'when repo_id is given' do
+      it 'processes only the repository with the given id' do
+        repo = Repository.first
+        expect(backup).to receive(:process_repo).once.with(repo)
+        backup.export(repo_id: repo.id)
+      end
+    end
+  end
 
   describe 'process_repo' do
+    after(:each) do
+      Repository.destroy_all
+      Build.destroy_all
+      Job.destroy_all
+    end
+  
+    let!(:config) { Config.new }
+    let(:datetime) { (config.delay + 1).months.ago.to_time.utc }
+    let(:org_id) { rand(100000) }
+    let(:com_id) { rand(100000) }
+    let(:private_org_id) { rand(100000) }
+    let(:private_com_id) { rand(100000) }
+    let!(:repository) {
+      FactoryBot.create(
+        :repository_with_builds,
+        created_at: datetime,
+        updated_at: datetime
+      )
+    }
+
     let!(:exported_object) {
       [[
         {

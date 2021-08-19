@@ -3,6 +3,38 @@
 require 'factory_bot'
 
 FactoryBot.define do
+  factory :organization do
+    factory :organization_with_repos do
+      transient do
+        repos_count { 3 }
+      end
+      after(:create) do |organization, evaluator|
+        create_list(
+          :repository,
+          evaluator.repos_count,
+          owner_id: organization.id,
+          owner_type: 'Organization'
+        )
+      end
+    end
+  end
+
+  factory :user do
+    factory :user_with_repos do
+      transient do
+        repos_count { 3 }
+      end
+      after(:create) do |user, evaluator|
+        create_list(
+          :repository,
+          evaluator.repos_count,
+          owner_id: user.id,
+          owner_type: 'User'
+        )
+      end
+    end
+  end
+
   factory :repository do
     factory :repository_with_builds do
       transient do

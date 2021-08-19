@@ -20,11 +20,24 @@ class Backup
     ActiveRecord::Base.establish_connection(@config.database_url)
   end
 
-  def export(owner_id = nil)
+  def export(args={})
+    if args[:user_id]
+      owner_id = args[:user_id]
+      owner_type = 'User'
+    elsif args[:org_id]
+      owner_id = args[:org_id]
+      owner_type = 'Organization'
+    elsif args[:repo_id]
+      repo_id = args[:repo_id]
+    end
+
     if owner_id
-      Repository.where('owner_id = ?', owner_id).order(:id).each do |repository|
+      Repository.where('owner_id = ? and owner_type = ?', owner_id, owner_type).order(:id).each do |repository|
         process_repo(repository)
       end
+    elsif repo_id
+      repository = Repository.find(repo_id)
+      process_repo(repository)
     else
       Repository.order(:id).each do |repository|
         process_repo(repository)
