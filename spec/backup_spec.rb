@@ -17,7 +17,7 @@ describe Backup do
   let(:files_location) { "dump/tests" }
   let!(:backup) { Backup.new(files_location: files_location, limit: 2) }
 
-  describe 'export' do
+  describe 'run' do
     let!(:unassigned_repositories) {
       (1..3).to_a.map do
         FactoryBot.create(:repository)    
@@ -41,7 +41,7 @@ describe Backup do
         Repository.all.each do |repository|
           expect(backup).to receive(:process_repo).once.with(repository)
         end
-        backup.export
+        backup.run
       end
     end
     context 'when user_id is given' do
@@ -53,7 +53,7 @@ describe Backup do
           user1.id,
           'User'
         ).map(&:id)
-        backup.export(user_id: user1.id)
+        backup.run(user_id: user1.id)
         expect(processed_repos_ids).to match_array(user_repos_ids)
       end
     end
@@ -66,7 +66,7 @@ describe Backup do
           organization1.id,
           'Organization'
         ).map(&:id)
-        backup.export(org_id: organization1.id)
+        backup.run(org_id: organization1.id)
         expect(processed_repos_ids).to match_array(organization_repos_ids)
       end
     end
@@ -74,7 +74,7 @@ describe Backup do
       it 'processes only the repository with the given id' do
         repo = Repository.first
         expect(backup).to receive(:process_repo).once.with(repo)
-        backup.export(repo_id: repo.id)
+        backup.run(repo_id: repo.id)
       end
     end
   end

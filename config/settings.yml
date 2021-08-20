@@ -1,9 +1,9 @@
 backup:
   # when false, removes data without saving it to file
   if_backup: true
-  # builds limit in file
+  # builds limit for one backup file
   limit: 1000
-  # number of months - data younger than this time won't be backuped
+  # number of months from now - data younger than this time won't be backuped
   delay: 6
   # path of the folder in which backup files will be placed
   files_location: './dump'

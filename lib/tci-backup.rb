@@ -12,15 +12,11 @@ class Backup
     connect_db
   end
 
-  def run
-    export
-  end
-
   def connect_db
     ActiveRecord::Base.establish_connection(@config.database_url)
   end
 
-  def export(args={})
+  def run(args={})
     if args[:user_id]
       owner_id = args[:user_id]
       owner_type = 'User'
