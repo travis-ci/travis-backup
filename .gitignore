@@ -4,3 +4,4 @@ dump/*
 !tmp/.keep
 !log/.keep
 !dump/.keep
+*.gem
