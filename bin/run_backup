@@ -3,5 +3,19 @@
 $: << 'lib'
 
 require 'tci-backup'
+require 'optparse'
 
-Backup.new.run
+options = {}
+OptionParser.new do |opt|
+  opt.on('-b', '--if_backup') { |o| options[:if_backup] = o }
+  opt.on('-l', '--limit X') { |o| options[:limit] = o.to_i }
+  opt.on('-t', '--threshold X') { |o| options[:threshold] = o.to_i }
+  opt.on('-f', '--files_location X') { |o| options[:files_location] = o }
+  opt.on('-u', '--user_id X') { |o| options[:user_id] = o.to_i }
+  opt.on('-r', '--repo_id X') { |o| options[:repo_id] = o.to_i }
+  opt.on('-o', '--org_id X') { |o| options[:org_id] = o.to_i }
+end.parse!
+
+options[:database_url] = ARGV[0] if ARGV[0]
+
+Backup.new(options).run

@@ -17,14 +17,18 @@ class Backup
   end
 
   def run(args={})
-    if args[:user_id]
-      owner_id = args[:user_id]
+    user_id = args[:user_id] || @config.user_id
+    repo_id = args[:repo_id] || @config.repo_id
+    org_id = args[:org_id] || @config.org_id
+
+    if user_id
+      owner_id = user_id
       owner_type = 'User'
-    elsif args[:org_id]
-      owner_id = args[:org_id]
+    elsif org_id
+      owner_id = org_id
       owner_type = 'Organization'
-    elsif args[:repo_id]
-      repo_id = args[:repo_id]
+    elsif repo_id
+      repo_id = repo_id
     end
 
     if owner_id
@@ -42,9 +46,9 @@ class Backup
   end
 
   def process_repo(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    delay = @config.delay.to_i.months.ago.to_datetime
+    threshold = @config.threshold.to_i.months.ago.to_datetime
     current_build_id = repository.current_build_id || -1
-    repository.builds.where('created_at < ? and id != ?', delay, current_build_id)
+    repository.builds.where('created_at < ? and id != ?', threshold, current_build_id)
               .in_groups_of(@config.limit.to_i, false).map do |builds_batch|
       if builds_batch.count == @config.limit.to_i
         @config.if_backup ? save_batch(builds_batch, repository) : builds_batch.each(&:destroy)
@@ -58,14 +62,14 @@ class Backup
     builds_export = export_builds(builds_batch)
     file_name = "repository_#{repository.id}_builds_#{builds_batch.first.id}-#{builds_batch.last.id}.json"
     pretty_json = JSON.pretty_generate(builds_export)
-    if upload(file_name, pretty_json)
+    if save_file(file_name, pretty_json)
       builds_batch.each(&:destroy)
     end
     builds_export
   end
 
-  def upload(file_name, content) # rubocop:disable Metrics/MethodLength
-    uploaded = false
+  def save_file(file_name, content) # rubocop:disable Metrics/MethodLength
+    saved = false
     begin
       unless File.directory?(@config.files_location)
         FileUtils.mkdir_p(@config.files_location)
@@ -74,12 +78,12 @@ class Backup
       File.open("#{@config.files_location}/#{file_name}", 'w') do |file|
         file.write(content)
         file.close
-        uploaded = true
+        saved = true
       end
     rescue => e
       print "Failed to save #{file_name}, error: #{e.inspect}\n"
     end
-    uploaded
+    saved
   end
 
   def export_builds(builds)

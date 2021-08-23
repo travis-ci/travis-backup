@@ -22,7 +22,7 @@ backup.run
 backup = Backup.new(
   if_backup: true,
   limit: 500,
-  delay: 12,
+  threshold: 12,
   files_location: './my_folder/dump',
   database_url: 'postgresql://postgres:pass@localhost:5432/my_db'
 )
@@ -48,11 +48,14 @@ One of the ways you can configure your export is a file `config/settinigs.yml` t
 backup:
   if_backup: true           # when false, removes data without saving it to file
   limit: 1000               # builds limit for one backup file
-  delay: 6                  # number of months from now - data younger than this time won't be backuped
+  threshold: 6                  # number of months from now - data younger than this time won't be backuped
   files_location: './dump'  # path of the folder in which backup files will be placed
+  user_id                   # run only for given user
+  org_id                    # run only for given organization
+  repo_id                   # run only for given repository
 ```
 
-You can also set these properties as hash arguments while creating `Backup` instance or use env vars corresponding to them: `IF_BACKUP`, `BACKUP_LIMIT`, `BACKUP_DELAY`, `FILES_LOCATION`.
+You can also set these properties as hash arguments while creating `Backup` instance or use env vars corresponding to them: `IF_BACKUP`, `BACKUP_LIMIT`, `BACKUP_DELAY`, `FILES_LOCATION`, `USER_ID`, `ORG_ID`, `REPO_ID`.
 
 You should also specify your database url. You can do this the standard way in `config/database.yml` file, setting the `database_url` hash argument while creating `Backup` instance or using the `DATABASE_URL` env var. Your database should be consistent with the Travis 2.2 database schema.
 
@@ -82,10 +85,17 @@ After cloning this repo you can also run it as a standalone app using
 bundle exec bin/run_backup
 ```
 
-or customize your run after opening the console:
+You can also pass arguments:
 
 ```
-bundle exec bin/console
+  first argument, no flag    # database url
+  -b, --if_backup            # when not present, removes data without saving it to file
+  -l, --limit LIMIT          # builds limit for one backup file
+  -t, --threshold MONTHS     # number of months from now - data younger than this time won't be backuped
+  -f, --files_location PATH  # path of the folder in which backup files will be placed
+  -u, --user_id ID           # run only for given user
+  -o, --org_id ID            # run only for given organization
+  -r, --repo_id ID           # run only for given repository
 ```
 
 ### Ruby version

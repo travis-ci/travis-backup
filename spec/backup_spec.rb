@@ -87,7 +87,7 @@ describe Backup do
     end
   
     let!(:config) { Config.new }
-    let(:datetime) { (config.delay + 1).months.ago.to_time.utc }
+    let(:datetime) { (config.threshold + 1).months.ago.to_time.utc }
     let(:org_id) { rand(100000) }
     let(:com_id) { rand(100000) }
     let(:private_org_id) { rand(100000) }
