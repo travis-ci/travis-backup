@@ -16,7 +16,7 @@ class Config
     )
     @dry_run = first_not_nil(
       args[:dry_run],
-      ENV['DRY_RUN'],
+      ENV['BACKUP_DRY_RUN'],
       config.dig('backup', 'dry_run'),
       false
     )
@@ -28,13 +28,13 @@ class Config
     )
     @threshold = first_not_nil(
       args[:threshold],
-      ENV['BACKUP_DELAY'],
+      ENV['BACKUP_THRESHOLD'],
       config.dig('backup', 'threshold'),
       6
     )
     @files_location = first_not_nil(
       args[:files_location],
-      ENV['BACKUP_FILES_LOCATION'],
+      ENV['BACKUP_BACKUP_FILES_LOCATION'],
       config.dig('backup', 'files_location'),
       './dump'
     )

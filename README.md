@@ -47,15 +47,16 @@ One of the ways you can configure your export is a file `config/settinigs.yml` t
 ```
 backup:
   if_backup: true           # when false, removes data without saving it to file
+  dry_run: false            # when true, only prints in console what data should be backuped and deleted
   limit: 1000               # builds limit for one backup file
-  threshold: 6                  # number of months from now - data younger than this time won't be backuped
+  threshold: 6              # number of months from now - data younger than this time won't be backuped
   files_location: './dump'  # path of the folder in which backup files will be placed
   user_id                   # run only for given user
   org_id                    # run only for given organization
   repo_id                   # run only for given repository
 ```
 
-You can also set these properties as hash arguments while creating `Backup` instance or use env vars corresponding to them: `IF_BACKUP`, `BACKUP_LIMIT`, `BACKUP_DELAY`, `FILES_LOCATION`, `USER_ID`, `ORG_ID`, `REPO_ID`.
+You can also set these properties as hash arguments while creating `Backup` instance or use env vars corresponding to them: `IF_BACKUP`, `BACKUP_DRY_RUN`, `BACKUP_LIMIT`, `BACKUP_THRESHOLD`, `BACKUP_FILES_LOCATION`, `USER_ID`, `ORG_ID`, `REPO_ID`.
 
 You should also specify your database url. You can do this the standard way in `config/database.yml` file, setting the `database_url` hash argument while creating `Backup` instance or using the `DATABASE_URL` env var. Your database should be consistent with the Travis 2.2 database schema.
 
