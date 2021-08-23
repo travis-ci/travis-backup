@@ -1,6 +1,6 @@
 $: << 'lib'
 require 'uri'
-require 'tci-backup'
+require 'travis-backup'
 require 'models/repository'
 require 'models/build'
 require 'models/job'

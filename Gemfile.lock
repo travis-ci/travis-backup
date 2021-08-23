@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tci-backup (0.0.1)
+    travis-backup (0.0.1)
       activerecord
       bootsnap
       pg
@@ -100,7 +100,7 @@ GEM
       mini_mime (>= 0.1.1)
     marcel (1.0.1)
     method_source (1.0.0)
-    mini_mime (1.1.0)
+    mini_mime (1.1.1)
     mini_portile2 (2.6.1)
     minitest (5.14.4)
     msgpack (1.4.2)
@@ -206,7 +206,7 @@ DEPENDENCIES
   rspec-rails
   rubocop (~> 0.75.1)
   rubocop-rspec
-  tci-backup!
+  travis-backup!
 
 BUNDLED WITH
    2.1.4

@@ -7,12 +7,12 @@ and exports them (optionally) to json files.
 
 You can install the gem using
 
-`gem install tci-backup`
+`gem install travis-backup`
 
 Next you can run it in your app like
 
 ```
-require 'tci-backup'
+require 'travis-backup'
 
 backup = Backup.new
 backup.run

@@ -2,7 +2,7 @@ namespace :backup do
   desc 'Backup all daily outdated build/job'
   task :cron do
     $: << 'lib'
-    require 'tci-backup'
+    require 'travis-backup'
 
     Backup.new.run
   end
