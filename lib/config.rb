@@ -2,7 +2,7 @@
 
 # Config for travis-backup
 class Config
-  attr_reader :if_backup, :limit, :threshold, :files_location, :database_url, :user_id, :repo_id, :org_id
+  attr_reader :if_backup, :dry_run, :limit, :threshold, :files_location, :database_url, :user_id, :repo_id, :org_id
 
   def initialize(args={}) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
     config = yaml_load('config/settings.yml')
@@ -13,6 +13,12 @@ class Config
       ENV['IF_BACKUP'],
       config.dig('backup', 'if_backup'),
       true
+    )
+    @dry_run = first_not_nil(
+      args[:dry_run],
+      ENV['DRY_RUN'],
+      config.dig('backup', 'dry_run'),
+      false
     )
     @limit = first_not_nil(
       args[:limit],

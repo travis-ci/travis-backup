@@ -7,7 +7,8 @@ require 'optparse'
 
 options = {}
 OptionParser.new do |opt|
-  opt.on('-b', '--if_backup') { |o| options[:if_backup] = o }
+  opt.on('-b', '--backup') { |o| options[:if_backup] = o }
+  opt.on('-d', '--dry_run') { |o| options[:dry_run] = o }
   opt.on('-l', '--limit X') { |o| options[:limit] = o.to_i }
   opt.on('-t', '--threshold X') { |o| options[:threshold] = o.to_i }
   opt.on('-f', '--files_location X') { |o| options[:files_location] = o }

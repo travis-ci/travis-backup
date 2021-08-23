@@ -51,31 +51,50 @@ class Backup
     repository.builds.where('created_at < ? and id != ?', threshold, current_build_id)
               .in_groups_of(@config.limit.to_i, false).map do |builds_batch|
       if builds_batch.count == @config.limit.to_i
-        @config.if_backup ? save_batch(builds_batch, repository) : builds_batch.each(&:destroy)
+        @config.if_backup ? save_and_destroy_batch(builds_batch, repository) : destroy_batch(builds_batch)
       end
     end.compact
   end
 
   private
 
-  def save_batch(builds_batch, repository)
+  def save_and_destroy_batch(builds_batch, repository)
     builds_export = export_builds(builds_batch)
     file_name = "repository_#{repository.id}_builds_#{builds_batch.first.id}-#{builds_batch.last.id}.json"
     pretty_json = JSON.pretty_generate(builds_export)
     if save_file(file_name, pretty_json)
-      builds_batch.each(&:destroy)
+      destroy_batch(builds_batch)
     end
     builds_export
   end
 
+  def destroy_batch(builds_batch)
+    return destroy_batch_dry(builds_batch) if @config.dry_run
+
+    builds_batch.each(&:destroy)
+  end
+
+  def destroy_batch_dry(builds_batch)
+    puts 'Dry mode: this code would destroy the following data in normal mode:'
+    puts ' - builds: ' + builds_batch.map(&:id).to_json
+
+    jobs = builds_batch.map do |build|
+      build.jobs.map(&:id) || []
+    end.flatten.to_json
+
+    puts " - jobs: #{jobs}"
+  end
+
   def save_file(file_name, content) # rubocop:disable Metrics/MethodLength
+    return save_file_dry(file_name, content) if @config.dry_run
+
     saved = false
     begin
       unless File.directory?(@config.files_location)
         FileUtils.mkdir_p(@config.files_location)
       end
 
-      File.open("#{@config.files_location}/#{file_name}", 'w') do |file|
+      File.open(file_path(file_name), 'w') do |file|
         file.write(content)
         file.close
         saved = true
@@ -84,6 +103,17 @@ class Backup
       print "Failed to save #{file_name}, error: #{e.inspect}\n"
     end
     saved
+  end
+
+  def file_path(file_name)
+    "#{@config.files_location}/#{file_name}"
+  end
+
+  def save_file_dry(file_name, content)
+    puts 'Dry mode: this code would generate the following files in normal mode:'
+    puts "\n#{file_path(file_name)}:\n\n"
+    puts content
+    return true
   end
 
   def export_builds(builds)

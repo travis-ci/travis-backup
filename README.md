@@ -89,13 +89,18 @@ You can also pass arguments:
 
 ```
   first argument, no flag    # database url
-  -b, --if_backup            # when not present, removes data without saving it to file
+  -b, --backup               # when not present, removes data without saving it to file
+  -d, --dry_run              # only prints in console what data will be backuped and deleted
   -l, --limit LIMIT          # builds limit for one backup file
   -t, --threshold MONTHS     # number of months from now - data younger than this time won't be backuped
   -f, --files_location PATH  # path of the folder in which backup files will be placed
   -u, --user_id ID           # run only for given user
   -o, --org_id ID            # run only for given organization
   -r, --repo_id ID           # run only for given repository
+
+  # example:
+
+  bundle exec bin/run_backup 'postgres://user:pass@localhost:5432/my_db' -b
 ```
 
 ### Ruby version

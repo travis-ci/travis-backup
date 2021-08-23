@@ -335,5 +335,30 @@ describe Backup do
 
       it_behaves_like 'removing builds and jobs in batches'
     end
+
+    context 'when dry_run config is set to true' do
+      let!(:backup) { Backup.new(files_location: files_location, limit: 2, dry_run: true) }
+
+      before do
+        allow_any_instance_of(IO).to receive(:puts)
+      end
+
+      it 'should not save JSON to file' do
+        expect(File).not_to receive(:open)
+        backup.process_repo(repository)
+      end
+
+      it 'should not delete builds' do
+        expect {
+          backup.process_repo(repository)
+        }.not_to change { Build.all.size }
+      end
+
+      it 'should not delete jobs' do
+        expect {
+          backup.process_repo(repository)
+        }.not_to change { Job.all.size }
+      end
+    end
   end
 end
