@@ -83,7 +83,7 @@ To make tests working properly you should also ensure the database connection st
 After cloning this repo you can also run it as a standalone app using
 
 ```
-bundle exec bin/run_backup
+bundle exec bin/travis_backup
 ```
 
 You can also pass arguments:
@@ -101,7 +101,7 @@ You can also pass arguments:
 
   # example:
 
-  bundle exec bin/run_backup 'postgres://user:pass@localhost:5432/my_db' -b
+  bundle exec bin/travis_backup 'postgres://user:pass@localhost:5432/my_db' -b
 ```
 
 ### Ruby version
