@@ -7,6 +7,7 @@ Gem::Specification.new do |s|
   s.files                 = Dir.chdir(File.expand_path('..', __FILE__)) do
     `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   end
+  s.executables           = Dir.glob('bin/*').map { |f| File.basename(f) }
   s.require_paths         = ["lib"]
   s.license               = 'Beerware'
 
