@@ -11,6 +11,7 @@ require 'pry'
 
 describe Backup do
   before(:all) do
+    ARGV = []
     system("psql '#{Config.new.database_url}' -f db/schema.sql > /dev/null")
   end
 
@@ -99,6 +100,15 @@ describe Backup do
         updated_at: datetime
       )
     }
+    let!(:repository2) {
+      FactoryBot.create(
+        :repository_with_builds,
+        created_at: datetime,
+        updated_at: datetime,
+        builds_count: 1
+      )
+    }
+
 
     let!(:exported_object) {
       [[
@@ -281,10 +291,10 @@ describe Backup do
       ]]
     }
 
-    shared_context 'removing builds and jobs in batches' do
-      it 'should delete builds fitting to batches' do
+    shared_context 'removing builds and jobs' do
+      it 'should delete all builds of the repository' do
         backup.process_repo(repository)
-        expect(Build.all.size).to eq(1)
+        expect(Build.all.map(&:repository_id)).to eq([repository2.id])
       end
 
       it 'should delete all jobs of removed builds and leave the rest' do
@@ -312,7 +322,7 @@ describe Backup do
         backup.process_repo(repository)
       end
 
-      it_behaves_like 'removing builds and jobs in batches'
+      it_behaves_like 'removing builds and jobs'
 
       context 'when path with nonexistent folders is given' do
         let(:random_files_location) { "dump/tests/#{rand(100000)}" }
@@ -333,7 +343,7 @@ describe Backup do
         backup.process_repo(repository)
       end
 
-      it_behaves_like 'removing builds and jobs in batches'
+      it_behaves_like 'removing builds and jobs'
     end
 
     context 'when dry_run config is set to true' do

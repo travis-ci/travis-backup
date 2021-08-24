@@ -38,7 +38,7 @@ FactoryBot.define do
   factory :repository do
     factory :repository_with_builds do
       transient do
-        builds_count { 3 }
+        builds_count { 2 }
       end
       after(:create) do |repository, evaluator|
         create_list(

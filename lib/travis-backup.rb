@@ -9,6 +9,11 @@ require 'models/repository'
 class Backup
   def initialize(config_args={})
     @config = Config.new(config_args)
+
+    if @config.dry_run
+      @dry_run_removed = {builds: [], jobs: []}
+    end
+
     connect_db
   end
 
@@ -43,6 +48,12 @@ class Backup
         process_repo(repository)
       end
     end
+
+    if @config.dry_run
+      puts 'Dry run active. The following data would be removed in normal mode:'
+      puts " - builds: #{@dry_run_removed[:builds].to_json}"
+      puts " - jobs: #{@dry_run_removed[:jobs].to_json}"
+    end
   end
 
   def process_repo(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
@@ -50,9 +61,7 @@ class Backup
     current_build_id = repository.current_build_id || -1
     repository.builds.where('created_at < ? and id != ?', threshold, current_build_id)
               .in_groups_of(@config.limit.to_i, false).map do |builds_batch|
-      if builds_batch.count == @config.limit.to_i
-        @config.if_backup ? save_and_destroy_batch(builds_batch, repository) : destroy_batch(builds_batch)
-      end
+      @config.if_backup ? save_and_destroy_batch(builds_batch, repository) : destroy_batch(builds_batch)
     end.compact
   end
 
@@ -75,18 +84,15 @@ class Backup
   end
 
   def destroy_batch_dry(builds_batch)
-    puts 'Dry mode: this code would destroy the following data in normal mode:'
-    puts ' - builds: ' + builds_batch.map(&:id).to_json
-
+    @dry_run_removed[:builds].concat(builds_batch.map(&:id))
     jobs = builds_batch.map do |build|
       build.jobs.map(&:id) || []
-    end.flatten.to_json
-
-    puts " - jobs: #{jobs}"
+    end.flatten
+    @dry_run_removed[:jobs].concat(jobs)
   end
 
   def save_file(file_name, content) # rubocop:disable Metrics/MethodLength
-    return save_file_dry(file_name, content) if @config.dry_run
+    return true if @config.dry_run
 
     saved = false
     begin
@@ -107,13 +113,6 @@ class Backup
 
   def file_path(file_name)
     "#{@config.files_location}/#{file_name}"
-  end
-
-  def save_file_dry(file_name, content)
-    puts 'Dry mode: this code would generate the following files in normal mode:'
-    puts "\n#{file_path(file_name)}:\n\n"
-    puts content
-    return true
   end
 
   def export_builds(builds)
