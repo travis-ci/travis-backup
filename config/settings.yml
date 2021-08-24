@@ -3,7 +3,5 @@ backup:
   if_backup: true
   # builds limit for one backup file
   limit: 1000
-  # number of months from now - data younger than this time won't be backuped
-  threshold: 6
   # path of the folder in which backup files will be placed
   files_location: './dump'

@@ -33,8 +33,7 @@ class Config
       args[:threshold],
       argv_opts[:threshold],
       ENV['BACKUP_THRESHOLD'],
-      config.dig('backup', 'threshold'),
-      6
+      config.dig('backup', 'threshold')
     )
     @files_location = first_not_nil(
       args[:files_location],
@@ -67,6 +66,11 @@ class Config
       ENV['ORG_ID'],
       config.dig('backup', 'org_id')
     )
+    if !@threshold
+      raise 'Please provide the threshold argument. Data younger than it will be omitted.' +
+        "Threshold defines number of months from now. It can be set like:\n\n"+
+        "  $ bin/travis_backup --threshold 6\n"
+    end
   end
 
   def argv_options
