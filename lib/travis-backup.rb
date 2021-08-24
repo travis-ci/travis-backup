@@ -18,13 +18,7 @@ class Backup
   end
 
   def connect_db
-    begin
-      ActiveRecord::Base.establish_connection(@config.database_url)
-    rescue ActiveRecord::AdapterNotSpecified => e
-      abort "\nPlease provide proper database URL. Example usage:\n" +
-        "\n  $ bin/travis_backup 'postgres://my_database_url' --threshold 6\n" +
-        "\nYou can also set it using environment variables or config/database.yml file.\n"
-    end
+    ActiveRecord::Base.establish_connection(@config.database_url)
   end
 
   def run(args={})

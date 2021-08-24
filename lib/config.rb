@@ -5,6 +5,11 @@ class Config
   attr_reader :if_backup, :dry_run, :limit, :threshold, :files_location, :database_url, :user_id, :repo_id, :org_id
 
   def initialize(args={}) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
+    set_values(args)
+    check_values
+  end
+
+  def set_values(args)
     config = yaml_load('config/settings.yml')
     connection_details = yaml_load('config/database.yml')
     argv_opts = argv_options
@@ -66,12 +71,25 @@ class Config
       ENV['ORG_ID'],
       config.dig('backup', 'org_id')
     )
+  end
+
+  def check_values
     if !@threshold
-      abort "\nPlease provide the threshold argument. Data younger than it will be omitted. " +
-        "Threshold defines number of months from now. Example usage:\n"+
-        "\n  $ bin/travis_backup 'postgres://my_database_url' --threshold 6\n" +
-        "\nYou can also set it using environment variables or config/database.yml file.\n"
+      message = abort_message("Please provide the threshold argument. Data younger than it will be omitted. " +
+        "Threshold defines number of months from now.")
+      abort message
     end
+
+    if !@database_url
+      message = abort_message("Please provide proper database URL.")
+      abort message
+    end
+  end
+
+  def abort_message(intro)
+    "\n#{intro} Example usage:\n"+
+    "\n  $ bin/travis_backup 'postgres://my_database_url' --threshold 6\n" +
+    "\nYou can also set it using environment variables or config/database.yml file.\n"
   end
 
   def argv_options
