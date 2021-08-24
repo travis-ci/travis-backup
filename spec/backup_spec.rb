@@ -11,7 +11,7 @@ require 'pry'
 
 describe Backup do
   before(:all) do
-    ARGV = []
+    ARGV = ['-t', '6']
     system("psql '#{Config.new.database_url}' -f db/schema.sql > /dev/null")
   end
 

@@ -74,6 +74,7 @@ class Config
   end
 
   def argv_options
+    argv_copy = ARGV.clone
     options = {}
     OptionParser.new do |opt|
       opt.on('-b', '--backup') { |o| options[:if_backup] = o }
@@ -86,7 +87,10 @@ class Config
       opt.on('-o', '--org_id X') { |o| options[:org_id] = o.to_i }
     end.parse!
 
-    options[:database_url] = ARGV[0] if ARGV[0]
+    options[:database_url] = ARGV.shift if ARGV[0]
+    argv_copy.each do |arg|
+      ARGV.push(arg)
+    end
     options
   end
 
