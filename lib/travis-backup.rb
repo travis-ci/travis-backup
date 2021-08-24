@@ -21,9 +21,9 @@ class Backup
     begin
       ActiveRecord::Base.establish_connection(@config.database_url)
     rescue ActiveRecord::AdapterNotSpecified => e
-      raise "Please provide proper database URL. You can set it as first argument running the application:\n" +
-        "\n  $ bin/travis_backup 'postgres://my_database_url'\n" +
-        "\nor setting it using environment variables or config/database.yml file.\n"
+      abort "\nPlease provide proper database URL. Example usage:\n" +
+        "\n  $ bin/travis_backup 'postgres://my_database_url' --threshold 6\n" +
+        "\nYou can also set it using environment variables or config/database.yml file.\n"
     end
   end
 

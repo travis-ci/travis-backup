@@ -67,9 +67,10 @@ class Config
       config.dig('backup', 'org_id')
     )
     if !@threshold
-      raise 'Please provide the threshold argument. Data younger than it will be omitted.' +
-        "Threshold defines number of months from now. It can be set like:\n\n"+
-        "  $ bin/travis_backup --threshold 6\n"
+      abort "\nPlease provide the threshold argument. Data younger than it will be omitted. " +
+        "Threshold defines number of months from now. Example usage:\n"+
+        "\n  $ bin/travis_backup 'postgres://my_database_url' --threshold 6\n" +
+        "\nYou can also set it using environment variables or config/database.yml file.\n"
     end
   end
 
