@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    travis-backup (0.0.1)
+    travis-backup (0.0.2)
       activerecord
       bootsnap
       pg
