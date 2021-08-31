@@ -12,11 +12,58 @@ require 'pry'
 describe Backup do
   before(:all) do
     ARGV = ['-t', '6']
-    system("psql '#{Config.new.database_url}' -f db/schema.sql > /dev/null")
+    config = Config.new
+    system("psql '#{config.database_url}' -f db/schema.sql > /dev/null")
+    system("psql '#{config.destination_db_url}' -f db/schema.sql > /dev/null") if config.destination_db_url
   end
 
   let(:files_location) { "dump/tests" }
-  let!(:backup) { Backup.new(files_location: files_location, limit: 2) }
+  let!(:backup) { Backup.new(files_location: files_location, limit: 5) }
+
+  describe 'move_logs' do
+    let!(:logs) {
+      (1..10).to_a.map do
+        FactoryBot.create(:log)    
+      end
+    }
+
+    def connect_db(url)
+      ActiveRecord::Base.establish_connection(url)
+    end
+
+    def do_in_destination_db(config)
+      connect_db(config.destination_db_url)
+      result = yield
+      connect_db(config.database_url)
+      result
+    end
+
+    it 'copies logs to destination database' do
+      def destination_logs_size
+        do_in_destination_db(backup.config) do
+          Log.all.size
+        end
+      end
+
+      source_db_logs = Log.all.as_json
+
+      expect {
+        backup.move_logs
+      }.to change { destination_logs_size }.by 10
+
+      destination_db_logs = do_in_destination_db(backup.config) do
+        Log.all.as_json
+      end
+
+      expect(destination_db_logs).to eql(source_db_logs)
+    end
+
+    it 'removes copied logs from source database' do
+      expect {
+        backup.move_logs
+      }.to change { Log.all.size }.by -10
+    end
+  end
 
   describe 'run' do
     let!(:unassigned_repositories) {
@@ -45,6 +92,7 @@ describe Backup do
         backup.run
       end
     end
+
     context 'when user_id is given' do
       it 'processes only the repositories of the given user' do
         processed_repos_ids = []
@@ -58,6 +106,7 @@ describe Backup do
         expect(processed_repos_ids).to match_array(user_repos_ids)
       end
     end
+
     context 'when org_id is given' do
       it 'processes only the repositories of the given organization' do
         processed_repos_ids = []
@@ -71,11 +120,28 @@ describe Backup do
         expect(processed_repos_ids).to match_array(organization_repos_ids)
       end
     end
+
     context 'when repo_id is given' do
       it 'processes only the repository with the given id' do
         repo = Repository.first
         expect(backup).to receive(:process_repo).once.with(repo)
         backup.run(repo_id: repo.id)
+      end
+    end
+
+    context 'when move logs mode is on' do
+      let!(:backup) { Backup.new(files_location: files_location, limit: 5, move_logs: true) }
+
+      it 'does not process repositories' do
+        repo = Repository.first
+        expect(backup).not_to receive(:process_repo)
+        backup.run
+      end
+
+      it 'moves logs' do
+        repo = Repository.first
+        expect(backup).to receive(:move_logs).once
+        backup.run
       end
     end
   end

@@ -4,9 +4,12 @@ require 'active_support/core_ext/array'
 require 'active_support/time'
 require 'config'
 require 'models/repository'
+require 'models/log'
 
 # main travis-backup class
 class Backup
+  attr_accessor :config
+
   def initialize(config_args={})
     @config = Config.new(config_args)
 
@@ -17,11 +20,13 @@ class Backup
     connect_db
   end
 
-  def connect_db
-    ActiveRecord::Base.establish_connection(@config.database_url)
+  def connect_db(url=@config.database_url)
+    ActiveRecord::Base.establish_connection(url)
   end
 
   def run(args={})
+    return move_logs if @config.move_logs
+
     user_id = args[:user_id] || @config.user_id
     repo_id = args[:repo_id] || @config.repo_id
     org_id = args[:org_id] || @config.org_id
@@ -53,6 +58,23 @@ class Backup
       puts 'Dry run active. The following data would be removed in normal mode:'
       puts " - builds: #{@dry_run_removed[:builds].to_json}"
       puts " - jobs: #{@dry_run_removed[:jobs].to_json}"
+    end
+  end
+
+  def move_logs
+    connect_db(@config.database_url)
+    Log.order(:id).in_groups_of(@config.limit.to_i, false).map do |logs_batch|
+      log_hashes = logs_batch.as_json
+      connect_db(@config.destination_db_url)
+
+      log_hashes.each do |log_hash|
+        new_log = Log.new(log_hash)
+        new_log.save!
+      end
+
+      connect_db(@config.database_url)
+
+      logs_batch.each(&:destroy)
     end
   end
 

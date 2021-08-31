@@ -2,7 +2,17 @@
 require 'optparse'
 
 class Config
-  attr_reader :if_backup, :dry_run, :limit, :threshold, :files_location, :database_url, :user_id, :repo_id, :org_id
+  attr_reader :if_backup,
+    :dry_run,
+    :limit,
+    :threshold,
+    :files_location,
+    :database_url,
+    :user_id,
+    :repo_id,
+    :org_id,
+    :move_logs,
+    :destination_db_url
 
   def initialize(args={}) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
     set_values(args)
@@ -43,7 +53,7 @@ class Config
     @files_location = first_not_nil(
       args[:files_location],
       argv_opts[:files_location],
-      ENV['BACKUP_BACKUP_FILES_LOCATION'],
+      ENV['BACKUP_FILES_LOCATION'],
       config.dig('backup', 'files_location'),
       './dump'
     )
@@ -71,6 +81,19 @@ class Config
       ENV['ORG_ID'],
       config.dig('backup', 'org_id')
     )
+    @move_logs = first_not_nil(
+      args[:move_logs],
+      argv_opts[:move_logs],
+      ENV['BACKUP_MOVE_LOGS'],
+      config.dig('backup', 'move_logs'),
+      false
+    )
+    @destination_db_url = first_not_nil(
+      args[:destination_db_url],
+      argv_opts[:destination_db_url],
+      ENV['BACKUP_DESTINATION_DB_URL'],
+      config.dig('backup', 'destination_db_url')
+    )
   end
 
   def check_values
@@ -84,6 +107,14 @@ class Config
       message = abort_message("Please provide proper database URL.")
       abort message
     end
+
+    if (@move_logs && !@destination_db_url)
+      abort "\nFor moving logs you need to specify your destination database. Example usage:\n" +
+      "\n  $ bin/travis_backup 'postgres://source_url' --move_logs --destination_db_url 'postgres://destination_url'\n" +
+      "\nor using in code:\n" +
+      "\n  Backup.new(database_url: 'postgres://source_url', destination_db_url: 'postgres://destination_url', move_logs: true)\n" +
+      "\nYou can also set it using environment variables or configuration files.\n"  
+    end
   end
 
   def abort_message(intro)
@@ -91,7 +122,7 @@ class Config
     "\n  $ bin/travis_backup 'postgres://my_database_url' --threshold 6\n" +
     "\nor using in code:\n" +
     "\n  Backup.new(database_url: 'postgres://my_database_url', threshold: 6)\n" +
-    "\nYou can also set it using environment variables or config/database.yml file.\n"
+    "\nYou can also set it using environment variables or configuration files.\n"
   end
 
   def argv_options
@@ -106,6 +137,8 @@ class Config
       opt.on('-u', '--user_id X') { |o| options[:user_id] = o.to_i }
       opt.on('-r', '--repo_id X') { |o| options[:repo_id] = o.to_i }
       opt.on('-o', '--org_id X') { |o| options[:org_id] = o.to_i }
+      opt.on('--move_logs') { |o| options[:move_logs] = o }
+      opt.on('--destination_db_url X') { |o| options[:destination_db_url] = o }
     end.parse!
 
     options[:database_url] = ARGV.shift if ARGV[0]
