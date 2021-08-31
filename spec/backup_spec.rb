@@ -65,6 +65,37 @@ describe Backup do
     end
   end
 
+  describe 'remove_orphans' do
+    let!(:repositories) {
+      4000.times do
+        FactoryBot.create(:repository)
+      end
+    }
+    let!(:orphan_repositories) {
+      ActiveRecord::Base.connection.execute('alter table repositories disable trigger all;')
+      4000.times do
+        FactoryBot.create(
+          :repository,
+          current_build_id: 2000000
+        )
+      end
+      ActiveRecord::Base.connection.execute('alter table repositories enable trigger all;')
+    }
+    let!(:builds) {
+      4000.times do
+        FactoryBot.create(:build)
+      end
+    }
+    it 'removes orphaned repositories' do
+      expect {
+        start = Time.now
+        backup.remove_orphans
+        removing_time = Time.now - start
+        puts removing_time
+      }.to change { Repository.all.size }.by -4000
+    end
+  end
+
   describe 'run' do
     let!(:unassigned_repositories) {
       (1..3).to_a.map do

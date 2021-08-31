@@ -78,6 +78,13 @@ class Backup
     end
   end
 
+  def remove_orphans
+    repositories = Repository.find_by_sql(
+      'select * from repositories where current_build_id is not null and current_build_id not in (select id from builds);'
+    )
+    repositories.each(&:delete)
+  end
+
   def process_repo(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     threshold = @config.threshold.to_i.months.ago.to_datetime
     current_build_id = repository.current_build_id || -1
