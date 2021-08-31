@@ -31,3 +31,6 @@ before_script:
   - psql -c 'CREATE DATABASE travis_test;' -U postgres
   - psql -t -c "SELECT 1 FROM pg_roles WHERE rolname='travis'" -U postgres | grep 1 || psql -c 'CREATE ROLE travis SUPERUSER LOGIN CREATEDB;' -U postgres
   - psql -f db/schema.sql -v ON_ERROR_STOP=1 travis_test
+  - psql -c 'CREATE DATABASE travis_test_destination;' -U postgres
+  - psql -t -c "SELECT 1 FROM pg_roles WHERE rolname='travis'" -U postgres | grep 1 || psql -c 'CREATE ROLE travis SUPERUSER LOGIN CREATEDB;' -U postgres
+  - psql -f db/schema.sql -v ON_ERROR_STOP=1 travis_test_destination

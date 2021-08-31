@@ -92,7 +92,7 @@ class Config
       args[:destination_db_url],
       argv_opts[:destination_db_url],
       ENV['BACKUP_DESTINATION_DB_URL'],
-      config.dig('backup', 'destination_db_url')
+      connection_details.dig(ENV['RAILS_ENV'], 'destination')
     )
   end
 
