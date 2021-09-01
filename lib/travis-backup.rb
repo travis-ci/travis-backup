@@ -79,9 +79,15 @@ class Backup
   end
 
   def remove_orphans
-    repositories = Repository.find_by_sql(
-      "select r.* from repositories r left join builds b on r.current_build_id = b.id where (r.current_build_id is not null) and (b.id is null);"
-    )
+    repositories = Repository.find_by_sql(%{
+      select r.*
+      from repositories r
+      left join builds b
+      on r.current_build_id = b.id
+      where
+        r.current_build_id is not null
+        and b.id is null;
+    })
     for_delete = repositories.map(&:id)
     Repository.where(id: for_delete).delete_all
   end
