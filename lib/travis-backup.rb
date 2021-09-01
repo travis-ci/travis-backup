@@ -86,34 +86,6 @@ class Backup
     Repository.where(id: for_delete).delete_all
   end
 
-  def remove_orphans2
-    build_ids = {}
-    Build.pluck(:id).each do |id|
-      build_ids[id] = true
-    end
-
-    repositories = Repository.find_by_sql(
-      "select * from repositories where current_build_id is not null;"
-    )
-    for_delete = []
-    repositories.each do |repo|
-      for_delete.push(repo.id) if !build_ids[repo.current_build_id]
-    end
-    Repository.where(id: for_delete).delete_all
-  end
-
-  def remove_orphans3
-    repositories = Repository.find_by_sql(
-      "select * from repositories where current_build_id is not null and current_build_id not in (select id from builds);"
-    )
-    for_delete = repositories.map(&:id)
-    Repository.where(id: for_delete).delete_all
-  end
-
-  def remove_orphans4
-    ActiveRecord::Base.connection.execute("delete from repositories where current_build_id is not null and current_build_id not in (select id from builds);")
-  end
-
   def process_repo(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     threshold = @config.threshold.to_i.months.ago.to_datetime
     current_build_id = repository.current_build_id || -1
