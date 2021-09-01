@@ -50,6 +50,10 @@ FactoryBot.define do
         )
       end
     end
+
+    factory :orphan_repository do
+      current_build_id { 2_000_000_000 }
+    end
   end
 
   factory :build do

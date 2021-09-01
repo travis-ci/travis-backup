@@ -67,32 +67,52 @@ describe Backup do
 
   describe 'remove_orphans' do
     let!(:repositories) {
-      4000.times do
-        FactoryBot.create(:repository)
-      end
+      FactoryBot.create_list(:repository, 100_000)
+    }
+    let!(:repositories_with_builds) {
+      FactoryBot.create_list(:repository_with_builds, 100_000)
     }
     let!(:orphan_repositories) {
       ActiveRecord::Base.connection.execute('alter table repositories disable trigger all;')
-      4000.times do
-        FactoryBot.create(
-          :repository,
-          current_build_id: 2000000
-        )
-      end
+      FactoryBot.create_list(:orphan_repository, 10000)
       ActiveRecord::Base.connection.execute('alter table repositories enable trigger all;')
-    }
-    let!(:builds) {
-      4000.times do
-        FactoryBot.create(:build)
-      end
     }
     it 'removes orphaned repositories' do
       expect {
         start = Time.now
         backup.remove_orphans
         removing_time = Time.now - start
+        puts 1
         puts removing_time
-      }.to change { Repository.all.size }.by -4000
+
+        ActiveRecord::Base.connection.execute('alter table repositories disable trigger all;')
+        FactoryBot.create_list(:orphan_repository, 10000)
+        ActiveRecord::Base.connection.execute('alter table repositories enable trigger all;')
+        start = Time.now
+        backup.remove_orphans2
+        removing_time = Time.now - start
+        puts 2
+        puts removing_time
+
+        ActiveRecord::Base.connection.execute('alter table repositories disable trigger all;')
+        FactoryBot.create_list(:orphan_repository, 10000)
+        ActiveRecord::Base.connection.execute('alter table repositories enable trigger all;')
+        start = Time.now
+        backup.remove_orphans3
+        removing_time = Time.now - start
+        puts 3
+        puts removing_time
+
+        ActiveRecord::Base.connection.execute('alter table repositories disable trigger all;')
+        FactoryBot.create_list(:orphan_repository, 10000)
+        ActiveRecord::Base.connection.execute('alter table repositories enable trigger all;')
+        start = Time.now
+        backup.remove_orphans4
+        removing_time = Time.now - start
+        puts 4
+        puts removing_time
+
+      }.to change { Repository.all.size }.by -10000
     end
   end
 
