@@ -10,7 +10,7 @@ FactoryBot.define do
       end
       after(:create) do |organization, evaluator|
         create_list(
-          :repository,
+          :repository_with_builds,
           evaluator.repos_count,
           owner_id: organization.id,
           owner_type: 'Organization'
@@ -26,7 +26,7 @@ FactoryBot.define do
       end
       after(:create) do |user, evaluator|
         create_list(
-          :repository,
+          :repository_with_builds,
           evaluator.repos_count,
           owner_id: user.id,
           owner_type: 'User'
@@ -59,7 +59,7 @@ FactoryBot.define do
       end
       after(:create) do |build, evaluator|
         create_list(
-          :job,
+          :job_with_logs,
           evaluator.jobs_count,
           repository: build.repository,
           source_type: 'Build',
@@ -71,13 +71,26 @@ FactoryBot.define do
     end
   end
 
-  factory :job
-
-  factory :log do
-    job_id { 1 }
-    content { 'some log content' }
-    removed_by { 1 }
-    archiving { false }
-    archive_verified { true }
+  factory :job do
+    factory :job_with_logs do
+      transient do
+        logs_count { 2 }
+      end
+      after(:create) do |job, evaluator|
+        create_list(
+          :log,
+          evaluator.logs_count,
+          job_id: job.id,
+          content: 'some log content',
+          removed_by: nil,
+          archiving: false,
+          archive_verified: true,
+          created_at: job.created_at,
+          updated_at: job.updated_at
+        )
+      end
+    end
   end
+
+  factory :log
 end

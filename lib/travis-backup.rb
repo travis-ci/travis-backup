@@ -9,12 +9,13 @@ require 'models/log'
 # main travis-backup class
 class Backup
   attr_accessor :config
+  attr_reader :dry_run_removed
 
   def initialize(config_args={})
     @config = Config.new(config_args)
 
     if @config.dry_run
-      @dry_run_removed = {builds: [], jobs: []}
+      @dry_run_removed = {builds: [], jobs: [], logs: []}
     end
 
     connect_db
@@ -58,6 +59,7 @@ class Backup
       puts 'Dry run active. The following data would be removed in normal mode:'
       puts " - builds: #{@dry_run_removed[:builds].to_json}"
       puts " - jobs: #{@dry_run_removed[:jobs].to_json}"
+      puts " - logs: #{@dry_run_removed[:logs].to_json}"
     end
   end
 
@@ -107,10 +109,20 @@ class Backup
 
   def destroy_batch_dry(builds_batch)
     @dry_run_removed[:builds].concat(builds_batch.map(&:id))
+
     jobs = builds_batch.map do |build|
       build.jobs.map(&:id) || []
     end.flatten
+
     @dry_run_removed[:jobs].concat(jobs)
+
+    logs = builds_batch.map do |build|
+      build.jobs.map do |job|
+        job.logs.map(&:id) || []
+      end.flatten || []
+    end.flatten
+
+    @dry_run_removed[:logs].concat(logs)
   end
 
   def save_file(file_name, content) # rubocop:disable Metrics/MethodLength
@@ -149,8 +161,17 @@ class Backup
   def export_jobs(jobs)
     jobs.map do |job|
       job_export = job.attributes
+      job_export[:logs] = export_logs(job.logs)
 
       job_export
+    end
+  end
+
+  def export_logs(logs)
+    logs.map do |log|
+      log_export = log.attributes
+
+      log_export
     end
   end
 end

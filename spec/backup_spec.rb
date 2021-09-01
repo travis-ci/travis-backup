@@ -17,14 +17,27 @@ describe Backup do
     system("psql '#{config.destination_db_url}' -f db/schema.sql > /dev/null") if config.destination_db_url
   end
 
+  after(:each) do
+    Repository.destroy_all
+    Build.destroy_all
+    Job.destroy_all
+    Log.destroy_all
+  end
+
   let(:files_location) { "dump/tests" }
   let!(:backup) { Backup.new(files_location: files_location, limit: 5) }
 
   describe 'move_logs' do
     let!(:logs) {
-      (1..10).to_a.map do
-        FactoryBot.create(:log)    
-      end
+      FactoryBot.create_list(
+        :log,
+        10,
+        job_id: 1,
+        content: 'some log content',
+        removed_by: 1,
+        archiving: false,
+        archive_verified: true
+      )    
     }
 
     def connect_db(url)
@@ -67,9 +80,7 @@ describe Backup do
 
   describe 'run' do
     let!(:unassigned_repositories) {
-      (1..3).to_a.map do
-        FactoryBot.create(:repository)    
-      end
+      FactoryBot.create_list(:repository, 3)
     }
     let!(:user1) {
       FactoryBot.create(:user_with_repos)
@@ -144,15 +155,25 @@ describe Backup do
         backup.run
       end
     end
+
+    context 'when dry run mode is on' do
+      let!(:backup) { Backup.new(files_location: files_location, limit: 10, dry_run: true, threshold: 0) }
+
+      before do
+        allow_any_instance_of(IO).to receive(:puts)
+      end
+
+      it 'prepares proper dry run report' do
+        backup.run
+        expect(backup.dry_run_removed[:builds].size).to eql 24
+        expect(backup.dry_run_removed[:jobs].size).to eql 48
+        expect(backup.dry_run_removed[:logs].size).to eql 96
+      end
+    end
+
   end
 
-  describe 'process_repo' do
-    after(:each) do
-      Repository.destroy_all
-      Build.destroy_all
-      Job.destroy_all
-    end
-  
+  describe 'process_repo' do  
     let!(:config) { Config.new }
     let(:datetime) { (config.threshold + 1).months.ago.to_time.utc }
     let(:org_id) { rand(100000) }
@@ -179,179 +200,299 @@ describe Backup do
     let!(:exported_object) {
       [[
         {
-          "id"=>repository.builds.first.id,
-          "repository_id"=>repository.id,
-          "number"=>nil,
-          "started_at"=>nil,
-          "finished_at"=>nil,
-          "created_at"=>datetime,
-          "updated_at"=>datetime,
-          "config"=>nil,
-          "commit_id"=>nil,
-          "request_id"=>nil,
-          "state"=>nil,
-          "duration"=>nil,
-          "owner_id"=>nil,
-          "owner_type"=>nil,
-          "event_type"=>nil,
-          "previous_state"=>nil,
-          "pull_request_title"=>nil,
-          "pull_request_number"=>nil,
-          "branch"=>nil,
-          "canceled_at"=>nil,
-          "cached_matrix_ids"=>nil,
-          "received_at"=>nil,
-          "private"=>nil,
-          "pull_request_id"=>nil,
-          "branch_id"=>nil,
-          "tag_id"=>nil,
-          "sender_id"=>nil,
-          "sender_type"=>nil,
-          :jobs=>[{
-            "id"=>repository.builds.first.jobs.first.id,
-            "repository_id"=>repository.id,
-            "commit_id"=>nil,
-            "source_id"=>repository.builds.first.id,
-            "source_type"=>"Build",
-            "queue"=>nil,
-            "type"=>nil,
-            "state"=>nil,
-            "number"=>nil,
-            "config"=>nil,
-            "worker"=>nil,
-            "started_at"=>nil,
-            "finished_at"=>nil,
-            "created_at"=>datetime,
-            "updated_at"=>datetime,
-            "tags"=>nil,
-            "allow_failure"=>false,
-            "owner_id"=>nil,
-            "owner_type"=>nil,
-            "result"=>nil,
-            "queued_at"=>nil,
-            "canceled_at"=>nil,
-            "received_at"=>nil,
-            "debug_options"=>nil,
-            "private"=>nil,
-            "stage_number"=>nil,
-            "stage_id"=>nil
+          "id": repository.builds.first.id,
+          "repository_id": repository.id,
+          "number": nil,
+          "started_at": nil,
+          "finished_at": nil,
+          "created_at": datetime,
+          "updated_at": datetime,
+          "config": nil,
+          "commit_id": nil,
+          "request_id": nil,
+          "state": nil,
+          "duration": nil,
+          "owner_id": nil,
+          "owner_type": nil,
+          "event_type": nil,
+          "previous_state": nil,
+          "pull_request_title": nil,
+          "pull_request_number": nil,
+          "branch": nil,
+          "canceled_at": nil,
+          "cached_matrix_ids": nil,
+          "received_at": nil,
+          "private": nil,
+          "pull_request_id": nil,
+          "branch_id": nil,
+          "tag_id": nil,
+          "sender_id": nil,
+          "sender_type": nil,
+          "jobs": [{
+            "id": repository.builds.first.jobs.first.id,
+            "repository_id": repository.id,
+            "commit_id": nil,
+            "source_id": repository.builds.first.id,
+            "source_type": "Build",
+            "queue": nil,
+            "type": nil,
+            "state": nil,
+            "number": nil,
+            "config": nil,
+            "worker": nil,
+            "started_at": nil,
+            "finished_at": nil,
+            "created_at": datetime,
+            "updated_at": datetime,
+            "tags": nil,
+            "allow_failure": false,
+            "owner_id": nil,
+            "owner_type": nil,
+            "result": nil,
+            "queued_at": nil,
+            "canceled_at": nil,
+            "received_at": nil,
+            "debug_options": nil,
+            "private": nil,
+            "stage_number": nil,
+            "stage_id": nil,
+            "logs": [
+              {
+                "id": repository.builds.first.jobs.first.logs.first.id,
+                "job_id": repository.builds.first.jobs.first.id,
+                "content": "some log content",
+                "removed_by": nil,
+                "created_at": datetime,
+                "updated_at": datetime,
+                "aggregated_at": nil,
+                "archived_at": nil,
+                "purged_at": nil,
+                "removed_at": nil,
+                "archiving": false,
+                "archive_verified": true
+              },
+              {
+                "id": repository.builds.first.jobs.first.logs.second.id,
+                "job_id": repository.builds.first.jobs.first.id,
+                "content": "some log content",
+                "removed_by": nil,
+                "created_at": datetime,
+                "updated_at": datetime,
+                "aggregated_at": nil,
+                "archived_at": nil,
+                "purged_at": nil,
+                "removed_at": nil,
+                "archiving": false,
+                "archive_verified": true
+              }
+            ]
           },
           {
-            "id"=>repository.builds.first.jobs.second.id,
-            "repository_id"=>repository.id,
-            "commit_id"=>nil,
-            "source_id"=>repository.builds.first.id,
-            "source_type"=>"Build",
-            "queue"=>nil,
-            "type"=>nil,
-            "state"=>nil,
-            "number"=>nil,
-            "config"=>nil,
-            "worker"=>nil,
-            "started_at"=>nil,
-            "finished_at"=>nil,
-            "created_at"=>datetime,
-            "updated_at"=>datetime,
-            "tags"=>nil,
-            "allow_failure"=>false,
-            "owner_id"=>nil,
-            "owner_type"=>nil,
-            "result"=>nil,
-            "queued_at"=>nil,
-            "canceled_at"=>nil,
-            "received_at"=>nil,
-            "debug_options"=>nil,
-            "private"=>nil,
-            "stage_number"=>nil,
-            "stage_id"=>nil
+            "id": repository.builds.first.jobs.second.id,
+            "repository_id": repository.id,
+            "commit_id": nil,
+            "source_id": repository.builds.first.id,
+            "source_type": "Build",
+            "queue": nil,
+            "type": nil,
+            "state": nil,
+            "number": nil,
+            "config": nil,
+            "worker": nil,
+            "started_at": nil,
+            "finished_at": nil,
+            "created_at": datetime,
+            "updated_at": datetime,
+            "tags": nil,
+            "allow_failure": false,
+            "owner_id": nil,
+            "owner_type": nil,
+            "result": nil,
+            "queued_at": nil,
+            "canceled_at": nil,
+            "received_at": nil,
+            "debug_options": nil,
+            "private": nil,
+            "stage_number": nil,
+            "stage_id": nil,
+            "logs": [
+              {
+                "id": repository.builds.first.jobs.second.logs.first.id,
+                "job_id": repository.builds.first.jobs.second.id,
+                "content": "some log content",
+                "removed_by": nil,
+                "created_at": datetime,
+                "updated_at": datetime,
+                "aggregated_at": nil,
+                "archived_at": nil,
+                "purged_at": nil,
+                "removed_at": nil,
+                "archiving": false,
+                "archive_verified": true
+              },
+              {
+                "id": repository.builds.first.jobs.second.logs.second.id,
+                "job_id": repository.builds.first.jobs.second.id,
+                "content": "some log content",
+                "removed_by": nil,
+                "created_at": datetime,
+                "updated_at": datetime,
+                "aggregated_at": nil,
+                "archived_at": nil,
+                "purged_at": nil,
+                "removed_at": nil,
+                "archiving": false,
+                "archive_verified": true
+              }
+            ]
           }]
         },
         {
-          "id"=>repository.builds.second.id,
-          "repository_id"=>repository.id,
-          "number"=>nil,
-          "started_at"=>nil,
-          "finished_at"=>nil,
-          "created_at"=>datetime,
-          "updated_at"=>datetime,
-          "config"=>nil,
-          "commit_id"=>nil,
-          "request_id"=>nil,
-          "state"=>nil,
-          "duration"=>nil,
-          "owner_id"=>nil,
-          "owner_type"=>nil,
-          "event_type"=>nil,
-          "previous_state"=>nil,
-          "pull_request_title"=>nil,
-          "pull_request_number"=>nil,
-          "branch"=>nil,
-          "canceled_at"=>nil,
-          "cached_matrix_ids"=>nil,
-          "received_at"=>nil,
-          "private"=>nil,
-          "pull_request_id"=>nil,
-          "branch_id"=>nil,
-          "tag_id"=>nil,
-          "sender_id"=>nil,
-          "sender_type"=>nil,
-          :jobs=>[{
-            "id"=>repository.builds.second.jobs.first.id,
-            "repository_id"=>repository.id,
-            "commit_id"=>nil,
-            "source_id"=>repository.builds.second.id,
-            "source_type"=>"Build",
-            "queue"=>nil,
-            "type"=>nil,
-            "state"=>nil,
-            "number"=>nil,
-            "config"=>nil,
-            "worker"=>nil,
-            "started_at"=>nil,
-            "finished_at"=>nil,
-            "created_at"=>datetime,
-            "updated_at"=>datetime,
-            "tags"=>nil,
-            "allow_failure"=>false,
-            "owner_id"=>nil,
-            "owner_type"=>nil,
-            "result"=>nil,
-            "queued_at"=>nil,
-            "canceled_at"=>nil,
-            "received_at"=>nil,
-            "debug_options"=>nil,
-            "private"=>nil,
-            "stage_number"=>nil,
-            "stage_id"=>nil
+          "id": repository.builds.second.id,
+          "repository_id": repository.id,
+          "number": nil,
+          "started_at": nil,
+          "finished_at": nil,
+          "created_at": datetime,
+          "updated_at": datetime,
+          "config": nil,
+          "commit_id": nil,
+          "request_id": nil,
+          "state": nil,
+          "duration": nil,
+          "owner_id": nil,
+          "owner_type": nil,
+          "event_type": nil,
+          "previous_state": nil,
+          "pull_request_title": nil,
+          "pull_request_number": nil,
+          "branch": nil,
+          "canceled_at": nil,
+          "cached_matrix_ids": nil,
+          "received_at": nil,
+          "private": nil,
+          "pull_request_id": nil,
+          "branch_id": nil,
+          "tag_id": nil,
+          "sender_id": nil,
+          "sender_type": nil,
+          "jobs": [{
+            "id": repository.builds.second.jobs.first.id,
+            "repository_id": repository.id,
+            "commit_id": nil,
+            "source_id": repository.builds.second.id,
+            "source_type": "Build",
+            "queue": nil,
+            "type": nil,
+            "state": nil,
+            "number": nil,
+            "config": nil,
+            "worker": nil,
+            "started_at": nil,
+            "finished_at": nil,
+            "created_at": datetime,
+            "updated_at": datetime,
+            "tags": nil,
+            "allow_failure": false,
+            "owner_id": nil,
+            "owner_type": nil,
+            "result": nil,
+            "queued_at": nil,
+            "canceled_at": nil,
+            "received_at": nil,
+            "debug_options": nil,
+            "private": nil,
+            "stage_number": nil,
+            "stage_id": nil,
+            "logs": [
+              {
+                "id": repository.builds.second.jobs.first.logs.first.id,
+                "job_id": repository.builds.second.jobs.first.id,
+                "content": "some log content",
+                "removed_by": nil,
+                "created_at": datetime,
+                "updated_at": datetime,
+                "aggregated_at": nil,
+                "archived_at": nil,
+                "purged_at": nil,
+                "removed_at": nil,
+                "archiving": false,
+                "archive_verified": true
+              },
+              {
+                "id": repository.builds.second.jobs.first.logs.second.id,
+                "job_id": repository.builds.second.jobs.first.id,
+                "content": "some log content",
+                "removed_by": nil,
+                "created_at": datetime,
+                "updated_at": datetime,
+                "aggregated_at": nil,
+                "archived_at": nil,
+                "purged_at": nil,
+                "removed_at": nil,
+                "archiving": false,
+                "archive_verified": true
+              }
+            ]
           },
           {
-            "id"=>repository.builds.second.jobs.second.id,
-            "repository_id"=>repository.id,
-            "commit_id"=>nil,
-            "source_id"=>repository.builds.second.id,
-            "source_type"=>"Build",
-            "queue"=>nil,
-            "type"=>nil,
-            "state"=>nil,
-            "number"=>nil,
-            "config"=>nil,
-            "worker"=>nil,
-            "started_at"=>nil,
-            "finished_at"=>nil,
-            "created_at"=>datetime,
-            "updated_at"=>datetime,
-            "tags"=>nil,
-            "allow_failure"=>false,
-            "owner_id"=>nil,
-            "owner_type"=>nil,
-            "result"=>nil,
-            "queued_at"=>nil,
-            "canceled_at"=>nil,
-            "received_at"=>nil,
-            "debug_options"=>nil,
-            "private"=>nil,
-            "stage_number"=>nil,
-            "stage_id"=>nil
+            "id": repository.builds.second.jobs.second.id,
+            "repository_id": repository.id,
+            "commit_id": nil,
+            "source_id": repository.builds.second.id,
+            "source_type": "Build",
+            "queue": nil,
+            "type": nil,
+            "state": nil,
+            "number": nil,
+            "config": nil,
+            "worker": nil,
+            "started_at": nil,
+            "finished_at": nil,
+            "created_at": datetime,
+            "updated_at": datetime,
+            "tags": nil,
+            "allow_failure": false,
+            "owner_id": nil,
+            "owner_type": nil,
+            "result": nil,
+            "queued_at": nil,
+            "canceled_at": nil,
+            "received_at": nil,
+            "debug_options": nil,
+            "private": nil,
+            "stage_number": nil,
+            "stage_id": nil,
+            "logs": [
+              {
+                "id": repository.builds.second.jobs.second.logs.first.id,
+                "job_id": repository.builds.second.jobs.second.id,
+                "content": "some log content",
+                "removed_by": nil,
+                "created_at": datetime,
+                "updated_at": datetime,
+                "aggregated_at": nil,
+                "archived_at": nil,
+                "purged_at": nil,
+                "removed_at": nil,
+                "archiving": false,
+                "archive_verified": true
+              },
+              {
+                "id": repository.builds.second.jobs.second.logs.second.id,
+                "job_id": repository.builds.second.jobs.second.id,
+                "content": "some log content",
+                "removed_by": nil,
+                "created_at": datetime,
+                "updated_at": datetime,
+                "aggregated_at": nil,
+                "archived_at": nil,
+                "purged_at": nil,
+                "removed_at": nil,
+                "archiving": false,
+                "archive_verified": true
+              }
+            ]
           }]
         }
       ]]
@@ -364,23 +505,43 @@ describe Backup do
       end
 
       it 'should delete all jobs of removed builds and leave the rest' do
-        backup.process_repo(repository)
+        expect {
+          backup.process_repo(repository)
+        }.to change { Job.all.size }.by -4
+
         build_id = Build.first.id
         expect(Job.all.map(&:source_id)).to eq([build_id, build_id])
+      end
+
+      it 'should delete all logs of removed jobs and leave the rest' do
+        expect {
+          backup.process_repo(repository)
+        }.to change { Log.all.size }.by -8
+
+        build_id = Build.first.id
+        expect(Log.all.map(&:job).map(&:source_id)).to eq(Array.new(4, build_id))
       end
     end
 
     context 'when if_backup config is set to true' do
       it 'should prepare proper JSON export' do
-        build_export = backup.process_repo(repository)
-        build_export.first.first['updated_at'] = datetime
-        build_export.first.second['updated_at'] = datetime
-        build_export.first.first[:jobs].first['updated_at'] = datetime
-        build_export.first.first[:jobs].second['updated_at'] = datetime
-        build_export.first.second[:jobs].first['updated_at'] = datetime
-        build_export.first.second[:jobs].second['updated_at'] = datetime
+        result = backup.process_repo(repository)
+        result.first.first['updated_at'] = datetime
+        result.first.second['updated_at'] = datetime
+        result.first.first[:jobs].first['updated_at'] = datetime
+        result.first.first[:jobs].second['updated_at'] = datetime
+        result.first.second[:jobs].first['updated_at'] = datetime
+        result.first.second[:jobs].second['updated_at'] = datetime
+        result.first.first[:jobs].first[:logs].first['updated_at'] = datetime
+        result.first.first[:jobs].first[:logs].second['updated_at'] = datetime
+        result.first.first[:jobs].second[:logs].first['updated_at'] = datetime
+        result.first.first[:jobs].second[:logs].second['updated_at'] = datetime
+        result.first.second[:jobs].first[:logs].first['updated_at'] = datetime
+        result.first.second[:jobs].first[:logs].second['updated_at'] = datetime
+        result.first.second[:jobs].second[:logs].first['updated_at'] = datetime
+        result.first.second[:jobs].second[:logs].second['updated_at'] = datetime
 
-        expect(build_export.to_json).to eq(exported_object.to_json)
+        expect(result.to_json).to eq(exported_object.to_json)
       end
 
       it 'should save JSON to file at proper path' do
@@ -414,10 +575,6 @@ describe Backup do
 
     context 'when dry_run config is set to true' do
       let!(:backup) { Backup.new(files_location: files_location, limit: 2, dry_run: true) }
-
-      before do
-        allow_any_instance_of(IO).to receive(:puts)
-      end
 
       it 'should not save JSON to file' do
         expect(File).not_to receive(:open)
