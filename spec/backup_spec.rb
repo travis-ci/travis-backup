@@ -206,7 +206,7 @@ describe Backup do
     end
 
     let!(:unassigned_repositories) {
-      FactoryBot.create_list(:repository, 3)
+      FactoryBot.create_list(:repository_with_requests, 3)
     }
     let!(:user1) {
       FactoryBot.create(:user_with_repos)
@@ -303,12 +303,28 @@ describe Backup do
 
       it 'prepares proper dry run report' do
         backup.run
-        expect(backup.dry_run_removed[:builds].size).to eql 24
-        expect(backup.dry_run_removed[:jobs].size).to eql 48
-        expect(backup.dry_run_removed[:logs].size).to eql 96
+        expect(backup.dry_run_report[:builds].size).to eql 24
+        expect(backup.dry_run_report[:jobs].size).to eql 48
+        expect(backup.dry_run_report[:logs].size).to eql 96
+        expect(backup.dry_run_report[:requests].size).to eql 6
       end
     end
+  end
 
+  describe 'process_repo' do
+    let!(:repository) {
+      FactoryBot.create(:repository)
+    }
+
+    it 'processes repository builds' do
+      expect(backup).to receive(:process_repo_builds).once.with(repository)
+      backup.process_repo(repository)
+    end
+
+    it 'processes repository requests' do
+      expect(backup).to receive(:process_repo_requests).once.with(repository)
+      backup.process_repo(repository)
+    end
   end
 
   describe 'process_repo_builds' do
@@ -319,12 +335,7 @@ describe Backup do
       Log.destroy_all
     end
 
-    let!(:config) { Config.new }
-    let(:datetime) { (config.threshold + 1).months.ago.to_time.utc }
-    let(:org_id) { rand(100000) }
-    let(:com_id) { rand(100000) }
-    let(:private_org_id) { rand(100000) }
-    let(:private_com_id) { rand(100000) }
+    let(:datetime) { (Config.new.threshold + 1).months.ago.to_time.utc }
     let!(:repository) {
       FactoryBot.create(
         :repository_with_builds_jobs_and_logs,
@@ -439,6 +450,107 @@ describe Backup do
         expect {
           backup.process_repo_builds(repository)
         }.not_to change { Job.all.size }
+      end
+    end
+  end
+
+  describe 'process_repo_requests' do  
+    let!(:config) { Config.new }
+    let(:datetime) { (config.threshold + 1).months.ago.to_time.utc }
+    let(:org_id) { rand(100000) }
+    let(:com_id) { rand(100000) }
+    let(:private_org_id) { rand(100000) }
+    let(:private_com_id) { rand(100000) }
+    let!(:repository) {
+      FactoryBot.create(
+        :repository_with_requests,
+        created_at: datetime,
+        updated_at: datetime
+      )
+    }
+    let!(:repository2) {
+      FactoryBot.create(
+        :repository_with_requests,
+        created_at: datetime,
+        updated_at: datetime,
+        requests_count: 1
+      )
+    }
+
+
+    let!(:expected_requests_json) {
+      ExpectedFiles.new(repository, datetime).requests_json
+    }
+
+    shared_context 'removing requests' do
+      it 'should delete all builds of the repository' do
+        backup.process_repo_requests(repository)
+        expect(Request.all.map(&:repository_id)).to eq([repository2.id])
+      end
+    end
+
+    context 'when if_backup config is set to true' do
+      it 'should prepare proper JSON export' do
+        result = backup.process_repo_requests(repository)
+        # result.first.first['updated_at'] = datetime
+        # result.first.second['updated_at'] = datetime
+        # result.first.first[:jobs].first['updated_at'] = datetime
+        # result.first.first[:jobs].second['updated_at'] = datetime
+        # result.first.second[:jobs].first['updated_at'] = datetime
+        # result.first.second[:jobs].second['updated_at'] = datetime
+        # result.first.first[:jobs].first[:logs].first['updated_at'] = datetime
+        # result.first.first[:jobs].first[:logs].second['updated_at'] = datetime
+        # result.first.first[:jobs].second[:logs].first['updated_at'] = datetime
+        # result.first.first[:jobs].second[:logs].second['updated_at'] = datetime
+        # result.first.second[:jobs].first[:logs].first['updated_at'] = datetime
+        # result.first.second[:jobs].first[:logs].second['updated_at'] = datetime
+        # result.first.second[:jobs].second[:logs].first['updated_at'] = datetime
+        # result.first.second[:jobs].second[:logs].second['updated_at'] = datetime
+
+        expect(result.to_json).to eq(expected_requests_json.to_json)
+      end
+
+      it 'should save JSON to file at proper path' do
+        expect(File).to receive(:open).once.with(Regexp.new(files_location), 'w')
+        backup.process_repo_requests(repository)
+      end
+
+      it_behaves_like 'removing requests'
+
+      context 'when path with nonexistent folders is given' do
+        let(:random_files_location) { "dump/tests/#{rand(100000)}" }
+        let!(:backup) { Backup.new(files_location: random_files_location, limit: 2) }
+
+        it 'should create needed folders' do
+          expect(FileUtils).to receive(:mkdir_p).once.with(random_files_location).and_call_original
+          backup.process_repo_requests(repository)
+        end
+      end
+    end
+
+    context 'when if_backup config is set to false' do
+      let!(:backup) { Backup.new(files_location: files_location, limit: 2, if_backup: false) }
+
+      it 'should not save JSON to file' do
+        expect(File).not_to receive(:open)
+        backup.process_repo_requests(repository)
+      end
+
+      it_behaves_like 'removing requests'
+    end
+
+    context 'when dry_run config is set to true' do
+      let!(:backup) { Backup.new(files_location: files_location, limit: 2, dry_run: true) }
+
+      it 'should not save JSON to file' do
+        expect(File).not_to receive(:open)
+        backup.process_repo_requests(repository)
+      end
+
+      it 'should not delete requests' do
+        expect {
+          backup.process_repo_requests(repository)
+        }.not_to change { Request.all.size }
       end
     end
   end

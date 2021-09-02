@@ -304,4 +304,65 @@ class ExpectedFiles
       }
     ]]
   end
+
+  def requests_json
+    [[
+      {
+        "id": @repository.requests.first.id,
+        "repository_id": @repository.id,
+        "commit_id": nil,
+        "state": nil,
+        "source": nil,
+        "payload": nil,
+        "token": nil,
+        "config": nil,
+        "started_at": nil,
+        "finished_at": nil,
+        "created_at": @datetime,
+        "updated_at": @datetime,
+        "event_type": nil,
+        "comments_url": nil,
+        "base_commit": nil,
+        "head_commit": nil,
+        "owner_id": nil,
+        "owner_type": nil,
+        "result": nil,
+        "message": nil,
+        "private": nil,
+        "pull_request_id": nil,
+        "branch_id": nil,
+        "tag_id": nil,
+        "sender_id": nil,
+        "sender_type": nil
+      },
+      {
+        "id": @repository.requests.second.id,
+        "repository_id": @repository.id,
+        "commit_id": nil,
+        "state": nil,
+        "source": nil,
+        "payload": nil,
+        "token": nil,
+        "config": nil,
+        "started_at": nil,
+        "finished_at": nil,
+        "created_at": @datetime,
+        "updated_at": @datetime,
+        "event_type": nil,
+        "comments_url": nil,
+        "base_commit": nil,
+        "head_commit": nil,
+        "owner_id": nil,
+        "owner_type": nil,
+        "result": nil,
+        "message": nil,
+        "private": nil,
+        "pull_request_id": nil,
+        "branch_id": nil,
+        "tag_id": nil,
+        "sender_id": nil,
+        "sender_type": nil
+      }
+    ]]
+  end
 end

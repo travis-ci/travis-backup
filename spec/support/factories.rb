@@ -81,7 +81,24 @@ FactoryBot.define do
     factory :repository_with_last_build_id do
       last_build_id { Build.first.id }
     end
+
+    factory :repository_with_requests do
+      transient do
+        requests_count { 2 }
+      end
+      after(:create) do |repository, evaluator|
+        create_list(
+          :request,
+          evaluator.requests_count,
+          repository: repository,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+      end
+    end
   end
+
+  factory :request
 
   factory :build do
     factory :build_with_jobs_and_logs do

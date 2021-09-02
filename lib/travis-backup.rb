@@ -17,13 +17,13 @@ require 'models/stage'
 # main travis-backup class
 class Backup
   attr_accessor :config
-  attr_reader :dry_run_removed
+  attr_reader :dry_run_report
 
   def initialize(config_args={})
     @config = Config.new(config_args)
 
     if @config.dry_run
-      @dry_run_removed = {builds: [], jobs: [], logs: []}
+      @dry_run_report = {builds: [], jobs: [], logs: [], requests: []}
     end
 
     connect_db
@@ -47,29 +47,52 @@ class Backup
     elsif org_id
       owner_id = org_id
       owner_type = 'Organization'
-    elsif repo_id
-      repo_id = repo_id
     end
 
     if owner_id
       Repository.where('owner_id = ? and owner_type = ?', owner_id, owner_type).order(:id).each do |repository|
-        process_repo_builds(repository)
+        process_repo(repository)
       end
     elsif repo_id
       repository = Repository.find(repo_id)
-      process_repo_builds(repository)
+      process_repo(repository)
     else
       Repository.order(:id).each do |repository|
-        process_repo_builds(repository)
+        process_repo(repository)
       end
     end
 
-    if @config.dry_run
-      puts 'Dry run active. The following data would be removed in normal mode:'
-      puts " - builds: #{@dry_run_removed[:builds].to_json}"
-      puts " - jobs: #{@dry_run_removed[:jobs].to_json}"
-      puts " - logs: #{@dry_run_removed[:logs].to_json}"
-    end
+    print_dry_run_report if @config.dry_run
+  end
+
+  def print_dry_run_report
+    puts 'Dry run active. The following data would be removed in normal mode:'
+    puts " - builds: #{@dry_run_report[:builds].to_json}"
+    puts " - jobs: #{@dry_run_report[:jobs].to_json}"
+    puts " - logs: #{@dry_run_report[:logs].to_json}"
+    puts " - requests: #{@dry_run_report[:requests].to_json}"
+  end
+
+  def process_repo(repository)
+    process_repo_builds(repository)
+    process_repo_requests(repository)
+  end
+
+  def process_repo_builds(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    threshold = @config.threshold.to_i.months.ago.to_datetime
+    current_build_id = repository.current_build_id || -1
+    repository.builds.where('created_at < ? and id != ?', threshold, current_build_id)
+              .in_groups_of(@config.limit.to_i, false).map do |builds_batch|
+      @config.if_backup ? save_and_destroy_builds_batch(builds_batch, repository) : destroy_builds_batch(builds_batch)
+    end.compact
+  end
+
+  def process_repo_requests(repository)
+    threshold = @config.threshold.to_i.months.ago.to_datetime
+    repository.requests.where('created_at < ?', threshold)
+              .in_groups_of(@config.limit.to_i, false).map do |requests_batch|
+      @config.if_backup ? save_and_destroy_requests_batch(requests_batch, repository) : destroy_requests_batch(requests_batch)
+    end.compact
   end
 
   def move_logs
@@ -89,6 +112,7 @@ class Backup
     end
   end
 
+<<<<<<< HEAD
   def remove_orphans
     remove_orphans_for_table(Repository, 'repositories', 'builds', 'current_build_id')
     remove_orphans_for_table(Repository, 'repositories', 'builds', 'last_build_id')
@@ -140,6 +164,8 @@ class Backup
     end.compact
   end
 
+=======
+>>>>>>> processing requests
   private
 
   def save_and_destroy_builds_batch(builds_batch, repository)
@@ -159,13 +185,13 @@ class Backup
   end
 
   def destroy_builds_batch_dry(builds_batch)
-    @dry_run_removed[:builds].concat(builds_batch.map(&:id))
+    @dry_run_report[:builds].concat(builds_batch.map(&:id))
 
     jobs = builds_batch.map do |build|
       build.jobs.map(&:id) || []
     end.flatten
 
-    @dry_run_removed[:jobs].concat(jobs)
+    @dry_run_report[:jobs].concat(jobs)
 
     logs = builds_batch.map do |build|
       build.jobs.map do |job|
@@ -173,7 +199,27 @@ class Backup
       end.flatten || []
     end.flatten
 
-    @dry_run_removed[:logs].concat(logs)
+    @dry_run_report[:logs].concat(logs)
+  end
+
+  def save_and_destroy_requests_batch(requests_batch, repository)
+    requests_export = export_requests(requests_batch)
+    file_name = "repository_#{repository.id}_requests_#{requests_batch.first.id}-#{requests_batch.last.id}.json"
+    pretty_json = JSON.pretty_generate(requests_export)
+    if save_file(file_name, pretty_json)
+      destroy_requests_batch(requests_batch)
+    end
+    requests_export
+  end
+
+  def destroy_requests_batch(requests_batch)
+    return destroy_requests_batch_dry(requests_batch) if @config.dry_run
+
+    requests_batch.each(&:destroy)
+  end
+
+  def destroy_requests_batch_dry(requests_batch)
+    @dry_run_report[:requests].concat(requests_batch.map(&:id))
   end
 
   def save_file(file_name, content) # rubocop:disable Metrics/MethodLength
@@ -220,9 +266,13 @@ class Backup
 
   def export_logs(logs)
     logs.map do |log|
-      log_export = log.attributes
+      log.attributes
+    end
+  end
 
-      log_export
+  def export_requests(requests)
+    requests.map do |request|
+      request.attributes
     end
   end
 end
