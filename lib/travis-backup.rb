@@ -53,14 +53,14 @@ class Backup
 
     if owner_id
       Repository.where('owner_id = ? and owner_type = ?', owner_id, owner_type).order(:id).each do |repository|
-        process_repo(repository)
+        process_repo_builds(repository)
       end
     elsif repo_id
       repository = Repository.find(repo_id)
-      process_repo(repository)
+      process_repo_builds(repository)
     else
       Repository.order(:id).each do |repository|
-        process_repo(repository)
+        process_repo_builds(repository)
       end
     end
 
@@ -131,34 +131,34 @@ class Backup
     model_class.where(id: for_delete.map(&:id)).delete_all
   end
 
-  def process_repo(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def process_repo_builds(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     threshold = @config.threshold.to_i.months.ago.to_datetime
     current_build_id = repository.current_build_id || -1
     repository.builds.where('created_at < ? and id != ?', threshold, current_build_id)
               .in_groups_of(@config.limit.to_i, false).map do |builds_batch|
-      @config.if_backup ? save_and_destroy_batch(builds_batch, repository) : destroy_batch(builds_batch)
+      @config.if_backup ? save_and_destroy_builds_batch(builds_batch, repository) : destroy_builds_batch(builds_batch)
     end.compact
   end
 
   private
 
-  def save_and_destroy_batch(builds_batch, repository)
+  def save_and_destroy_builds_batch(builds_batch, repository)
     builds_export = export_builds(builds_batch)
     file_name = "repository_#{repository.id}_builds_#{builds_batch.first.id}-#{builds_batch.last.id}.json"
     pretty_json = JSON.pretty_generate(builds_export)
     if save_file(file_name, pretty_json)
-      destroy_batch(builds_batch)
+      destroy_builds_batch(builds_batch)
     end
     builds_export
   end
 
-  def destroy_batch(builds_batch)
-    return destroy_batch_dry(builds_batch) if @config.dry_run
+  def destroy_builds_batch(builds_batch)
+    return destroy_builds_batch_dry(builds_batch) if @config.dry_run
 
     builds_batch.each(&:destroy)
   end
 
-  def destroy_batch_dry(builds_batch)
+  def destroy_builds_batch_dry(builds_batch)
     @dry_run_removed[:builds].concat(builds_batch.map(&:id))
 
     jobs = builds_batch.map do |build|
