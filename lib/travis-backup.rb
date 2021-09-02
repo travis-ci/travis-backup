@@ -112,7 +112,6 @@ class Backup
     end
   end
 
-<<<<<<< HEAD
   def remove_orphans
     remove_orphans_for_table(Repository, 'repositories', 'builds', 'current_build_id')
     remove_orphans_for_table(Repository, 'repositories', 'builds', 'last_build_id')
@@ -164,8 +163,6 @@ class Backup
     end.compact
   end
 
-=======
->>>>>>> processing requests
   private
 
   def save_and_destroy_builds_batch(builds_batch, repository)

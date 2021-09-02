@@ -308,6 +308,11 @@ describe Backup do
         expect(backup.dry_run_report[:logs].size).to eql 96
         expect(backup.dry_run_report[:requests].size).to eql 6
       end
+
+      it 'prints dry run report' do
+        expect(backup).to receive(:print_dry_run_report).once
+        backup.run
+      end
     end
   end
 
@@ -382,6 +387,13 @@ describe Backup do
       end
     end
 
+    shared_context 'not saving JSON to file' do
+      it 'should not save JSON to file' do
+        expect(File).not_to receive(:open)
+        backup.process_repo_builds(repository)
+      end
+    end
+
     context 'when if_backup config is set to true' do
       it 'should prepare proper JSON export' do
         result = backup.process_repo_builds(repository)
@@ -424,21 +436,14 @@ describe Backup do
     context 'when if_backup config is set to false' do
       let!(:backup) { Backup.new(files_location: files_location, limit: 2, if_backup: false) }
 
-      it 'should not save JSON to file' do
-        expect(File).not_to receive(:open)
-        backup.process_repo_builds(repository)
-      end
-
+      it_behaves_like 'not saving JSON to file'
       it_behaves_like 'removing builds and jobs'
     end
 
     context 'when dry_run config is set to true' do
       let!(:backup) { Backup.new(files_location: files_location, limit: 2, dry_run: true) }
 
-      it 'should not save JSON to file' do
-        expect(File).not_to receive(:open)
-        backup.process_repo_builds(repository)
-      end
+      it_behaves_like 'not saving JSON to file'
 
       it 'should not delete builds' do
         expect {
@@ -455,12 +460,7 @@ describe Backup do
   end
 
   describe 'process_repo_requests' do  
-    let!(:config) { Config.new }
-    let(:datetime) { (config.threshold + 1).months.ago.to_time.utc }
-    let(:org_id) { rand(100000) }
-    let(:com_id) { rand(100000) }
-    let(:private_org_id) { rand(100000) }
-    let(:private_com_id) { rand(100000) }
+    let(:datetime) { (Config.new.threshold + 1).months.ago.to_time.utc }
     let!(:repository) {
       FactoryBot.create(
         :repository_with_requests,
@@ -489,24 +489,16 @@ describe Backup do
       end
     end
 
+    shared_context 'not saving JSON to file' do
+      it 'should not save JSON to file' do
+        expect(File).not_to receive(:open)
+        backup.process_repo_requests(repository)
+      end
+    end
+
     context 'when if_backup config is set to true' do
       it 'should prepare proper JSON export' do
         result = backup.process_repo_requests(repository)
-        # result.first.first['updated_at'] = datetime
-        # result.first.second['updated_at'] = datetime
-        # result.first.first[:jobs].first['updated_at'] = datetime
-        # result.first.first[:jobs].second['updated_at'] = datetime
-        # result.first.second[:jobs].first['updated_at'] = datetime
-        # result.first.second[:jobs].second['updated_at'] = datetime
-        # result.first.first[:jobs].first[:logs].first['updated_at'] = datetime
-        # result.first.first[:jobs].first[:logs].second['updated_at'] = datetime
-        # result.first.first[:jobs].second[:logs].first['updated_at'] = datetime
-        # result.first.first[:jobs].second[:logs].second['updated_at'] = datetime
-        # result.first.second[:jobs].first[:logs].first['updated_at'] = datetime
-        # result.first.second[:jobs].first[:logs].second['updated_at'] = datetime
-        # result.first.second[:jobs].second[:logs].first['updated_at'] = datetime
-        # result.first.second[:jobs].second[:logs].second['updated_at'] = datetime
-
         expect(result.to_json).to eq(expected_requests_json.to_json)
       end
 
@@ -531,21 +523,14 @@ describe Backup do
     context 'when if_backup config is set to false' do
       let!(:backup) { Backup.new(files_location: files_location, limit: 2, if_backup: false) }
 
-      it 'should not save JSON to file' do
-        expect(File).not_to receive(:open)
-        backup.process_repo_requests(repository)
-      end
-
+      it_behaves_like 'not saving JSON to file'
       it_behaves_like 'removing requests'
     end
 
     context 'when dry_run config is set to true' do
       let!(:backup) { Backup.new(files_location: files_location, limit: 2, dry_run: true) }
 
-      it 'should not save JSON to file' do
-        expect(File).not_to receive(:open)
-        backup.process_repo_requests(repository)
-      end
+      it_behaves_like 'not saving JSON to file'
 
       it 'should not delete requests' do
         expect {
