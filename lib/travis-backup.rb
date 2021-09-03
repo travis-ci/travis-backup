@@ -34,6 +34,7 @@ class Backup
 
   def run(args={})
     return move_logs if @config.move_logs
+    return remove_orphans if @config.remove_orphans
 
     user_id = args[:user_id] || @config.user_id
     repo_id = args[:repo_id] || @config.repo_id

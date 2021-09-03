@@ -66,7 +66,7 @@ FactoryBot.define do
       end
     end
 
-    factory :orphan_repository_on_current_build_id do
+    factory :repository_orphaned_on_current_build_id do
       current_build_id { 2_000_000_000 }
     end
 
@@ -74,7 +74,7 @@ FactoryBot.define do
       current_build_id { Build.first.id }
     end
 
-    factory :orphan_repository_on_last_build_id do
+    factory :repository_orphaned_on_last_build_id do
       last_build_id { 2_000_000_000 }
     end
 
@@ -101,7 +101,7 @@ FactoryBot.define do
       end
     end
 
-    factory :orphan_build_on_repository_id do
+    factory :build_orphaned_on_repository_id do
       repository_id { 2_000_000_000 }
     end
 
@@ -109,7 +109,7 @@ FactoryBot.define do
       repository_id { Repository.first.id }
     end
 
-    factory :orphan_build_on_commit_id do
+    factory :build_orphaned_on_commit_id do
       commit_id { 2_000_000_000 }
     end
 
@@ -117,7 +117,7 @@ FactoryBot.define do
       commit_id { Commit.first.id }
     end
 
-    factory :orphan_build_on_request_id do
+    factory :build_orphaned_on_request_id do
       request_id { 2_000_000_000 }
     end
 
@@ -125,7 +125,7 @@ FactoryBot.define do
       request_id { Request.first.id }
     end
 
-    factory :orphan_build_on_pull_request_id do
+    factory :build_orphaned_on_pull_request_id do
       pull_request_id { 2_000_000_000 }
     end
 
@@ -133,7 +133,7 @@ FactoryBot.define do
       pull_request_id { PullRequest.first.id }
     end
 
-    factory :orphan_build_on_branch_id do
+    factory :build_orphaned_on_branch_id do
       branch_id { 2_000_000_000 }
     end
 
@@ -141,7 +141,7 @@ FactoryBot.define do
       branch_id { Branch.first.id }
     end
 
-    factory :orphan_build_on_tag_id do
+    factory :build_orphaned_on_tag_id do
       tag_id { 2_000_000_000 }
     end
 
@@ -151,7 +151,7 @@ FactoryBot.define do
   end
 
   factory :job do
-    factory :orphan_job_on_repository_id do
+    factory :job_orphaned_on_repository_id do
       repository_id { 2_000_000_000 }
     end
 
@@ -159,7 +159,7 @@ FactoryBot.define do
       repository_id { Repository.first.id }
     end
 
-    factory :orphan_job_on_commit_id do
+    factory :job_orphaned_on_commit_id do
       commit_id { 2_000_000_000 }
     end
 
@@ -167,7 +167,7 @@ FactoryBot.define do
       commit_id { Commit.first.id }
     end
 
-    factory :orphan_job_on_stage_id do
+    factory :job_orphaned_on_stage_id do
       stage_id { 2_000_000_000 }
     end
 
@@ -187,11 +187,11 @@ FactoryBot.define do
   factory :branch do
     name { "branch_#{Time.now.to_f}" }
     repository_id { 1 }
-    factory :orphan_branch_on_repository_id do
+    factory :branch_orphaned_on_repository_id do
       repository_id { 2_000_000_000 }
     end
 
-    factory :orphan_branch_on_last_build_id do
+    factory :branch_orphaned_on_last_build_id do
       last_build_id { 2_000_000_000 }
     end
 
@@ -201,7 +201,7 @@ FactoryBot.define do
   end
 
   factory :tag do
-    factory :orphan_tag_on_repository_id do
+    factory :tag_orphaned_on_repository_id do
       repository_id { 2_000_000_000 }
     end
 
@@ -209,7 +209,7 @@ FactoryBot.define do
       repository_id { Repository.first.id }
     end
 
-    factory :orphan_tag_on_last_build_id do
+    factory :tag_orphaned_on_last_build_id do
       last_build_id { 2_000_000_000 }
     end
 
@@ -219,7 +219,7 @@ FactoryBot.define do
   end
 
   factory :commit do
-    factory :orphan_commit_on_repository_id do
+    factory :commit_orphaned_on_repository_id do
       repository_id { 2_000_000_000 }
     end
 
@@ -227,7 +227,7 @@ FactoryBot.define do
       repository_id { Repository.first.id }
     end
 
-    factory :orphan_commit_on_branch_id do
+    factory :commit_orphaned_on_branch_id do
       branch_id { 2_000_000_000 }
     end
 
@@ -235,7 +235,7 @@ FactoryBot.define do
       branch_id { Branch.first.id }
     end
 
-    factory :orphan_commit_on_tag_id do
+    factory :commit_orphaned_on_tag_id do
       tag_id { 2_000_000_000 }
     end
 
@@ -246,7 +246,7 @@ FactoryBot.define do
 
   factory :cron do
     interval { 'test' }
-    factory :orphan_cron_on_branch_id do
+    factory :cron_orphaned_on_branch_id do
       branch_id { 2_000_000_000 }
     end
 
@@ -256,7 +256,7 @@ FactoryBot.define do
   end
 
   factory :pull_request do
-    factory :orphan_pull_request_on_repository_id do
+    factory :pull_request_orphaned_on_repository_id do
       repository_id { 2_000_000_000 }
     end
 
@@ -266,7 +266,7 @@ FactoryBot.define do
   end
 
   factory :ssl_key do
-    factory :orphan_ssl_key_on_repository_id do
+    factory :ssl_key_orphaned_on_repository_id do
       repository_id { 2_000_000_000 }
     end
 
@@ -276,7 +276,7 @@ FactoryBot.define do
   end
 
   factory :request do
-    factory :orphan_request_on_commit_id do
+    factory :request_orphaned_on_commit_id do
       commit_id { 2_000_000_000 }
     end
 
@@ -284,7 +284,7 @@ FactoryBot.define do
       commit_id { Commit.first.id }
     end
 
-    factory :orphan_request_on_pull_request_id do
+    factory :request_orphaned_on_pull_request_id do
       pull_request_id { 2_000_000_000 }
     end
 
@@ -292,7 +292,7 @@ FactoryBot.define do
       pull_request_id { PullRequest.first.id }
     end
 
-    factory :orphan_request_on_branch_id do
+    factory :request_orphaned_on_branch_id do
       branch_id { 2_000_000_000 }
     end
 
@@ -300,7 +300,7 @@ FactoryBot.define do
       branch_id { Branch.first.id }
     end
 
-    factory :orphan_request_on_tag_id do
+    factory :request_orphaned_on_tag_id do
       tag_id { 2_000_000_000 }
     end
 
@@ -310,7 +310,7 @@ FactoryBot.define do
   end
 
   factory :stage do
-    factory :orphan_stage_on_build_id do
+    factory :stage_orphaned_on_build_id do
       build_id { 2_000_000_000 }
     end
 
