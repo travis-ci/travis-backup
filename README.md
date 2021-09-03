@@ -27,6 +27,9 @@ All arguments:
   -u, --user_id ID           # run only for given user
   -o, --org_id ID            # run only for given organization
   -r, --repo_id ID           # run only for given repository
+  --move_logs                # run in move logs mode - move all logs to database at destination_db_url URL
+  --destination_db_url URL   # URL for moving logs to
+  --remove_orphans           # run in remove orphans mode
 ```
 
 Or inside your app:
@@ -53,6 +56,12 @@ backup.run(org_id: 1)
 # or
 backup.run(repo_id: 1)
 ```
+
+#### Special modes
+
+Using `--move_logs` flag you can move all logs to database at `destination_db_url` URL (which is required in this case). Running gem in this mode no files are created and no other tables are being touched.
+
+Using `--remove_orphans` flag you can remove all orphaned data from tables. Running gem in this mode no files are created.
 
 ### Configuration
 
