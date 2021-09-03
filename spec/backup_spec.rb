@@ -73,6 +73,19 @@ describe Backup do
   end
 
   describe 'remove_orphans' do
+    after(:all) do
+      Repository.destroy_all
+      Build.destroy_all
+      Job.destroy_all
+      Branch.destroy_all
+      Tag.destroy_all
+      Commit.destroy_all
+      Cron.destroy_all
+      PullRequest.destroy_all
+      Request.destroy_all
+      Stage.destroy_all
+    end
+
     let!(:data) {
       ActiveRecord::Base.connection.execute('alter table repositories disable trigger all;')
       FactoryBot.create_list(:repository, 2)
@@ -199,10 +212,13 @@ describe Backup do
 
   describe 'run' do
     after(:each) do
+      Organization.destroy_all
+      User.destroy_all
       Repository.destroy_all
       Build.destroy_all
       Job.destroy_all
       Log.destroy_all
+      Request.destroy_all
     end
 
     let!(:unassigned_repositories) {
@@ -459,7 +475,12 @@ describe Backup do
     end
   end
 
-  describe 'process_repo_requests' do  
+  describe 'process_repo_requests' do
+    after(:each) do
+      Repository.destroy_all
+      Request.destroy_all
+    end
+
     let(:datetime) { (Config.new.threshold + 1).months.ago.to_time.utc }
     let!(:repository) {
       FactoryBot.create(
@@ -483,7 +504,7 @@ describe Backup do
     }
 
     shared_context 'removing requests' do
-      it 'should delete all builds of the repository' do
+      it 'should delete all requests of the repository' do
         backup.process_repo_requests(repository)
         expect(Request.all.map(&:repository_id)).to eq([repository2.id])
       end

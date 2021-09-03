@@ -98,8 +98,6 @@ FactoryBot.define do
     end
   end
 
-  factory :request
-
   factory :build do
     factory :build_with_jobs_and_logs do
       transient do
