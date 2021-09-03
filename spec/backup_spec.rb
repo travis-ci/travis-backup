@@ -1,11 +1,11 @@
 $: << 'lib'
 require 'uri'
 require 'travis-backup'
-require 'models/repository'
 require 'models/build'
 require 'models/job'
 require 'models/organization'
 require 'models/user'
+
 require 'support/factories'
 require 'pry'
 
@@ -15,13 +15,6 @@ describe Backup do
     config = Config.new
     system("psql '#{config.database_url}' -f db/schema.sql > /dev/null")
     system("psql '#{config.destination_db_url}' -f db/schema.sql > /dev/null") if config.destination_db_url
-  end
-
-  after(:each) do
-    Repository.destroy_all
-    Build.destroy_all
-    Job.destroy_all
-    Log.destroy_all
   end
 
   let(:files_location) { "dump/tests" }
@@ -78,7 +71,139 @@ describe Backup do
     end
   end
 
+  describe 'remove_orphans' do
+    let!(:data) {
+      ActiveRecord::Base.connection.execute('alter table repositories disable trigger all;')
+      FactoryBot.create_list(:repository, 2)
+      FactoryBot.create_list(:build, 2)
+      FactoryBot.create_list(:job, 2)
+      FactoryBot.create_list(:branch, 2)
+      FactoryBot.create_list(:tag, 2)
+      FactoryBot.create_list(:commit, 2)
+      FactoryBot.create_list(:cron, 2)
+      FactoryBot.create_list(:pull_request, 2)
+      FactoryBot.create_list(:request, 2)
+      FactoryBot.create_list(:stage, 2)
+      FactoryBot.create_list(:repository_orphaned_on_current_build_id, 2)
+      FactoryBot.create_list(:repository_with_current_build_id, 2)
+      FactoryBot.create_list(:repository_orphaned_on_last_build_id, 2)
+      FactoryBot.create_list(:repository_with_last_build_id, 2)
+      FactoryBot.create_list(:build_orphaned_on_repository_id, 2)
+      FactoryBot.create_list(:build_with_repository_id, 2)
+      FactoryBot.create_list(:build_orphaned_on_commit_id, 2)
+      FactoryBot.create_list(:build_with_commit_id, 2)
+      FactoryBot.create_list(:build_orphaned_on_request_id, 2)
+      FactoryBot.create_list(:build_with_request_id, 2)
+      FactoryBot.create_list(:build_orphaned_on_pull_request_id, 2)
+      FactoryBot.create_list(:build_with_pull_request_id, 2)
+      FactoryBot.create_list(:build_orphaned_on_branch_id, 2)
+      FactoryBot.create_list(:build_with_branch_id, 2)
+      FactoryBot.create_list(:build_orphaned_on_tag_id, 2)
+      FactoryBot.create_list(:build_with_tag_id, 2)
+      FactoryBot.create_list(:job_orphaned_on_repository_id, 2)
+      FactoryBot.create_list(:job_with_repository_id, 2)
+      FactoryBot.create_list(:job_orphaned_on_commit_id, 2)
+      FactoryBot.create_list(:job_with_commit_id, 2)
+      FactoryBot.create_list(:job_orphaned_on_stage_id, 2)
+      FactoryBot.create_list(:job_with_stage_id, 2)
+      FactoryBot.create_list(:branch_orphaned_on_repository_id, 2)
+      FactoryBot.create_list(:branch_orphaned_on_last_build_id, 2)
+      FactoryBot.create_list(:branch_with_last_build_id, 2)
+      FactoryBot.create_list(:tag_orphaned_on_repository_id, 2)
+      FactoryBot.create_list(:tag_with_repository_id, 2)
+      FactoryBot.create_list(:tag_orphaned_on_last_build_id, 2)
+      FactoryBot.create_list(:tag_with_last_build_id, 2)
+      FactoryBot.create_list(:commit_orphaned_on_repository_id, 2)
+      FactoryBot.create_list(:commit_with_repository_id, 2)
+      FactoryBot.create_list(:commit_orphaned_on_branch_id, 2)
+      FactoryBot.create_list(:commit_with_branch_id, 2)
+      FactoryBot.create_list(:commit_orphaned_on_tag_id, 2)
+      FactoryBot.create_list(:commit_with_tag_id, 2)
+      FactoryBot.create_list(:cron_orphaned_on_branch_id, 2)
+      FactoryBot.create_list(:cron_with_branch_id, 2)
+      FactoryBot.create_list(:pull_request_orphaned_on_repository_id, 2)
+      FactoryBot.create_list(:pull_request_with_repository_id, 2)
+      FactoryBot.create_list(:request_orphaned_on_commit_id, 2)
+      FactoryBot.create_list(:request_with_commit_id, 2)
+      FactoryBot.create_list(:request_orphaned_on_pull_request_id, 2)
+      FactoryBot.create_list(:request_with_pull_request_id, 2)
+      FactoryBot.create_list(:request_orphaned_on_branch_id, 2)
+      FactoryBot.create_list(:request_with_branch_id, 2)
+      FactoryBot.create_list(:request_orphaned_on_tag_id, 2)
+      FactoryBot.create_list(:request_with_tag_id, 2)
+      FactoryBot.create_list(:stage_orphaned_on_build_id, 2)
+      FactoryBot.create_list(:stage_with_build_id, 2)
+      ActiveRecord::Base.connection.execute('alter table repositories enable trigger all;')
+    }
+    it 'removes orphaned repositories' do
+      expect {
+        backup.remove_orphans
+      }.to change { Repository.all.size }.by -4
+    end
+
+    it 'removes orphaned builds' do
+      expect {
+        backup.remove_orphans
+      }.to change { Build.all.size }.by -12
+    end
+
+    it 'removes orphaned jobs' do
+      expect {
+        backup.remove_orphans
+      }.to change { Job.all.size }.by -6
+    end
+
+    it 'removes orphaned branches' do
+      expect {
+        backup.remove_orphans
+      }.to change { Branch.all.size }.by -4
+    end
+
+    it 'removes orphaned tags' do
+      expect {
+        backup.remove_orphans
+      }.to change { Tag.all.size }.by -4
+    end
+
+    it 'removes orphaned commits' do
+      expect {
+        backup.remove_orphans
+      }.to change { Commit.all.size }.by -6
+    end
+
+    it 'removes orphaned crons' do
+      expect {
+        backup.remove_orphans
+      }.to change { Cron.all.size }.by -2
+    end
+
+    it 'removes orphaned pull requests' do
+      expect {
+        backup.remove_orphans
+      }.to change { PullRequest.all.size }.by -2
+    end
+
+    it 'removes orphaned requests' do
+      expect {
+        backup.remove_orphans
+      }.to change { Request.all.size }.by -8
+    end
+
+    it 'removes orphaned stages' do
+      expect {
+        backup.remove_orphans
+      }.to change { Stage.all.size }.by -2
+    end
+  end
+
   describe 'run' do
+    after(:each) do
+      Repository.destroy_all
+      Build.destroy_all
+      Job.destroy_all
+      Log.destroy_all
+    end
+
     let!(:unassigned_repositories) {
       FactoryBot.create_list(:repository, 3)
     }
@@ -144,14 +269,26 @@ describe Backup do
       let!(:backup) { Backup.new(files_location: files_location, limit: 5, move_logs: true) }
 
       it 'does not process repositories' do
-        repo = Repository.first
         expect(backup).not_to receive(:process_repo)
         backup.run
       end
 
       it 'moves logs' do
-        repo = Repository.first
         expect(backup).to receive(:move_logs).once
+        backup.run
+      end
+    end
+
+    context 'when remove orphans mode is on' do
+      let!(:backup) { Backup.new(files_location: files_location, limit: 5, remove_orphans: true) }
+
+      it 'does not process repositories' do
+        expect(backup).not_to receive(:process_repo)
+        backup.run
+      end
+
+      it 'removes orphans' do
+        expect(backup).to receive(:remove_orphans).once
         backup.run
       end
     end
@@ -173,7 +310,14 @@ describe Backup do
 
   end
 
-  describe 'process_repo' do  
+  describe 'process_repo' do
+    after(:each) do
+      Repository.destroy_all
+      Build.destroy_all
+      Job.destroy_all
+      Log.destroy_all
+    end
+
     let!(:config) { Config.new }
     let(:datetime) { (config.threshold + 1).months.ago.to_time.utc }
     let(:org_id) { rand(100000) }
@@ -182,14 +326,14 @@ describe Backup do
     let(:private_com_id) { rand(100000) }
     let!(:repository) {
       FactoryBot.create(
-        :repository_with_builds,
+        :repository_with_builds_jobs_and_logs,
         created_at: datetime,
         updated_at: datetime
       )
     }
     let!(:repository2) {
       FactoryBot.create(
-        :repository_with_builds,
+        :repository_with_builds_jobs_and_logs,
         created_at: datetime,
         updated_at: datetime,
         builds_count: 1

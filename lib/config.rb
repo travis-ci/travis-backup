@@ -12,6 +12,7 @@ class Config
     :repo_id,
     :org_id,
     :move_logs,
+    :remove_orphans,
     :destination_db_url
 
   def initialize(args={}) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
@@ -88,6 +89,13 @@ class Config
       config.dig('backup', 'move_logs'),
       false
     )
+    @remove_orphans = first_not_nil(
+      args[:remove_orphans],
+      argv_opts[:remove_orphans],
+      ENV['BACKUP_REMOVE_ORPHANS'],
+      config.dig('backup', 'remove_orphans'),
+      false
+    )
     @destination_db_url = first_not_nil(
       args[:destination_db_url],
       argv_opts[:destination_db_url],
@@ -138,6 +146,7 @@ class Config
       opt.on('-r', '--repo_id X') { |o| options[:repo_id] = o.to_i }
       opt.on('-o', '--org_id X') { |o| options[:org_id] = o.to_i }
       opt.on('--move_logs') { |o| options[:move_logs] = o }
+      opt.on('--remove_orphans') { |o| options[:remove_orphans] = o }
       opt.on('--destination_db_url X') { |o| options[:destination_db_url] = o }
     end.parse!
 
