@@ -1,11 +1,11 @@
 $: << 'lib'
 require 'uri'
 require 'travis-backup'
-require 'models/repository'
 require 'models/build'
 require 'models/job'
 require 'models/organization'
 require 'models/user'
+
 require 'support/factories'
 require 'pry'
 
@@ -66,21 +66,127 @@ describe Backup do
   end
 
   describe 'remove_orphans' do
-    let!(:repositories) {
-      FactoryBot.create_list(:repository, 100)
-    }
-    let!(:repositories_with_builds) {
-      FactoryBot.create_list(:repository_with_builds, 100)
-    }
-    let!(:orphan_repositories) {
+    let!(:data) {
       ActiveRecord::Base.connection.execute('alter table repositories disable trigger all;')
-      FactoryBot.create_list(:orphan_repository, 10)
+      FactoryBot.create_list(:repository, 2)
+      FactoryBot.create_list(:build, 2)
+      FactoryBot.create_list(:job, 2)
+      FactoryBot.create_list(:branch, 2)
+      FactoryBot.create_list(:tag, 2)
+      FactoryBot.create_list(:commit, 2)
+      FactoryBot.create_list(:cron, 2)
+      FactoryBot.create_list(:pull_request, 2)
+      FactoryBot.create_list(:request, 2)
+      FactoryBot.create_list(:stage, 2)
+      FactoryBot.create_list(:orphan_repository_on_current_build_id, 2)
+      FactoryBot.create_list(:repository_with_current_build_id, 2)
+      FactoryBot.create_list(:orphan_repository_on_last_build_id, 2)
+      FactoryBot.create_list(:repository_with_last_build_id, 2)
+      FactoryBot.create_list(:orphan_build_on_repository_id, 2)
+      FactoryBot.create_list(:build_with_repository_id, 2)
+      FactoryBot.create_list(:orphan_build_on_commit_id, 2)
+      FactoryBot.create_list(:build_with_commit_id, 2)
+      FactoryBot.create_list(:orphan_build_on_request_id, 2)
+      FactoryBot.create_list(:build_with_request_id, 2)
+      FactoryBot.create_list(:orphan_build_on_pull_request_id, 2)
+      FactoryBot.create_list(:build_with_pull_request_id, 2)
+      FactoryBot.create_list(:orphan_build_on_branch_id, 2)
+      FactoryBot.create_list(:build_with_branch_id, 2)
+      FactoryBot.create_list(:orphan_build_on_tag_id, 2)
+      FactoryBot.create_list(:build_with_tag_id, 2)
+      FactoryBot.create_list(:orphan_job_on_repository_id, 2)
+      FactoryBot.create_list(:job_with_repository_id, 2)
+      FactoryBot.create_list(:orphan_job_on_commit_id, 2)
+      FactoryBot.create_list(:job_with_commit_id, 2)
+      FactoryBot.create_list(:orphan_job_on_stage_id, 2)
+      FactoryBot.create_list(:job_with_stage_id, 2)
+      FactoryBot.create_list(:orphan_branch_on_repository_id, 2)
+      FactoryBot.create_list(:orphan_branch_on_last_build_id, 2)
+      FactoryBot.create_list(:branch_with_last_build_id, 2)
+      FactoryBot.create_list(:orphan_tag_on_repository_id, 2)
+      FactoryBot.create_list(:tag_with_repository_id, 2)
+      FactoryBot.create_list(:orphan_tag_on_last_build_id, 2)
+      FactoryBot.create_list(:tag_with_last_build_id, 2)
+      FactoryBot.create_list(:orphan_commit_on_repository_id, 2)
+      FactoryBot.create_list(:commit_with_repository_id, 2)
+      FactoryBot.create_list(:orphan_commit_on_branch_id, 2)
+      FactoryBot.create_list(:commit_with_branch_id, 2)
+      FactoryBot.create_list(:orphan_commit_on_tag_id, 2)
+      FactoryBot.create_list(:commit_with_tag_id, 2)
+      FactoryBot.create_list(:orphan_cron_on_branch_id, 2)
+      FactoryBot.create_list(:cron_with_branch_id, 2)
+      FactoryBot.create_list(:orphan_pull_request_on_repository_id, 2)
+      FactoryBot.create_list(:pull_request_with_repository_id, 2)
+      FactoryBot.create_list(:orphan_request_on_commit_id, 2)
+      FactoryBot.create_list(:request_with_commit_id, 2)
+      FactoryBot.create_list(:orphan_request_on_pull_request_id, 2)
+      FactoryBot.create_list(:request_with_pull_request_id, 2)
+      FactoryBot.create_list(:orphan_request_on_branch_id, 2)
+      FactoryBot.create_list(:request_with_branch_id, 2)
+      FactoryBot.create_list(:orphan_request_on_tag_id, 2)
+      FactoryBot.create_list(:request_with_tag_id, 2)
+      FactoryBot.create_list(:orphan_stage_on_build_id, 2)
+      FactoryBot.create_list(:stage_with_build_id, 2)
       ActiveRecord::Base.connection.execute('alter table repositories enable trigger all;')
     }
     it 'removes orphaned repositories' do
       expect {
         backup.remove_orphans
-      }.to change { Repository.all.size }.by -10
+      }.to change { Repository.all.size }.by -4
+    end
+
+    it 'removes orphaned builds' do
+      expect {
+        backup.remove_orphans
+      }.to change { Build.all.size }.by -12
+    end
+
+    it 'removes orphaned jobs' do
+      expect {
+        backup.remove_orphans
+      }.to change { Job.all.size }.by -6
+    end
+
+    it 'removes orphaned branches' do
+      expect {
+        backup.remove_orphans
+      }.to change { Branch.all.size }.by -4
+    end
+
+    it 'removes orphaned tags' do
+      expect {
+        backup.remove_orphans
+      }.to change { Tag.all.size }.by -4
+    end
+
+    it 'removes orphaned commits' do
+      expect {
+        backup.remove_orphans
+      }.to change { Commit.all.size }.by -6
+    end
+
+    it 'removes orphaned crons' do
+      expect {
+        backup.remove_orphans
+      }.to change { Cron.all.size }.by -2
+    end
+
+    it 'removes orphaned pull requests' do
+      expect {
+        backup.remove_orphans
+      }.to change { PullRequest.all.size }.by -2
+    end
+
+    it 'removes orphaned requests' do
+      expect {
+        backup.remove_orphans
+      }.to change { Request.all.size }.by -8
+    end
+
+    it 'removes orphaned stages' do
+      expect {
+        backup.remove_orphans
+      }.to change { Stage.all.size }.by -2
     end
   end
 
@@ -180,14 +286,14 @@ describe Backup do
     let(:private_com_id) { rand(100000) }
     let!(:repository) {
       FactoryBot.create(
-        :repository_with_builds,
+        :repository_with_builds_and_jobs,
         created_at: datetime,
         updated_at: datetime
       )
     }
     let!(:repository2) {
       FactoryBot.create(
-        :repository_with_builds,
+        :repository_with_builds_and_jobs,
         created_at: datetime,
         updated_at: datetime,
         builds_count: 1

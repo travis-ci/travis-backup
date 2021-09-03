@@ -5,6 +5,14 @@ require 'active_support/time'
 require 'config'
 require 'models/repository'
 require 'models/log'
+require 'models/branch'
+require 'models/tag'
+require 'models/commit'
+require 'models/cron'
+require 'models/pull_request'
+require 'models/ssl_key'
+require 'models/request'
+require 'models/stage'
 
 # main travis-backup class
 class Backup
@@ -79,17 +87,45 @@ class Backup
   end
 
   def remove_orphans
-    repositories = Repository.find_by_sql(%{
-      select r.*
-      from repositories r
-      left join builds b
-      on r.current_build_id = b.id
+    remove_orphans_for_table(Repository, 'repositories', 'builds', 'current_build_id')
+    remove_orphans_for_table(Repository, 'repositories', 'builds', 'last_build_id')
+    remove_orphans_for_table(Build, 'builds', 'repositories', 'repository_id')
+    remove_orphans_for_table(Build, 'builds', 'commits', 'commit_id')
+    remove_orphans_for_table(Build, 'builds', 'requests', 'request_id')
+    remove_orphans_for_table(Build, 'builds', 'pull_requests', 'pull_request_id')
+    remove_orphans_for_table(Build, 'builds', 'branches', 'branch_id')
+    remove_orphans_for_table(Build, 'builds', 'tags', 'tag_id')
+    remove_orphans_for_table(Job, 'jobs', 'repositories', 'repository_id')
+    remove_orphans_for_table(Job, 'jobs', 'commits', 'commit_id')
+    remove_orphans_for_table(Job, 'jobs', 'stages', 'stage_id')
+    remove_orphans_for_table(Branch, 'branches', 'repositories', 'repository_id')
+    remove_orphans_for_table(Branch, 'branches', 'builds', 'last_build_id')
+    remove_orphans_for_table(Tag, 'tags', 'repositories', 'repository_id')
+    remove_orphans_for_table(Tag, 'tags', 'builds', 'last_build_id')
+    remove_orphans_for_table(Commit, 'commits', 'repositories', 'repository_id')
+    remove_orphans_for_table(Commit, 'commits', 'branches', 'branch_id')
+    remove_orphans_for_table(Commit, 'commits', 'tags', 'tag_id')
+    remove_orphans_for_table(Cron, 'crons', 'branches', 'branch_id')
+    remove_orphans_for_table(PullRequest, 'pull_requests', 'repositories', 'repository_id')
+    remove_orphans_for_table(SslKey, 'ssl_keys', 'repositories', 'repository_id')
+    remove_orphans_for_table(Request, 'requests', 'commits', 'commit_id')
+    remove_orphans_for_table(Request, 'requests', 'pull_requests', 'pull_request_id')
+    remove_orphans_for_table(Request, 'requests', 'branches', 'branch_id')
+    remove_orphans_for_table(Request, 'requests', 'tags', 'tag_id')
+    remove_orphans_for_table(Stage, 'stages', 'builds', 'build_id')
+  end
+
+  def remove_orphans_for_table(model_class, table_a_name, table_b_name, fk_name)
+    for_delete = model_class.find_by_sql(%{
+      select a.*
+      from #{table_a_name} a
+      left join #{table_b_name} b
+      on a.#{fk_name} = b.id
       where
-        r.current_build_id is not null
+        a.#{fk_name} is not null
         and b.id is null;
     })
-    for_delete = repositories.map(&:id)
-    Repository.where(id: for_delete).delete_all
+    model_class.where(id: for_delete.map(&:id)).delete_all
   end
 
   def process_repo(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
