@@ -105,7 +105,7 @@ class Config
   end
 
   def check_values
-    if !@move_logs && !@threshold
+    if !@move_logs && !@remove_orphans && !@threshold
       message = abort_message("Please provide the threshold argument. Data younger than it will be omitted. " +
         "Threshold defines number of months from now.")
       abort message

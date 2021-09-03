@@ -1,7 +1,6 @@
 # README
 
-*travis-backup* is an application that removes builds and their corresponding jobs
-and exports them (optionally) to json files.
+*travis-backup* is an application that helps with housekeeping and backup for Travis CI database v2.2 and with migration to v3.0 database.
 
 ### Installation and run
 
@@ -59,13 +58,15 @@ backup.run(repo_id: 1)
 
 #### Special modes
 
-Using `--move_logs` flag you can move all logs to database at `destination_db_url` URL (which is required in this case). Running gem in this mode no files are created and no other tables are being touched.
+Using `--move_logs` flag you can move all logs to database at `destination_db_url` URL (which is required in this case). When you run gem in this mode no files are created and no other tables are being touched.
 
-Using `--remove_orphans` flag you can remove all orphaned data from tables. Running gem in this mode no files are created.
+Using `--remove_orphans` flag you can remove all orphaned data from tables. When you run gem in this mode no files are created.
 
-### Configuration
+Using `--dry_run` flag you can check which data would be removed by gem, but without removing them actually. Instead of that reports will be printed on standard output. This flag can be also combined with `--move_logs` or `--remove_orphans`.
 
-Despite of command line arguments, one of the ways you can configure your export is a file `config/settinigs.yml` that you can place in your app's main directory. The gem expects properties in the following format:
+### Configuration options
+
+Despite of command line arguments, one of the ways you can configure your export is a file `config/settings.yml` that you can place in your app's main directory. The gem expects properties in the following format:
 
 ```
 backup:
@@ -97,9 +98,9 @@ and
 bundle exec rspec
 ```
 
-To make tests working properly you should also ensure the database connection string for an empty test database. You can set it as `DATABASE_URL` environment variable or in `config/database.yml`.
+To make tests working properly you should also ensure database connection strings for empty test databases. You can set them as `DATABASE_URL` and `BACKUP_DESTINATION_DB_URL` environment variables or in `config/database.yml`.
 
-**Warning: this database will be cleaned during tests, so ensure that it includes no important data.**
+**Warning: these databases will be cleaned during tests, so ensure that they include no important data.**
 
 ### Ruby version
 

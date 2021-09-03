@@ -34,9 +34,6 @@ class Backup
   end
 
   def run(args={})
-    return move_logs if @config.move_logs
-    return remove_orphans if @config.remove_orphans
-
     user_id = args[:user_id] || @config.user_id
     repo_id = args[:repo_id] || @config.repo_id
     org_id = args[:org_id] || @config.org_id
@@ -49,7 +46,11 @@ class Backup
       owner_type = 'Organization'
     end
 
-    if owner_id
+    if @config.move_logs
+      move_logs
+    elsif @config.remove_orphans
+      remove_orphans
+    elsif owner_id
       Repository.where('owner_id = ? and owner_type = ?', owner_id, owner_type).order(:id).each do |repository|
         process_repo(repository)
       end
@@ -66,11 +67,19 @@ class Backup
   end
 
   def print_dry_run_report
-    puts 'Dry run active. The following data would be removed in normal mode:'
-    puts " - builds: #{@dry_run_report[:builds].to_json}"
-    puts " - jobs: #{@dry_run_report[:jobs].to_json}"
-    puts " - logs: #{@dry_run_report[:logs].to_json}"
-    puts " - requests: #{@dry_run_report[:requests].to_json}"
+    if @dry_run_report.to_a.map(&:second).flatten.empty?
+      puts 'Dry run active. No data would be removed in normal run.'
+    else
+      puts 'Dry run active. The following data would be removed in normal run:'
+
+      @dry_run_report.to_a.map(&:first).each do |symbol|
+        print_dry_run_report_line(symbol)
+      end
+    end
+  end
+
+  def print_dry_run_report_line(symbol)
+    puts " - #{symbol}: #{@dry_run_report[symbol].to_json}" if @dry_run_report[symbol].any?
   end
 
   def process_repo(repository)
@@ -96,6 +105,8 @@ class Backup
   end
 
   def move_logs
+    return move_logs_dry if config.dry_run
+
     connect_db(@config.database_url)
     Log.order(:id).in_groups_of(@config.limit.to_i, false).map do |logs_batch|
       log_hashes = logs_batch.as_json
@@ -110,6 +121,10 @@ class Backup
 
       logs_batch.each(&:destroy)
     end
+  end
+
+  def move_logs_dry
+    dry_run_report[:logs].concat(Log.order(:id).map(&:id))
   end
 
   def remove_orphans
@@ -151,7 +166,14 @@ class Backup
         a.#{fk_name} is not null
         and b.id is null;
     })
-    model_class.where(id: for_delete.map(&:id)).delete_all
+
+    if config.dry_run
+      dry_run_report[table_a_name.to_sym] = [] if dry_run_report[table_a_name.to_sym].nil?
+      dry_run_report[table_a_name.to_sym].concat(for_delete.map(&:id))
+      dry_run_report[table_a_name.to_sym].uniq!
+    else
+      model_class.where(id: for_delete.map(&:id)).delete_all
+    end
   end
 
   def process_repo_builds(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
