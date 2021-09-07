@@ -59,15 +59,17 @@ class Backup
 
   def process_repo(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     repository.builds.where('created_at < ?', @config.delay.months.ago.to_datetime)
-              .in_groups_of(@config.limit).map do |builds|
-      builds_export = export_builds(builds)
-      file_name = "repository_#{repository.id}_builds_#{builds.compact.first.id}-#{builds.compact.last.id}.json"
-      pretty_json = JSON.pretty_generate(builds_export)
-      if upload(file_name, pretty_json)
-        BuildBackup.new(repository_id: repository.id, file_name: file_name).save!
-        builds.compact.each(&:destroy)
+              .in_groups_of(@config.limit, false).map do |builds|
+      if builds.count == @config.limit
+        builds_export = export_builds(builds)
+        file_name = "repository_#{repository.id}_builds_#{builds.first.id}-#{builds.last.id}.json"
+        pretty_json = JSON.pretty_generate(builds_export)
+        if upload(file_name, pretty_json)
+          BuildBackup.new(repository_id: repository.id, file_name: file_name).save!
+          builds.each(&:destroy)
+        end
+        builds_export
       end
-      builds_export
     end
   end
 
@@ -107,7 +109,7 @@ class Backup
   end
 
   def export_builds(builds)
-    builds.compact.map do |build|
+    builds.map do |build|
       build_export = build.attributes
       build_export[:build_config] = build.build_config&.attributes
       build_export[:jobs] = export_jobs(build.jobs)
