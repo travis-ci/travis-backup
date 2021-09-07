@@ -1,6 +1,6 @@
 # README
 
-*travis-backup* is an application that helps with housekeeping and backup for Travis CI database v2.2 and with migration to v3.0 database.
+*travis-backup* is an application that helps with housekeeping and backup for Travis CI database v2.2 and with migration to v3.0 database. By default it removes requests and builds with their corresponding jobs and logs, as long as they are older than given threshold says (and backups them in files, if this option is active). Although it can be also run with special modes: `move_logs`, for moving logs from one database to another, and `remove_orphans`, for deleting all orphaned data.
 
 ### Installation and run
 
@@ -75,14 +75,18 @@ backup:
   limit: 1000               # builds limit for one backup file
   threshold: 6              # number of months from now - data younger than this time won't be backuped
   files_location: './dump'  # path of the folder in which backup files will be placed
-  user_id                   # run only for given user
-  org_id                    # run only for given organization
-  repo_id                   # run only for given repository
+  user_id: 1                # run only for given user
+  org_id: 1                 # run only for given organization
+  repo_id: 1                # run only for given repository
+  move_logs: false          # run in move logs mode - move all logs to database at destination_db_url URL
+  remove_orphans: false     # run in remove orphans mode
 ```
 
-You can also set these properties using env vars corresponding to them: `IF_BACKUP`, `BACKUP_DRY_RUN`, `BACKUP_LIMIT`, `BACKUP_THRESHOLD`, `BACKUP_FILES_LOCATION`, `USER_ID`, `ORG_ID`, `REPO_ID`.
+You can also set these properties using env vars corresponding to them: `IF_BACKUP`, `BACKUP_DRY_RUN`, `BACKUP_LIMIT`, `BACKUP_THRESHOLD`, `BACKUP_FILES_LOCATION`, `BACKUP_USER_ID`, `BACKUP_ORG_ID`, `BACKUP_REPO_ID`, `BACKUP_MOVE_LOGS`, `BACKUP_REMOVE_ORPHANS`.
 
 You should also specify your database url. You can do this the standard way in `config/database.yml` file, setting the `database_url` hash argument while creating `Backup` instance or using the `DATABASE_URL` env var. Your database should be consistent with the Travis 2.2 database schema.
+
+For `move_logs` mode you need also to specify a destination database. You can set it also in `config/database.yml` file, in `destination` subsection, setting the `destination_db_url` hash argument while creating `Backup` instance or using the `BACKUP_DESTINATION_DB_URL` env var. Your destination database should be consistent with the Travis 3.0 database schema.
 
 ### How to run the test suite
 

@@ -51,19 +51,30 @@ class Backup
     elsif @config.remove_orphans
       remove_orphans
     elsif owner_id
-      Repository.where('owner_id = ? and owner_type = ?', owner_id, owner_type).order(:id).each do |repository|
-        process_repo(repository)
-      end
+      process_repos_for_owner(owner_id, owner_type)
     elsif repo_id
-      repository = Repository.find(repo_id)
-      process_repo(repository)
+      process_repo_with_id(repo_id)
     else
-      Repository.order(:id).each do |repository|
-        process_repo(repository)
-      end
+      process_all_repos
     end
 
     print_dry_run_report if @config.dry_run
+  end
+
+  def process_repos_for_owner(owner_id, owner_type)
+    Repository.where('owner_id = ? and owner_type = ?', owner_id, owner_type).order(:id).each do |repository|
+      process_repo(repository)
+    end
+  end
+
+  def process_repo_with_id(repo_id)
+    process_repo(Repository.find(repo_id))
+  end
+
+  def process_all_repos
+    Repository.order(:id).each do |repository|
+      process_repo(repository)
+    end
   end
 
   def print_dry_run_report
@@ -168,21 +179,13 @@ class Backup
     })
 
     if config.dry_run
-      dry_run_report[table_a_name.to_sym] = [] if dry_run_report[table_a_name.to_sym].nil?
-      dry_run_report[table_a_name.to_sym].concat(for_delete.map(&:id))
-      dry_run_report[table_a_name.to_sym].uniq!
+      key = table_a_name.to_sym
+      dry_run_report[key] = [] if dry_run_report[key].nil?
+      dry_run_report[key].concat(for_delete.map(&:id))
+      dry_run_report[key].uniq!
     else
       model_class.where(id: for_delete.map(&:id)).delete_all
     end
-  end
-
-  def process_repo_builds(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    threshold = @config.threshold.to_i.months.ago.to_datetime
-    current_build_id = repository.current_build_id || -1
-    repository.builds.where('created_at < ? and id != ?', threshold, current_build_id)
-              .in_groups_of(@config.limit.to_i, false).map do |builds_batch|
-      @config.if_backup ? save_and_destroy_builds_batch(builds_batch, repository) : destroy_builds_batch(builds_batch)
-    end.compact
   end
 
   private

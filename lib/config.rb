@@ -67,19 +67,19 @@ class Config
     @user_id = first_not_nil(
       args[:user_id],
       argv_opts[:user_id],
-      ENV['USER_ID'],
+      ENV['BACKUP_USER_ID'],
       config.dig('backup', 'user_id')
     )
     @repo_id = first_not_nil(
       args[:repo_id],
       argv_opts[:repo_id],
-      ENV['REPO_ID'],
+      ENV['BACKUP_REPO_ID'],
       config.dig('backup', 'repo_id')
     )
     @org_id = first_not_nil(
       args[:org_id],
       argv_opts[:org_id],
-      ENV['ORG_ID'],
+      ENV['BACKUP_ORG_ID'],
       config.dig('backup', 'org_id')
     )
     @move_logs = first_not_nil(
