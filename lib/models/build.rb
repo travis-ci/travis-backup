@@ -8,6 +8,7 @@ require 'models/repository'
 class Build < Model
   belongs_to :repository
   has_many   :jobs, -> { order('id') }, foreign_key: :source_id, dependent: :destroy, class_name: 'Job'
+  has_one    :repo_for_that_this_build_is_current, foreign_key: :current_build_id, dependent: :destroy, class_name: 'Repository'
 
   self.table_name = 'builds'
 end

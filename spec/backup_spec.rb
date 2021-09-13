@@ -104,7 +104,7 @@ describe Backup do
       FactoryBot.create_list(:repository_with_last_build_id, 2)
       FactoryBot.create_list(:build_orphaned_on_repository_id, 2)
       FactoryBot.create_list(:build_with_repository_id, 2)
-      FactoryBot.create_list(:build_orphaned_on_commit_id, 2)
+      FactoryBot.create_list(:build_orphaned_on_commit_id_with_repo, 2)
       FactoryBot.create_list(:build_with_commit_id, 2)
       FactoryBot.create_list(:build_orphaned_on_request_id, 2)
       FactoryBot.create_list(:build_with_request_id, 2)
@@ -149,10 +149,10 @@ describe Backup do
       FactoryBot.create_list(:stage_with_build_id, 2)
       ActiveRecord::Base.connection.execute('alter table repositories enable trigger all;')
     }
-    it 'removes orphaned repositories' do
+    it 'removes orphaned repositories (with these dependent on orphaned builds)' do
       expect {
         backup.remove_orphans
-      }.to change { Repository.all.size }.by -4
+      }.to change { Repository.all.size }.by -6
     end
 
     it 'removes orphaned builds' do
