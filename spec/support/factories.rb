@@ -124,8 +124,16 @@ FactoryBot.define do
       repository_id { Repository.first.id }
     end
 
-    factory :build_orphaned_on_commit_id do
+    factory :build_orphaned_on_commit_id_with_repo do
       commit_id { 2_000_000_000 }
+      after(:create) do |build|
+        create(
+          :repository,
+          current_build_id: build.id,
+          created_at: build.created_at,
+          updated_at: build.updated_at
+        )
+      end
     end
 
     factory :build_with_commit_id do

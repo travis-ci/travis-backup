@@ -184,7 +184,7 @@ class Backup
       dry_run_report[key].concat(for_delete.map(&:id))
       dry_run_report[key].uniq!
     else
-      model_class.where(id: for_delete.map(&:id)).delete_all
+      model_class.where(id: for_delete.map(&:id)).destroy_all
     end
   end
 
