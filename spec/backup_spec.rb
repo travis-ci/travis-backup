@@ -104,7 +104,7 @@ describe Backup do
       FactoryBot.create_list(:repository_with_last_build_id, 2)
       FactoryBot.create_list(:build_orphaned_on_repository_id, 2)
       FactoryBot.create_list(:build_with_repository_id, 2)
-      FactoryBot.create_list(:build_orphaned_on_commit_id_with_repo, 2)
+      FactoryBot.create_list(:build_orphaned_on_commit_id_with_mutually_related_repo, 2)
       FactoryBot.create_list(:build_with_commit_id, 2)
       FactoryBot.create_list(:build_orphaned_on_request_id, 2)
       FactoryBot.create_list(:build_with_request_id, 2)
