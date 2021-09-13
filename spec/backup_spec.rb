@@ -237,7 +237,7 @@ describe Backup do
       FactoryBot.create(:organization_with_repos)
     }
 
-    context 'when no arguments are given' do
+    context 'when no id arguments are given' do
       it 'processes every repository' do
         Repository.all.each do |repository|
           expect(backup).to receive(:process_repo_builds).once.with(repository)
@@ -279,6 +279,26 @@ describe Backup do
         repo = Repository.first
         expect(backup).to receive(:process_repo_builds).once.with(repo)
         backup.run(repo_id: repo.id)
+      end
+    end
+
+    context 'when threshold is not given' do
+      context 'when user_id is given' do
+        it 'removes the user with all dependencies' do
+
+        end
+      end
+
+      context 'when org_id is given' do
+        it 'removes the organisation with all dependencies' do
+
+        end
+      end
+
+      context 'when repo_id is given' do
+        it 'removes the repo with all dependencies' do
+
+        end
       end
     end
 

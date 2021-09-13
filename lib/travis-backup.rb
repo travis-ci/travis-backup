@@ -38,20 +38,14 @@ class Backup
     repo_id = args[:repo_id] || @config.repo_id
     org_id = args[:org_id] || @config.org_id
 
-    if user_id
-      owner_id = user_id
-      owner_type = 'User'
-    elsif org_id
-      owner_id = org_id
-      owner_type = 'Organization'
-    end
-
     if @config.move_logs
       move_logs
     elsif @config.remove_orphans
       remove_orphans
-    elsif owner_id
-      process_repos_for_owner(owner_id, owner_type)
+    elsif user_id
+      process_user(user_id)
+    elsif org_id
+      process_organization(org_id)
     elsif repo_id
       process_repo_with_id(repo_id)
     else
@@ -61,6 +55,22 @@ class Backup
     print_dry_run_report if @config.dry_run
   end
 
+  def process_user(user_id)
+    if @config.threshold
+      process_repos_for_owner(user_id, 'User')
+    else
+      remove_user_with_dependencies(user_id)
+    end
+  end
+
+  def process_organization(org_id)
+    if @config.threshold
+      process_repos_for_owner(org_id, 'Organization')
+    else
+      remove_org_with_dependencies(org_id)
+    end
+  end
+
   def process_repos_for_owner(owner_id, owner_type)
     Repository.where('owner_id = ? and owner_type = ?', owner_id, owner_type).order(:id).each do |repository|
       process_repo(repository)
@@ -68,7 +78,15 @@ class Backup
   end
 
   def process_repo_with_id(repo_id)
-    process_repo(Repository.find(repo_id))
+    if @config.threshold
+      process_repo(Repository.find(repo_id))
+    else
+      remove_repo_with_dependencies(repo_id)
+    end
+  end
+
+  def remove_repo_with_dependencies(repo_id)
+    
   end
 
   def process_all_repos
