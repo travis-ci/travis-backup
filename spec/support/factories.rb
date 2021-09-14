@@ -116,48 +116,72 @@ FactoryBot.define do
       end
     end
 
-    factory :build_orphaned_on_repository_id do
-      repository_id { 2_000_000_000 }
+    factory :build_with_repo do
+      after(:create) do |build|
+        create(
+          :repository,
+          current_build_id: build.id,
+          created_at: build.created_at,
+          updated_at: build.updated_at
+        )
+      end
+
+      factory :build_orphaned_on_repository_id_with_mutually_related_repo do
+        repository_id { 2_000_000_000 }
+      end
     end
 
     factory :build_with_repository_id do
       repository_id { Repository.first.id }
     end
 
-    factory :build_orphaned_on_commit_id do
-      commit_id { 2_000_000_000 }
+    factory :build_with_mutually_related_repo do
+      after(:create) do |build|
+        repo = create(
+          :repository,
+          current_build_id: build.id,
+          created_at: build.created_at,
+          updated_at: build.updated_at
+        )
+        build.repository_id = repo.id
+        build.save!
+      end
+
+      factory :build_orphaned_on_commit_id_with_mutually_related_repo do
+        commit_id { 2_000_000_000 }
+      end        
+
+      factory :build_orphaned_on_request_id_with_mutually_related_repo do
+        request_id { 2_000_000_000 }
+      end
+
+      factory :build_orphaned_on_pull_request_id_with_mutually_related_repo do
+        pull_request_id { 2_000_000_000 }
+      end
+
+      factory :build_orphaned_on_branch_id_with_mutually_related_repo do
+        branch_id { 2_000_000_000 }
+      end
+
+      factory :build_orphaned_on_tag_id_with_mutually_related_repo do
+        tag_id { 2_000_000_000 }
+      end
     end
 
     factory :build_with_commit_id do
       commit_id { Commit.first.id }
     end
 
-    factory :build_orphaned_on_request_id do
-      request_id { 2_000_000_000 }
-    end
-
     factory :build_with_request_id do
       request_id { Request.first.id }
-    end
-
-    factory :build_orphaned_on_pull_request_id do
-      pull_request_id { 2_000_000_000 }
     end
 
     factory :build_with_pull_request_id do
       pull_request_id { PullRequest.first.id }
     end
 
-    factory :build_orphaned_on_branch_id do
-      branch_id { 2_000_000_000 }
-    end
-
     factory :build_with_branch_id do
       branch_id { Branch.first.id }
-    end
-
-    factory :build_orphaned_on_tag_id do
-      tag_id { 2_000_000_000 }
     end
 
     factory :build_with_tag_id do

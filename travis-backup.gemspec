@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name                  = 'travis-backup'
-  s.version               = '0.1.1'
+  s.version               = '0.1.3'
   s.summary               = 'Travis CI backup tool'
   s.authors               = ['Karol Selak']
   s.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
