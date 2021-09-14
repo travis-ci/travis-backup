@@ -141,12 +141,24 @@ class Backup
   def remove_orphans
     remove_orphans_for_table(Repository, 'repositories', 'builds', 'current_build_id')
     remove_orphans_for_table(Repository, 'repositories', 'builds', 'last_build_id')
-    remove_orphans_for_table(Build, 'builds', 'repositories', 'repository_id')
-    remove_orphans_for_table(Build, 'builds', 'commits', 'commit_id')
-    remove_orphans_for_table(Build, 'builds', 'requests', 'request_id')
-    remove_orphans_for_table(Build, 'builds', 'pull_requests', 'pull_request_id')
-    remove_orphans_for_table(Build, 'builds', 'branches', 'branch_id')
-    remove_orphans_for_table(Build, 'builds', 'tags', 'tag_id')
+    remove_orphans_for_table(Build, 'builds', 'repositories', 'repository_id', :destroy_all) do |ids_for_delete|
+      add_builds_dependencies_to_dry_run_report(ids_for_delete)
+    end
+    remove_orphans_for_table(Build, 'builds', 'commits', 'commit_id', :destroy_all) do |ids_for_delete|
+      add_builds_dependencies_to_dry_run_report(ids_for_delete)
+    end
+    remove_orphans_for_table(Build, 'builds', 'requests', 'request_id', :destroy_all) do |ids_for_delete|
+      add_builds_dependencies_to_dry_run_report(ids_for_delete)
+    end
+    remove_orphans_for_table(Build, 'builds', 'pull_requests', 'pull_request_id', :destroy_all) do |ids_for_delete|
+      add_builds_dependencies_to_dry_run_report(ids_for_delete)
+    end
+    remove_orphans_for_table(Build, 'builds', 'branches', 'branch_id', :destroy_all) do |ids_for_delete|
+      add_builds_dependencies_to_dry_run_report(ids_for_delete)
+    end
+    remove_orphans_for_table(Build, 'builds', 'tags', 'tag_id', :destroy_all) do |ids_for_delete|
+      add_builds_dependencies_to_dry_run_report(ids_for_delete)
+    end
     remove_orphans_for_table(Job, 'jobs', 'repositories', 'repository_id')
     remove_orphans_for_table(Job, 'jobs', 'commits', 'commit_id')
     remove_orphans_for_table(Job, 'jobs', 'stages', 'stage_id')
@@ -167,7 +179,14 @@ class Backup
     remove_orphans_for_table(Stage, 'stages', 'builds', 'build_id')
   end
 
-  def remove_orphans_for_table(model_class, table_a_name, table_b_name, fk_name)
+  def add_builds_dependencies_to_dry_run_report(ids_for_delete)
+    repos_for_delete = Repository.where(current_build_id: ids_for_delete)
+    jobs_for_delete = Job.where(source_id: ids_for_delete)
+    dry_run_report[:repositories].concat(repos_for_delete.map(&:id))
+    dry_run_report[:jobs].concat(jobs_for_delete.map(&:id))
+  end
+
+  def remove_orphans_for_table(model_class, table_a_name, table_b_name, fk_name, method=:delete_all)
     for_delete = model_class.find_by_sql(%{
       select a.*
       from #{table_a_name} a
@@ -178,13 +197,18 @@ class Backup
         and b.id is null;
     })
 
+    ids_for_delete = for_delete.map(&:id)
+
     if config.dry_run
       key = table_a_name.to_sym
+
       dry_run_report[key] = [] if dry_run_report[key].nil?
-      dry_run_report[key].concat(for_delete.map(&:id))
+      dry_run_report[key].concat(ids_for_delete)
       dry_run_report[key].uniq!
+
+      yield(ids_for_delete) if block_given?
     else
-      model_class.where(id: for_delete.map(&:id)).destroy_all
+      model_class.where(id: ids_for_delete).send(method)
     end
   end
 
