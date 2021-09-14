@@ -38,20 +38,14 @@ class Backup
     repo_id = args[:repo_id] || @config.repo_id
     org_id = args[:org_id] || @config.org_id
 
-    if user_id
-      owner_id = user_id
-      owner_type = 'User'
-    elsif org_id
-      owner_id = org_id
-      owner_type = 'Organization'
-    end
-
     if @config.move_logs
       move_logs
     elsif @config.remove_orphans
       remove_orphans
-    elsif owner_id
-      process_repos_for_owner(owner_id, owner_type)
+    elsif user_id
+      process_repos_for_owner(user_id, 'User')
+    elsif org_id
+      process_repos_for_owner(org_id, 'Organization')
     elsif repo_id
       process_repo_with_id(repo_id)
     else
@@ -139,44 +133,93 @@ class Backup
   end
 
   def remove_orphans
-    remove_orphans_for_table(Repository, 'repositories', 'builds', 'current_build_id')
-    remove_orphans_for_table(Repository, 'repositories', 'builds', 'last_build_id')
-    remove_orphans_for_table(Build, 'builds', 'repositories', 'repository_id', :destroy_all) do |ids_for_delete|
-      add_builds_dependencies_to_dry_run_report(ids_for_delete)
+    cases = [
+      {
+        main_model: Repository,
+        relations: [
+          {related_model: Build, fk_name: 'current_build_id'},
+          {related_model: Build, fk_name: 'last_build_id'}
+        ]
+      }, {
+        main_model: Build,
+        relations: [
+          {related_model: Repository, fk_name: 'repository_id'},
+          {related_model: Commit, fk_name: 'commit_id'},
+          {related_model: Request, fk_name: 'request_id'},
+          {related_model: PullRequest, fk_name: 'pull_request_id'},
+          {related_model: Branch, fk_name: 'branch_id'},
+          {related_model: Tag, fk_name: 'tag_id'}
+        ],
+        method: :destroy_all,
+        dry_run_complement: -> (ids) { add_builds_dependencies_to_dry_run_report(ids) }
+      }, {
+        main_model: Job,
+        relations: [
+          {related_model: Repository, fk_name: 'repository_id'},
+          {related_model: Commit, fk_name: 'commit_id'},
+          {related_model: Stage, fk_name: 'stage_id'},
+        ]
+      }, {
+        main_model: Branch,
+        relations: [
+          {related_model: Repository, fk_name: 'repository_id'},
+          {related_model: Build, fk_name: 'last_build_id'}
+        ]
+      }, {
+        main_model: Tag,
+        relations: [
+          {related_model: Repository, fk_name: 'repository_id'},
+          {related_model: Build, fk_name: 'last_build_id'}
+        ]
+      }, {
+        main_model: Commit,
+        relations: [
+          {related_model: Repository, fk_name: 'repository_id'},
+          {related_model: Branch, fk_name: 'branch_id'},
+          {related_model: Tag, fk_name: 'tag_id'}
+        ]
+      }, {
+        main_model: Cron,
+        relations: [
+          {related_model: Branch, fk_name: 'branch_id'}
+        ]
+      }, {
+        main_model: PullRequest,
+        relations: [
+          {related_model: Repository, fk_name: 'repository_id'}
+        ]
+      }, {
+        main_model: SslKey,
+        relations: [
+          {related_model: Repository, fk_name: 'repository_id'}
+        ]
+      }, {
+        main_model: Request,
+        relations: [
+          {related_model: Commit, fk_name: 'commit_id'},
+          {related_model: PullRequest, fk_name: 'pull_request_id'},
+          {related_model: Branch, fk_name: 'branch_id'},
+          {related_model: Tag, fk_name: 'tag_id'}
+        ]
+      }, {
+        main_model: Stage,
+        relations: [
+          {related_model: Build, fk_name: 'build_id'}
+        ]
+      }
+    ]
+
+    cases.each do |model_block|
+      model_block[:relations].each do |relation|
+        remove_orphans_for_table(
+          main_model: model_block[:main_model],
+          related_model: relation[:related_model],
+          fk_name: relation[:fk_name],
+          method: model_block[:method],
+          dry_run_complement: model_block[:dry_run_complement]
+        )
+      end
     end
-    remove_orphans_for_table(Build, 'builds', 'commits', 'commit_id', :destroy_all) do |ids_for_delete|
-      add_builds_dependencies_to_dry_run_report(ids_for_delete)
-    end
-    remove_orphans_for_table(Build, 'builds', 'requests', 'request_id', :destroy_all) do |ids_for_delete|
-      add_builds_dependencies_to_dry_run_report(ids_for_delete)
-    end
-    remove_orphans_for_table(Build, 'builds', 'pull_requests', 'pull_request_id', :destroy_all) do |ids_for_delete|
-      add_builds_dependencies_to_dry_run_report(ids_for_delete)
-    end
-    remove_orphans_for_table(Build, 'builds', 'branches', 'branch_id', :destroy_all) do |ids_for_delete|
-      add_builds_dependencies_to_dry_run_report(ids_for_delete)
-    end
-    remove_orphans_for_table(Build, 'builds', 'tags', 'tag_id', :destroy_all) do |ids_for_delete|
-      add_builds_dependencies_to_dry_run_report(ids_for_delete)
-    end
-    remove_orphans_for_table(Job, 'jobs', 'repositories', 'repository_id')
-    remove_orphans_for_table(Job, 'jobs', 'commits', 'commit_id')
-    remove_orphans_for_table(Job, 'jobs', 'stages', 'stage_id')
-    remove_orphans_for_table(Branch, 'branches', 'repositories', 'repository_id')
-    remove_orphans_for_table(Branch, 'branches', 'builds', 'last_build_id')
-    remove_orphans_for_table(Tag, 'tags', 'repositories', 'repository_id')
-    remove_orphans_for_table(Tag, 'tags', 'builds', 'last_build_id')
-    remove_orphans_for_table(Commit, 'commits', 'repositories', 'repository_id')
-    remove_orphans_for_table(Commit, 'commits', 'branches', 'branch_id')
-    remove_orphans_for_table(Commit, 'commits', 'tags', 'tag_id')
-    remove_orphans_for_table(Cron, 'crons', 'branches', 'branch_id')
-    remove_orphans_for_table(PullRequest, 'pull_requests', 'repositories', 'repository_id')
-    remove_orphans_for_table(SslKey, 'ssl_keys', 'repositories', 'repository_id')
-    remove_orphans_for_table(Request, 'requests', 'commits', 'commit_id')
-    remove_orphans_for_table(Request, 'requests', 'pull_requests', 'pull_request_id')
-    remove_orphans_for_table(Request, 'requests', 'branches', 'branch_id')
-    remove_orphans_for_table(Request, 'requests', 'tags', 'tag_id')
-    remove_orphans_for_table(Stage, 'stages', 'builds', 'build_id')
   end
 
   def add_builds_dependencies_to_dry_run_report(ids_for_delete)
@@ -186,11 +229,20 @@ class Backup
     dry_run_report[:jobs].concat(jobs_for_delete.map(&:id))
   end
 
-  def remove_orphans_for_table(model_class, table_a_name, table_b_name, fk_name, method=:delete_all)
-    for_delete = model_class.find_by_sql(%{
+  def remove_orphans_for_table(args)
+    main_model = args[:main_model]
+    related_model = args[:related_model]
+    fk_name = args[:fk_name]
+    method = args[:method] || :delete_all
+    dry_run_complement = args[:dry_run_complement]
+
+    main_table = main_model.table_name
+    related_table = related_model.table_name
+
+    for_delete = main_model.find_by_sql(%{
       select a.*
-      from #{table_a_name} a
-      left join #{table_b_name} b
+      from #{main_table} a
+      left join #{related_table} b
       on a.#{fk_name} = b.id
       where
         a.#{fk_name} is not null
@@ -200,15 +252,15 @@ class Backup
     ids_for_delete = for_delete.map(&:id)
 
     if config.dry_run
-      key = table_a_name.to_sym
+      key = main_table.to_sym
 
       dry_run_report[key] = [] if dry_run_report[key].nil?
       dry_run_report[key].concat(ids_for_delete)
       dry_run_report[key].uniq!
 
-      yield(ids_for_delete) if block_given?
+      dry_run_complement.call(ids_for_delete) if dry_run_complement
     else
-      model_class.where(id: ids_for_delete).send(method)
+      main_model.where(id: ids_for_delete).send(method)
     end
   end
 
