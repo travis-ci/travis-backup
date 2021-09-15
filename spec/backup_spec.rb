@@ -385,11 +385,14 @@ describe Backup do
 
     let(:datetime) { (Config.new.threshold + 1).months.ago.to_time.utc }
     let!(:repository) {
-      FactoryBot.create(
+      ActiveRecord::Base.connection.execute('set session_replication_role = replica;')
+      repository = FactoryBot.create(
         :repository_with_builds_jobs_and_logs,
         created_at: datetime,
         updated_at: datetime
       )
+      ActiveRecord::Base.connection.execute('set session_replication_role = default;')
+      repository
     }
     let!(:repository2) {
       FactoryBot.create(
@@ -438,24 +441,9 @@ describe Backup do
     end
 
     context 'when if_backup config is set to true' do
-      it 'should prepare proper JSON export' do
-        result = backup.process_repo_builds(repository)
-        result.first.first['updated_at'] = datetime
-        result.first.second['updated_at'] = datetime
-        result.first.first[:jobs].first['updated_at'] = datetime
-        result.first.first[:jobs].second['updated_at'] = datetime
-        result.first.second[:jobs].first['updated_at'] = datetime
-        result.first.second[:jobs].second['updated_at'] = datetime
-        result.first.first[:jobs].first[:logs].first['updated_at'] = datetime
-        result.first.first[:jobs].first[:logs].second['updated_at'] = datetime
-        result.first.first[:jobs].second[:logs].first['updated_at'] = datetime
-        result.first.first[:jobs].second[:logs].second['updated_at'] = datetime
-        result.first.second[:jobs].first[:logs].first['updated_at'] = datetime
-        result.first.second[:jobs].first[:logs].second['updated_at'] = datetime
-        result.first.second[:jobs].second[:logs].first['updated_at'] = datetime
-        result.first.second[:jobs].second[:logs].second['updated_at'] = datetime
-
-        expect(result.to_json).to eq(expected_builds_json.to_json)
+      it 'should save proper build JSON to file' do
+        expect_any_instance_of(File).to receive(:write).once.with(JSON.pretty_generate(expected_builds_json.first))
+        backup.process_repo_builds(repository)
       end
 
       it 'should save JSON to file at proper path' do
@@ -545,9 +533,9 @@ describe Backup do
     end
 
     context 'when if_backup config is set to true' do
-      it 'should prepare proper JSON export' do
-        result = backup.process_repo_requests(repository)
-        expect(result.to_json).to eq(expected_requests_json.to_json)
+      it 'should save proper build JSON to file' do
+        expect_any_instance_of(File).to receive(:write).once.with(JSON.pretty_generate(expected_requests_json.first))
+        backup.process_repo_requests(repository)
       end
 
       it 'should save JSON to file at proper path' do
