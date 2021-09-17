@@ -5,72 +5,18 @@ require 'models/build'
 require 'models/job'
 require 'models/organization'
 require 'models/user'
-
 require 'support/factories'
 require 'support/expected_files'
+require 'support/before_tests'
 require 'pry'
 
 describe Backup do
   before(:all) do
-    ARGV = ['-t', '6']
-    config = Config.new
-    system("psql '#{config.database_url}' -f db/schema.sql > /dev/null")
-    system("psql '#{config.destination_db_url}' -f db/schema.sql > /dev/null") if config.destination_db_url
+    BeforeTests.new.run
   end
 
   let(:files_location) { "dump/tests" }
   let!(:backup) { Backup.new(files_location: files_location, limit: 5) }
-
-  describe 'move_logs' do
-    let!(:logs) {
-      FactoryBot.create_list(
-        :log,
-        10,
-        job_id: 1,
-        content: 'some log content',
-        removed_by: 1,
-        archiving: false,
-        archive_verified: true
-      )    
-    }
-
-    def connect_db(url)
-      ActiveRecord::Base.establish_connection(url)
-    end
-
-    def do_in_destination_db(config)
-      connect_db(config.destination_db_url)
-      result = yield
-      connect_db(config.database_url)
-      result
-    end
-
-    it 'copies logs to destination database' do
-      def destination_logs_size
-        do_in_destination_db(backup.config) do
-          Log.all.size
-        end
-      end
-
-      source_db_logs = Log.all.as_json
-
-      expect {
-        backup.move_logs
-      }.to change { destination_logs_size }.by 10
-
-      destination_db_logs = do_in_destination_db(backup.config) do
-        Log.all.as_json
-      end
-
-      expect(destination_db_logs).to eql(source_db_logs)
-    end
-
-    it 'removes copied logs from source database' do
-      expect {
-        backup.move_logs
-      }.to change { Log.all.size }.by -10
-    end
-  end
 
   describe 'remove_orphans' do
     after(:all) do
@@ -231,7 +177,7 @@ describe Backup do
       end
 
       it 'prints dry run report' do
-        expect(backup).to receive(:print_dry_run_report).once
+        expect_any_instance_of(DryRunReporter).to receive(:print_report).once
         backup.run
       end
     end
@@ -318,7 +264,7 @@ describe Backup do
       end
 
       it 'moves logs' do
-        expect(backup).to receive(:move_logs).once
+        expect_any_instance_of(Backup::MoveLogs).to receive(:run).once
         backup.run
       end
     end
@@ -353,7 +299,7 @@ describe Backup do
       end
 
       it 'prints dry run report' do
-        expect(backup).to receive(:print_dry_run_report).once
+        expect_any_instance_of(DryRunReporter).to receive(:print_report).once
         backup.run
       end
     end
