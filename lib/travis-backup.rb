@@ -23,7 +23,7 @@ class Backup
     @config = Config.new(config_args)
 
     if @config.dry_run
-      @dry_run_report = {builds: [], jobs: [], logs: [], requests: []}
+      @dry_run_report = {}
     end
 
     connect_db
@@ -69,6 +69,12 @@ class Backup
     Repository.order(:id).each do |repository|
       process_repo(repository)
     end
+  end
+
+  def add_to_dry_report(key, *values)
+    dry_run_report[key] = [] if dry_run_report[key].nil?
+    dry_run_report[key].concat(values)
+    dry_run_report[key].uniq!
   end
 
   def print_dry_run_report
@@ -134,7 +140,8 @@ class Backup
   end
 
   def move_logs_dry
-    dry_run_report[:logs].concat(Log.order(:id).map(&:id))
+    ids = Log.order(:id).map(&:id)
+    add_to_dry_report(:logs, *ids)
   end
 
   def remove_orphans
@@ -230,8 +237,8 @@ class Backup
   def add_builds_dependencies_to_dry_run_report(ids_for_delete)
     repos_for_delete = Repository.where(current_build_id: ids_for_delete)
     jobs_for_delete = Job.where(source_id: ids_for_delete)
-    dry_run_report[:repositories].concat(repos_for_delete.map(&:id))
-    dry_run_report[:jobs].concat(jobs_for_delete.map(&:id))
+    add_to_dry_report(:repositories, *repos_for_delete.map(&:id))
+    add_to_dry_report(:jobs, *jobs_for_delete.map(&:id))
   end
 
   def remove_orphans_for_table(args)
@@ -259,9 +266,7 @@ class Backup
     if config.dry_run
       key = main_table.to_sym
 
-      dry_run_report[key] = [] if dry_run_report[key].nil?
-      dry_run_report[key].concat(ids_for_delete)
-      dry_run_report[key].uniq!
+      add_to_dry_report(key, *ids_for_delete)
 
       dry_run_complement.call(ids_for_delete) if dry_run_complement
     else
@@ -331,21 +336,21 @@ class Backup
   end
 
   def destroy_builds_batch_dry(builds_batch)
-    @dry_run_report[:builds].concat(builds_batch.map(&:id))
+    add_to_dry_report(:builds, *builds_batch.map(&:id))
 
-    jobs = builds_batch.map do |build|
+    jobs_ids = builds_batch.map do |build|
       build.jobs.map(&:id) || []
     end.flatten
 
-    @dry_run_report[:jobs].concat(jobs)
+    add_to_dry_report(:jobs, *jobs_ids)
 
-    logs = builds_batch.map do |build|
+    logs_ids = builds_batch.map do |build|
       build.jobs.map do |job|
         job.logs.map(&:id) || []
       end.flatten || []
     end.flatten
 
-    @dry_run_report[:logs].concat(logs)
+    add_to_dry_report(:logs, *logs_ids)
   end
 
   def save_and_destroy_requests_batch(requests_batch, repository)
@@ -365,7 +370,7 @@ class Backup
   end
 
   def destroy_requests_batch_dry(requests_batch)
-    @dry_run_report[:requests].concat(requests_batch.map(&:id))
+    add_to_dry_report(:requests, *requests_batch.map(&:id))
   end
 
   def save_file(file_name, content) # rubocop:disable Metrics/MethodLength

@@ -213,7 +213,7 @@ describe Backup do
       let!(:backup) { Backup.new(dry_run: true) }
 
       before do
-        allow_any_instance_of(IO).to receive(:puts)
+        # allow_any_instance_of(IO).to receive(:puts)
       end
 
       it 'prepares proper dry run report' do
