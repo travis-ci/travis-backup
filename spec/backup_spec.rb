@@ -402,10 +402,23 @@ describe Backup do
         builds_count: 1
       )
     }
-
-
+    let(:expected_files_creator) {
+      ExpectedFiles.new(repository, datetime)
+    }
     let!(:expected_builds_json) {
-      ExpectedFiles.new(repository, datetime).builds_json
+      expected_files_creator.builds_json
+    }
+    let!(:expected_jobs_jsons) {
+      repository.builds.map do |build|
+        expected_files_creator.jobs_json(build)
+      end
+    }
+    let!(:expected_logs_jsons) {
+      repository.builds.map do |build|
+        build.jobs.map do |job|
+          expected_files_creator.logs_json(job)
+        end
+      end.flatten(1)
     }
 
     shared_context 'removing builds and jobs' do
@@ -441,14 +454,78 @@ describe Backup do
     end
 
     context 'when if_backup config is set to true' do
-      it 'should save proper build JSON to file' do
-        expect_any_instance_of(File).to receive(:write).once.with(JSON.pretty_generate(expected_builds_json.first))
-        backup.process_repo_builds(repository)
+      it 'should save proper build JSON file' do
+        expect_method_calls_on(
+          File, :write,
+          [JSON.pretty_generate(expected_builds_json)],
+          allow_instances: true,
+          arguments_to_check: :first
+        ) do
+          backup.process_repo_builds(repository)
+        end
       end
 
-      it 'should save JSON to file at proper path' do
-        expect(File).to receive(:open).once.with(Regexp.new(files_location), 'w')
-        backup.process_repo_builds(repository)
+      it 'should save proper job JSON files' do
+        expect_method_calls_on(
+          File, :write,
+          [
+            JSON.pretty_generate(expected_jobs_jsons.first),
+            JSON.pretty_generate(expected_jobs_jsons.second)
+          ],
+          allow_instances: true,
+          arguments_to_check: :first
+        ) do
+          backup.process_repo_builds(repository)
+        end
+      end
+
+      it 'should save proper log JSON files' do
+        expect_method_calls_on(
+          File, :write,
+          [
+            JSON.pretty_generate(expected_logs_jsons.first),
+            JSON.pretty_generate(expected_logs_jsons.second),
+            JSON.pretty_generate(expected_logs_jsons.third),
+            JSON.pretty_generate(expected_logs_jsons.fourth),
+          ],
+          allow_instances: true,
+          arguments_to_check: :first
+        ) do
+          backup.process_repo_builds(repository)
+        end
+      end
+
+      it 'should save JSON files at proper paths' do
+        expect_method_calls_on(
+          File, :open,
+          [
+            Regexp.new('dump/tests/repository_\d+_build_\d+_job_\d+_logs_\d+-\d+.json'),
+            Regexp.new('dump/tests/repository_\d+_build_\d+_job_\d+_logs_\d+-\d+.json'),
+            Regexp.new('dump/tests/repository_\d+_build_\d+_jobs_\d+-\d+.json'),
+            Regexp.new('dump/tests/repository_\d+_build_\d+_job_\d+_logs_\d+-\d+.json'),
+            Regexp.new('dump/tests/repository_\d+_build_\d+_job_\d+_logs_\d+-\d+.json'),
+            Regexp.new('dump/tests/repository_\d+_build_\d+_jobs_\d+-\d+.json'),
+            Regexp.new('dump/tests/repository_\d+_builds_\d+-\d+.json')
+          ],
+          match_mode: :match,
+          arguments_to_check: :first
+        ) do
+          backup.process_repo_builds(repository)
+        end
+
+
+
+        # saved_files_paths = []
+
+        # allow(File).to receive(:open).and_wrap_original do |method, *args, &block|
+        #   saved_files_paths.push(args.first)
+        #   method.call(*args, &block)
+        # end
+
+        # backup.process_repo_builds(repository)
+
+        # expect(saved_files_paths).to match_array([
+        # ])
       end
 
       it_behaves_like 'removing builds and jobs'
@@ -534,7 +611,7 @@ describe Backup do
 
     context 'when if_backup config is set to true' do
       it 'should save proper build JSON to file' do
-        expect_any_instance_of(File).to receive(:write).once.with(JSON.pretty_generate(expected_requests_json.first))
+        expect_any_instance_of(File).to receive(:write).once.with(JSON.pretty_generate(expected_requests_json))
         backup.process_repo_requests(repository)
       end
 
@@ -574,5 +651,35 @@ describe Backup do
         }.not_to change { Request.all.size }
       end
     end
+  end
+end
+
+def expect_method_calls_on(cl, method, call_with, options)
+  match_mode = options[:mode] || :including
+  allow_instances = options[:allow_instances] || false
+  arguments_to_check = options[:arguments_to_check] || :all
+
+  calls_args = []
+
+  allowed = allow_instances ? allow_any_instance_of(cl) : allow(cl)
+
+  allowed.to receive(method).and_wrap_original do |method, *args, &block|
+    if arguments_to_check == :all
+      calls_args.push(args)
+    else
+      calls_args.push(args.send(arguments_to_check)) # = args.first, args.second, args.third etc.
+    end
+    method.call(*args, &block)
+  end
+
+  yield
+
+  case match_mode
+  when :including
+    call_with.each do |args|
+      expect(calls_args).to include(args)
+    end
+  when :match
+    expect(call_with).to match_array(calls_args)
   end
 end
