@@ -17,4 +17,11 @@ class DbHelper
     connect_db(saved_config)
     result
   end
+
+  def do_without_triggers
+    ActiveRecord::Base.connection.execute('set session_replication_role = replica;')
+    result = yield
+    ActiveRecord::Base.connection.execute('set session_replication_role = default;')
+    result
+  end
 end
