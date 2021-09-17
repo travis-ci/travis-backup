@@ -392,30 +392,6 @@ class Backup
     "#{@config.files_location}/#{file_name}"
   end
 
-  # def export_builds(builds)
-  #   builds.map do |build|
-  #     build_export = build.attributes
-  #     build_export[:jobs] = export_jobs(build.jobs)
-
-  #     build_export
-  #   end
-  # end
-
-  # def export_jobs(jobs)
-  #   jobs.map do |job|
-  #     job_export = job.attributes
-  #     job_export[:logs] = export_logs(job.logs)
-
-  #     job_export
-  #   end
-  # end
-
-  # def export_logs(logs)
-  #   logs.map do |log|
-  #     log.attributes
-  #   end
-  # end
-
   def export_requests(requests)
     requests.map do |request|
       request.attributes
