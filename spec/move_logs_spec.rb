@@ -34,28 +34,24 @@ describe Backup::MoveLogs do
       )    
     }
 
-    def do_in_destination_db(config)
-      db_helper.connect_db(config.destination_db_url)
-      result = yield
-      db_helper.connect_db(config.database_url)
-      result
+    def do_in_destination_db(&block)
+      db_helper.do_in_other_db(config.destination_db_url, &block)
+    end
+
+    def destination_logs_size
+      do_in_destination_db do
+        Log.all.size
+      end
     end
 
     it 'copies logs to destination database' do
-      
-      def destination_logs_size
-        do_in_destination_db(move_logs.config) do
-          Log.all.size
-        end
-      end
-
       source_db_logs = Log.all.as_json
 
       expect {
         move_logs.run
       }.to change { destination_logs_size }.by 10
 
-      destination_db_logs = do_in_destination_db(move_logs.config) do
+      destination_db_logs = do_in_destination_db do
         Log.all.as_json
       end
 
