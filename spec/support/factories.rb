@@ -272,7 +272,7 @@ FactoryBot.define do
     end
 
     factory :tag_with_last_build_id do
-      last_build_id { Tag.first.id }
+      last_build_id { Build.first.id }
     end
   end
 
