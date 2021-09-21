@@ -9,7 +9,7 @@ require 'support/factories'
 require 'support/expected_files'
 require 'support/before_tests'
 require 'pry'
-
+require 'database_cleaner/active_record'
 
 describe Backup::RemoveOrphans do
   before(:all) do
@@ -23,16 +23,8 @@ describe Backup::RemoveOrphans do
 
   describe 'run' do
     after(:all) do
-      Repository.destroy_all
-      Build.destroy_all
-      Job.destroy_all
-      Branch.destroy_all
-      Tag.destroy_all
-      Commit.destroy_all
-      Cron.destroy_all
-      PullRequest.destroy_all
-      Request.destroy_all
-      Stage.destroy_all
+      DatabaseCleaner.strategy = :truncation
+      DatabaseCleaner.clean
     end
 
     let!(:data) {
