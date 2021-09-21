@@ -14,7 +14,7 @@ class Backup
       return run_dry if @config.dry_run
 
       @db_helper.connect_db(@config.database_url)
-      Log.order(:id).in_groups_of(@config.limit.to_i, false).map do |logs_batch|
+      Log.order(:id).in_batches(of: @config.limit.to_i).map do |logs_batch|
         log_hashes = logs_batch.as_json
         @db_helper.connect_db(@config.destination_db_url)
 

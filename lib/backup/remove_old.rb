@@ -54,7 +54,7 @@ class Backup
       threshold = @config.threshold.to_i.months.ago.to_datetime
       current_build_id = repository.current_build_id || -1
       repository.builds.where('created_at < ? and id != ?', threshold, current_build_id)
-                .in_groups_of(@config.limit.to_i, false).map do |builds_batch|
+                .in_batches(of: @config.limit.to_i).map do |builds_batch|
         if @config.if_backup
           file_prefix = "repository_#{repository.id}"
           save_and_destroy_builds_batch(builds_batch, file_prefix)
@@ -67,7 +67,7 @@ class Backup
     def process_repo_requests(repository)
       threshold = @config.threshold.to_i.months.ago.to_datetime
       repository.requests.where('created_at < ?', threshold)
-                .in_groups_of(@config.limit.to_i, false).map do |requests_batch|
+                .in_batches(of: @config.limit.to_i).map do |requests_batch|
         @config.if_backup ? save_and_destroy_requests_batch(requests_batch, repository) : destroy_requests_batch(requests_batch)
       end.compact
     end
@@ -91,7 +91,7 @@ class Backup
     end
   
     def save_build_jobs_and_logs(build, file_prefix)
-      build.jobs.in_groups_of(@config.limit.to_i, false).map do |jobs_batch|
+      build.jobs.in_batches(of: @config.limit.to_i).map do |jobs_batch|
         file_prefix = "#{file_prefix}_build_#{build.id}"
         save_jobs_batch(jobs_batch, file_prefix)
       end.compact.reduce(&:&)
@@ -114,7 +114,7 @@ class Backup
     end
   
     def save_job_logs(job, file_prefix)
-      job.logs.in_groups_of(@config.limit.to_i, false).map do |logs_batch|
+      job.logs.in_batches(of: @config.limit.to_i).map do |logs_batch|
         file_prefix = "#{file_prefix}_job_#{job.id}"
         save_logs_batch(logs_batch, file_prefix)
       end.compact.reduce(&:&)
