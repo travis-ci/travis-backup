@@ -22,7 +22,7 @@ describe Backup::RemoveOrphans do
   let!(:remove_orphans) { Backup::RemoveOrphans.new(config, DryRunReporter.new) }
 
   describe 'run' do
-    after(:all) do
+    before(:each) do
       DatabaseCleaner.strategy = :truncation
       DatabaseCleaner.clean
     end
