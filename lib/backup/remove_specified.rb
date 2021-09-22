@@ -59,6 +59,14 @@ class Backup
       end
     end
 
+    def remove_user_with_dependencies(user_id)
+      
+    end
+
+    def remove_org_with_dependencies(org_id)
+      
+    end
+
     def remove_repo_with_dependencies(repo_id)
       
     end

@@ -48,14 +48,13 @@ describe Backup::RemoveSpecified do
 
     let(:datetime) { (Config.new.threshold + 1).months.ago.to_time.utc }
     let!(:repository) {
-      ActiveRecord::Base.connection.execute('set session_replication_role = replica;')
-      repository = FactoryBot.create(
-        :repository_with_builds_jobs_and_logs,
-        created_at: datetime,
-        updated_at: datetime
-      )
-      ActiveRecord::Base.connection.execute('set session_replication_role = default;')
-      repository
+      db_helper.do_without_triggers do
+        FactoryBot.create(
+          :repository_with_builds_jobs_and_logs,
+          created_at: datetime,
+          updated_at: datetime
+        )
+      end
     }
     let!(:repository2) {
       FactoryBot.create(
@@ -305,5 +304,17 @@ describe Backup::RemoveSpecified do
         }.not_to change { Request.all.size }
       end
     end
+  end
+
+  describe 'remove_user_with_dependencies' do
+
+  end
+
+  describe 'remove_org_with_dependencies' do
+    
+  end
+
+  describe 'remove_repo_with_dependencies' do
+    
   end
 end
