@@ -17,7 +17,7 @@ require 'models/request'
 require 'models/stage'
 require 'backup/move_logs'
 require 'backup/remove_orphans'
-require 'backup/remove_old'
+require 'backup/remove_specified'
 
 # main travis-backup class
 class Backup
@@ -42,7 +42,7 @@ class Backup
     elsif @config.remove_orphans
       Backup::RemoveOrphans.new(@config, @dry_run_reporter).run
     else
-      Backup::RemoveOld.new(@config, @dry_run_reporter).run(args)
+      Backup::RemoveSpecified.new(@config, @dry_run_reporter).run(args)
     end
 
     @dry_run_reporter.print_report if @config.dry_run

@@ -12,7 +12,7 @@ require 'support/utils'
 require 'pry'
 
 
-describe Backup::RemoveOld do
+describe Backup::RemoveSpecified do
   before(:all) do
     BeforeTests.new.run
   end
@@ -20,22 +20,21 @@ describe Backup::RemoveOld do
   let(:files_location) { "dump/tests" }
   let!(:config) { Config.new(files_location: files_location, limit: 5) }
   let!(:db_helper) { DbHelper.new(config) }
-  let!(:remove_old) { Backup::RemoveOld.new(config, DryRunReporter.new) }
+  let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
 
-  
   describe 'process_repo' do
     let!(:repository) {
       FactoryBot.create(:repository)
     }
 
     it 'processes repository builds' do
-      expect(remove_old).to receive(:process_repo_builds).once.with(repository)
-      remove_old.process_repo(repository)
+      expect(remove_specified).to receive(:process_repo_builds).once.with(repository)
+      remove_specified.process_repo(repository)
     end
 
     it 'processes repository requests' do
-      expect(remove_old).to receive(:process_repo_requests).once.with(repository)
-      remove_old.process_repo(repository)
+      expect(remove_specified).to receive(:process_repo_requests).once.with(repository)
+      remove_specified.process_repo(repository)
     end
   end
 
@@ -87,13 +86,13 @@ describe Backup::RemoveOld do
 
     shared_context 'removing builds and jobs' do
       it 'should delete all builds of the repository' do
-        remove_old.process_repo_builds(repository)
+        remove_specified.process_repo_builds(repository)
         expect(Build.all.map(&:repository_id)).to eq([repository2.id])
       end
 
       it 'should delete all jobs of removed builds and leave the rest' do
         expect {
-          remove_old.process_repo_builds(repository)
+          remove_specified.process_repo_builds(repository)
         }.to change { Job.all.size }.by -4
 
         build_id = Build.first.id
@@ -102,7 +101,7 @@ describe Backup::RemoveOld do
 
       it 'should delete all logs of removed jobs and leave the rest' do
         expect {
-          remove_old.process_repo_builds(repository)
+          remove_specified.process_repo_builds(repository)
         }.to change { Log.all.size }.by -8
 
         build_id = Build.first.id
@@ -113,7 +112,7 @@ describe Backup::RemoveOld do
     shared_context 'not saving JSON to file' do
       it 'should not save JSON to file' do
         expect(File).not_to receive(:open)
-        remove_old.process_repo_builds(repository)
+        remove_specified.process_repo_builds(repository)
       end
     end
 
@@ -125,7 +124,7 @@ describe Backup::RemoveOld do
           allow_instances: true,
           arguments_to_check: :first
         ) do
-          remove_old.process_repo_builds(repository)
+          remove_specified.process_repo_builds(repository)
         end
       end
 
@@ -139,7 +138,7 @@ describe Backup::RemoveOld do
           allow_instances: true,
           arguments_to_check: :first
         ) do
-          remove_old.process_repo_builds(repository)
+          remove_specified.process_repo_builds(repository)
         end
       end
 
@@ -155,7 +154,7 @@ describe Backup::RemoveOld do
           allow_instances: true,
           arguments_to_check: :first
         ) do
-          remove_old.process_repo_builds(repository)
+          remove_specified.process_repo_builds(repository)
         end
       end
 
@@ -174,7 +173,7 @@ describe Backup::RemoveOld do
           match_mode: :match,
           arguments_to_check: :first
         ) do
-          remove_old.process_repo_builds(repository)
+          remove_specified.process_repo_builds(repository)
         end
       end
 
@@ -183,19 +182,19 @@ describe Backup::RemoveOld do
       context 'when path with nonexistent folders is given' do
         let(:random_files_location) { "dump/tests/#{rand(100000)}" }
         let!(:config) { Config.new(files_location: random_files_location, limit: 2) }
-        let!(:remove_old) { Backup::RemoveOld.new(config, DryRunReporter.new) }
+        let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
       
 
         it 'should create needed folders' do
           expect(FileUtils).to receive(:mkdir_p).once.with(random_files_location).and_call_original
-          remove_old.process_repo_builds(repository)
+          remove_specified.process_repo_builds(repository)
         end
       end
     end
 
     context 'when if_backup config is set to false' do
       let!(:config) { Config.new(files_location: files_location, limit: 2, if_backup: false) }
-      let!(:remove_old) { Backup::RemoveOld.new(config, DryRunReporter.new) }
+      let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
 
       it_behaves_like 'not saving JSON to file'
       it_behaves_like 'removing builds and jobs'
@@ -203,19 +202,19 @@ describe Backup::RemoveOld do
 
     context 'when dry_run config is set to true' do
       let!(:config) { Config.new(files_location: files_location, limit: 2, dry_run: true) }
-      let!(:remove_old) { Backup::RemoveOld.new(config, DryRunReporter.new) }
+      let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
 
       it_behaves_like 'not saving JSON to file'
 
       it 'should not delete builds' do
         expect {
-          remove_old.process_repo_builds(repository)
+          remove_specified.process_repo_builds(repository)
         }.not_to change { Build.all.size }
       end
 
       it 'should not delete jobs' do
         expect {
-          remove_old.process_repo_builds(repository)
+          remove_specified.process_repo_builds(repository)
         }.not_to change { Job.all.size }
       end
     end
@@ -243,15 +242,13 @@ describe Backup::RemoveOld do
         requests_count: 1
       )
     }
-
-
     let!(:expected_requests_json) {
       ExpectedFiles.new(repository, datetime).requests_json
     }
 
     shared_context 'removing requests' do
       it 'should delete all requests of the repository' do
-        remove_old.process_repo_requests(repository)
+        remove_specified.process_repo_requests(repository)
         expect(Request.all.map(&:repository_id)).to eq([repository2.id])
       end
     end
@@ -259,19 +256,19 @@ describe Backup::RemoveOld do
     shared_context 'not saving JSON to file' do
       it 'should not save JSON to file' do
         expect(File).not_to receive(:open)
-        remove_old.process_repo_requests(repository)
+        remove_specified.process_repo_requests(repository)
       end
     end
 
     context 'when if_backup config is set to true' do
       it 'should save proper build JSON to file' do
         expect_any_instance_of(File).to receive(:write).once.with(JSON.pretty_generate(expected_requests_json))
-        remove_old.process_repo_requests(repository)
+        remove_specified.process_repo_requests(repository)
       end
 
       it 'should save JSON to file at proper path' do
         expect(File).to receive(:open).once.with(Regexp.new(files_location), 'w')
-        remove_old.process_repo_requests(repository)
+        remove_specified.process_repo_requests(repository)
       end
 
       it_behaves_like 'removing requests'
@@ -279,18 +276,18 @@ describe Backup::RemoveOld do
       context 'when path with nonexistent folders is given' do
         let(:random_files_location) { "dump/tests/#{rand(100000)}" }
         let!(:config) { Config.new(files_location: random_files_location, limit: 2) }
-        let!(:remove_old) { Backup::RemoveOld.new(config, DryRunReporter.new) }
+        let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
 
         it 'should create needed folders' do
           expect(FileUtils).to receive(:mkdir_p).once.with(random_files_location).and_call_original
-          remove_old.process_repo_requests(repository)
+          remove_specified.process_repo_requests(repository)
         end
       end
     end
 
     context 'when if_backup config is set to false' do
       let!(:config) { Config.new(files_location: files_location, limit: 2, if_backup: false) }
-      let!(:remove_old) { Backup::RemoveOld.new(config, DryRunReporter.new) }
+      let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
 
       it_behaves_like 'not saving JSON to file'
       it_behaves_like 'removing requests'
@@ -298,13 +295,13 @@ describe Backup::RemoveOld do
 
     context 'when dry_run config is set to true' do
       let!(:config) { Config.new(files_location: files_location, limit: 2, dry_run: true) }
-      let!(:remove_old) { Backup::RemoveOld.new(config, DryRunReporter.new) }
+      let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
 
       it_behaves_like 'not saving JSON to file'
 
       it 'should not delete requests' do
         expect {
-          remove_old.process_repo_requests(repository)
+          remove_specified.process_repo_requests(repository)
         }.not_to change { Request.all.size }
       end
     end

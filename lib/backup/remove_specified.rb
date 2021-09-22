@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Backup
-  class RemoveOld
+  class RemoveSpecified
     attr_reader :config
 
     def initialize(config, dry_run_reporter=nil)
