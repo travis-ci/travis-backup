@@ -11,5 +11,22 @@ FactoryBot.define do
     factory :pull_request_with_repository_id do
       repository_id { Repository.first.id }
     end
+
+    factory :pull_request_with_all_dependencies do
+      after(:create) do |pull_request|
+        create_list(
+          :build_with_all_dependencies, 2,
+          pull_request_id: pull_request.id,
+          created_at: pull_request.created_at,
+          updated_at: pull_request.updated_at
+        )
+        create_list(
+          :request_with_all_dependencies, 2,
+          pull_request_id: pull_request.id,
+          created_at: pull_request.created_at,
+          updated_at: pull_request.updated_at
+        )
+      end
+    end
   end
 end

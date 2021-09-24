@@ -17,5 +17,41 @@ FactoryBot.define do
     factory :branch_with_last_build_id do
       last_build_id { Build.first.id }
     end
+
+    factory :branch_with_all_dependencies do
+      after(:create) do |branch|
+        create_list(
+          :build_with_safe_dependencies, 2,
+          branch_id: branch.id,
+          created_at: branch.created_at,
+          updated_at: branch.updated_at
+        )
+        create_list(
+          :cron, 2,
+          branch_id: branch.id,
+          created_at: branch.created_at,
+          updated_at: branch.updated_at
+        )
+        create_list(
+          :job_with_all_dependencies, 2,
+          source_id: branch.id,
+          source_type: 'Branch',
+          created_at: branch.created_at,
+          updated_at: branch.updated_at
+        )
+        create_list(
+          :commit_with_all_dependencies, 2,
+          branch_id: branch.id,
+          created_at: branch.created_at,
+          updated_at: branch.updated_at
+        )
+        create_list(
+          :request_with_all_dependencies, 2,
+          branch_id: branch.id,
+          created_at: branch.created_at,
+          updated_at: branch.updated_at
+        )
+      end
+    end
   end
 end

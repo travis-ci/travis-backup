@@ -27,5 +27,28 @@ FactoryBot.define do
     factory :commit_with_tag_id do
       tag_id { Tag.first.id }
     end
+
+    factory :commit_with_all_dependencies do
+      after(:create) do |commit|
+        create_list(
+          :build_with_safe_dependencies, 2,
+          commit_id: commit.id,
+          created_at: commit.created_at,
+          updated_at: commit.updated_at
+        )
+        create_list(
+          :job_with_all_dependencies, 2,
+          commit_id: commit.id,
+          created_at: commit.created_at,
+          updated_at: commit.updated_at
+        )
+        create_list(
+          :request_with_all_dependencies, 2,
+          commit_id: commit.id,
+          created_at: commit.created_at,
+          updated_at: commit.updated_at
+        )
+      end
+    end
   end
 end

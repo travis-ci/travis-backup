@@ -12,3 +12,22 @@ require 'support/factories/ssl_key'
 require 'support/factories/stage'
 require 'support/factories/tag'
 require 'support/factories/user'
+
+FactoryBot.define do
+  factory :email
+  factory :token
+  factory :star
+  factory :membership
+  factory :user_beta_feature
+  factory :permission
+  factory :trial
+  factory :trial_allowance
+  factory :broadcast
+  factory :subscription
+  factory :invoice
+  factory :owner_group
+  factory :message
+  factory :abuse
+  factory :annotation
+  factory :queueable_job
+end

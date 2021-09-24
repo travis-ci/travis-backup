@@ -35,5 +35,29 @@ FactoryBot.define do
     factory :request_with_tag_id do
       tag_id { Tag.first.id }
     end
+
+    factory :request_with_all_dependencies do
+      after(:create) do |request|
+        create_list(
+          :abuse, 2,
+          request_id: request.id,
+          created_at: request.created_at,
+          updated_at: request.updated_at
+        )
+        create_list(
+          :message, 2,
+          subject_id: request.id,
+          subject_type: 'Request',
+          created_at: request.created_at,
+          updated_at: request.updated_at
+        )
+        create_list(
+          :build_with_safe_dependencies, 2,
+          request_id: request.id,
+          created_at: request.created_at,
+          updated_at: request.updated_at
+        )
+      end
+    end
   end
 end

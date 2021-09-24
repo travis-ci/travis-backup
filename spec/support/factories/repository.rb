@@ -64,5 +64,134 @@ FactoryBot.define do
         )
       end
     end
+
+    factory :repository_with_all_dependencies do
+      after(:create) do |repository|
+        create_list(
+          :build_with_all_dependencies, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+        create_list(
+          :request_with_all_dependencies, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+        create_list(
+          :job_with_all_dependencies, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+        create_list(
+          :branch_with_all_dependencies, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+        create_list(
+          :commit_with_all_dependencies, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+        create_list(
+          :ssl_key, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+        create_list(
+          :permission, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+        create_list(
+          :star, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+        create_list(
+          :pull_request_with_all_dependencies, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+        create_list(
+          :tag_with_all_dependencies, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+      end
+    end
+    factory :repository_with_safe_dependencies do
+      after(:create) do |repository|
+        create_list(
+          :build, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+        create_list(
+          :request, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+        create_list(
+          :job_with_all_dependencies, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+        create_list(
+          :branch, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+        create_list(
+          :commit, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+        create_list(
+          :ssl_key, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+        create_list(
+          :permission, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+        create_list(
+          :star, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+        create_list(
+          :pull_request, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+        create_list(
+          :tag, 2,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+      end
+    end
   end
 end

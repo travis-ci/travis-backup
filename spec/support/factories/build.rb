@@ -92,5 +92,89 @@ FactoryBot.define do
     factory :build_with_tag_id do
       tag_id { Tag.first.id }
     end
+
+    factory :build_with_all_dependencies do
+      after(:create) do |build|
+        create_list(
+          :tag_with_all_dependencies, 2,
+          build_id: build.id,
+          created_at: build.created_at,
+          updated_at: build.updated_at
+        )
+        create_list(
+          :stage_with_jobs, 2,
+          build_id: build.id,
+          created_at: build.created_at,
+          updated_at: build.updated_at
+        )
+        create_list(
+          :job_with_all_dependencies, 2,
+          source_type: 'Build',
+          source_id: build.id,
+          created_at: build.created_at,
+          updated_at: build.updated_at
+        )
+        create_list(
+          :branch_with_all_dependencies, 2,
+          last_build_id: build.id,
+          created_at: build.created_at,
+          updated_at: build.updated_at
+        )
+        create_list(
+          :repository_with_safe_dependencies, 2,
+          last_build_id: build.id,
+          created_at: build.created_at,
+          updated_at: build.updated_at
+        )
+        create_list(
+          :repository_with_safe_dependencies, 2,
+          current_build_id: build.id,
+          created_at: build.created_at,
+          updated_at: build.updated_at
+        )
+      end
+    end
+
+    factory :build_with_safe_dependencies do
+      after(:create) do |build|
+        create_list(
+          :tag, 2,
+          build_id: build.id,
+          created_at: build.created_at,
+          updated_at: build.updated_at
+        )
+        create_list(
+          :stage_with_jobs, 2,
+          build_id: build.id,
+          created_at: build.created_at,
+          updated_at: build.updated_at
+        )
+        create_list(
+          :job_with_all_dependencies, 2,
+          source_type: 'Build',
+          source_id: build.id,
+          created_at: build.created_at,
+          updated_at: build.updated_at
+        )
+        create_list(
+          :branch, 2,
+          last_build_id: build.id,
+          created_at: build.created_at,
+          updated_at: build.updated_at
+        )
+        create_list(
+          :repository, 2,
+          last_build_id: build.id,
+          created_at: build.created_at,
+          updated_at: build.updated_at
+        )
+        create_list(
+          :repository, 2,
+          current_build_id: build.id,
+          created_at: build.created_at,
+          updated_at: build.updated_at
+        )
+      end
+    end
   end
 end

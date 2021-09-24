@@ -46,5 +46,28 @@ FactoryBot.define do
     factory :job_with_stage_id do
       stage_id { Stage.first.id }
     end
+
+    factory :job_with_all_dependencies do
+      after(:create) do |job|
+        create_list(
+          :annotation, 2,
+          job_id: job.id,
+          created_at: job.created_at,
+          updated_at: job.updated_at
+        )
+        create_list(
+          :queueable_job, 2,
+          job_id: job.id,
+          created_at: job.created_at,
+          updated_at: job.updated_at
+        )
+        create_list(
+          :log, 2,
+          job_id: job.id,
+          created_at: job.created_at,
+          updated_at: job.updated_at
+        )
+      end
+    end
   end
 end
