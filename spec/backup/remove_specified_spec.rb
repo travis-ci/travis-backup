@@ -21,6 +21,7 @@ describe Backup::RemoveSpecified do
   let!(:config) { Config.new(files_location: files_location, limit: 5) }
   let!(:db_helper) { DbHelper.new(config) }
   let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
+  let(:datetime) { (Config.new.threshold + 1).months.ago.to_time.utc }
 
   describe 'process_repo' do
     let!(:repository) {
@@ -46,7 +47,6 @@ describe Backup::RemoveSpecified do
       Log.destroy_all
     end
 
-    let(:datetime) { (Config.new.threshold + 1).months.ago.to_time.utc }
     let!(:repository) {
       db_helper.do_without_triggers do
         FactoryBot.create(
@@ -225,7 +225,6 @@ describe Backup::RemoveSpecified do
       Request.destroy_all
     end
 
-    let(:datetime) { (Config.new.threshold + 1).months.ago.to_time.utc }
     let!(:repository) {
       FactoryBot.create(
         :repository_with_requests,
@@ -307,7 +306,16 @@ describe Backup::RemoveSpecified do
   end
 
   describe 'remove_user_with_dependencies' do
-
+    let!(:user) {
+      FactoryBot.create(
+        :user_with_all_dependencies,
+        created_at: datetime,
+        updated_at: datetime
+      )
+    }
+    it do
+      expect(true).not_to be(false)
+    end
   end
 
   describe 'remove_org_with_dependencies' do

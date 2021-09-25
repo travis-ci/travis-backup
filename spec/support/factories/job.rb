@@ -57,9 +57,7 @@ FactoryBot.define do
         )
         create_list(
           :queueable_job, 2,
-          job_id: job.id,
-          created_at: job.created_at,
-          updated_at: job.updated_at
+          job_id: job.id
         )
         create_list(
           :log, 2,

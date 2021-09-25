@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'factory_bot'
+require 'models/user'
 
 FactoryBot.define do
   factory :user do
@@ -37,20 +38,14 @@ FactoryBot.define do
         )
         create_list(:membership, 3,
           user_id: user.id,
-          created_at: user.created_at,
-          updated_at: user.updated_at
         )
         create_list(:user_beta_feature, 3,
           user_id: user.id,
-          created_at: user.created_at,
-          updated_at: user.updated_at
         )
         create_list(:permission, 3,
           user_id: user.id,
-          created_at: user.created_at,
-          updated_at: user.updated_at
         )
-        create_list(##
+        create_list(
           :repository_with_all_dependencies, 2,
           owner_id: user.id,
           owner_type: 'User',

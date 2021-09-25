@@ -105,9 +105,7 @@ FactoryBot.define do
         )
         create_list(
           :permission, 2,
-          repository_id: repository.id,
-          created_at: repository.created_at,
-          updated_at: repository.updated_at
+          repository_id: repository.id
         )
         create_list(
           :star, 2,
@@ -169,9 +167,7 @@ FactoryBot.define do
         )
         create_list(
           :permission, 2,
-          repository_id: repository.id,
-          created_at: repository.created_at,
-          updated_at: repository.updated_at
+          repository_id: repository.id
         )
         create_list(
           :star, 2,

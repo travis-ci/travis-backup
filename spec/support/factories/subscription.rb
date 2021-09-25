@@ -8,9 +8,9 @@ FactoryBot.define do
       after(:create) do |subscription|
         create_list(
           :invoice, 2,
-          subscription_id: tag.id,
-          created_at: tag.created_at,
-          updated_at: tag.updated_at
+          subscription_id: subscription.id,
+          created_at: subscription.created_at,
+          updated_at: subscription.updated_at
         )
       end
     end

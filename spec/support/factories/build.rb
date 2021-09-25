@@ -97,7 +97,7 @@ FactoryBot.define do
       after(:create) do |build|
         create_list(
           :tag_with_all_dependencies, 2,
-          build_id: build.id,
+          last_build_id: build.id,
           created_at: build.created_at,
           updated_at: build.updated_at
         )
@@ -139,7 +139,7 @@ FactoryBot.define do
       after(:create) do |build|
         create_list(
           :tag, 2,
-          build_id: build.id,
+          last_build_id: build.id,
           created_at: build.created_at,
           updated_at: build.updated_at
         )
