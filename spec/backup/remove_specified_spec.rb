@@ -313,7 +313,11 @@ describe Backup::RemoveSpecified do
         updated_at: datetime
       )
     }
-    it do
+    it 'removes user with all his dependencies' do
+      Model.subclasses.each do |subclass|
+        puts subclass.to_s
+        puts subclass.all.size
+      end
       expect(true).not_to be(false)
     end
   end
