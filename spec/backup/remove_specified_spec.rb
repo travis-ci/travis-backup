@@ -314,10 +314,10 @@ describe Backup::RemoveSpecified do
       )
     }
     it 'removes user with all his dependencies' do
-      Model.subclasses.each do |subclass|
-        puts subclass.to_s
-        puts subclass.all.size
-      end
+      # Model.subclasses.each do |subclass|
+      #   puts subclass.to_s
+      #   puts subclass.all.size
+      # end
       expect(true).not_to be(false)
     end
   end

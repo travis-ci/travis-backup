@@ -9,7 +9,7 @@ class Job < Model
   self.inheritance_column = :_type_disabled
 
   belongs_to :repository
-  has_many   :logs, -> { order('id') }, foreign_key: :job_id, dependent: :destroy, class_name: 'Log'
+  has_many   :logs, -> { order('id') }, dependent: :destroy
 
   self.table_name = 'jobs'
 end
