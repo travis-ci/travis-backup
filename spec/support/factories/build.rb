@@ -143,39 +143,37 @@ FactoryBot.define do
 
     factory :build_with_safe_dependencies do
       after(:create) do |build|
-        create_list(
-          :tag, 2,
+        create(
+          :tag,
           last_build_id: build.id,
           created_at: build.created_at,
           updated_at: build.updated_at
         )
-        create_list(
-          :stage_with_jobs, 2,
-          build_id: build.id,
-          created_at: build.created_at,
-          updated_at: build.updated_at
+        create(
+          :stage,
+          build_id: build.id
         )
         create(
-          :job_with_all_dependencies_and_sibling,
+          :job,
           source_type: 'Build',
           source_id: build.id,
           created_at: build.created_at,
           updated_at: build.updated_at
         )
-        create_list(
-          :branch, 2,
+        create(
+          :branch,
           last_build_id: build.id,
           created_at: build.created_at,
           updated_at: build.updated_at
         )
-        create_list(
-          :repository, 2,
+        create(
+          :repository,
           last_build_id: build.id,
           created_at: build.created_at,
           updated_at: build.updated_at
         )
-        create_list(
-          :repository, 2,
+        create(
+          :repository,
           current_build_id: build.id,
           created_at: build.created_at,
           updated_at: build.updated_at

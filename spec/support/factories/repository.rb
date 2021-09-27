@@ -135,60 +135,60 @@ FactoryBot.define do
     end
     factory :repository_with_safe_dependencies do
       after(:create) do |repository|
-        create_list(
-          :build, 2,
-          repository_id: repository.id,
-          created_at: repository.created_at,
-          updated_at: repository.updated_at
-        )
-        create_list(
-          :request, 2,
+        create(
+          :build,
           repository_id: repository.id,
           created_at: repository.created_at,
           updated_at: repository.updated_at
         )
         create(
-          :job_with_all_dependencies_and_sibling,
+          :request,
           repository_id: repository.id,
           created_at: repository.created_at,
           updated_at: repository.updated_at
         )
-        create_list(
-          :branch, 2,
+        create(
+          :job,
           repository_id: repository.id,
           created_at: repository.created_at,
           updated_at: repository.updated_at
         )
-        create_list(
-          :commit, 2,
+        create(
+          :branch,
           repository_id: repository.id,
           created_at: repository.created_at,
           updated_at: repository.updated_at
         )
-        create_list(
-          :ssl_key, 2,
+        create(
+          :commit,
           repository_id: repository.id,
           created_at: repository.created_at,
           updated_at: repository.updated_at
         )
-        create_list(
-          :permission, 2,
+        create(
+          :ssl_key,
+          repository_id: repository.id,
+          created_at: repository.created_at,
+          updated_at: repository.updated_at
+        )
+        create(
+          :permission,
           repository_id: repository.id
         )
-        create_list(
-          :star, 2,
+        create(
+          :star,
           repository_id: repository.id,
           created_at: repository.created_at,
           updated_at: repository.updated_at
         )
-        create_list(
-          :pull_request, 2,
+        create(
+          :pull_request,
           repository_id: repository.id,
           created_at: repository.created_at,
           updated_at: repository.updated_at
         )
-        create_list(
-          :tag, 2,
+        create(
+          :tag,
           repository_id: repository.id,
           created_at: repository.created_at,
           updated_at: repository.updated_at
