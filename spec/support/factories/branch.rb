@@ -21,8 +21,8 @@ FactoryBot.define do
 
     factory :branch_with_all_dependencies do
       after(:create) do |branch|
-        create_list(
-          :build_with_safe_dependencies, 2,
+        create(
+          :build_with_safe_dependencies_and_sibling,
           branch_id: branch.id,
           created_at: branch.created_at,
           updated_at: branch.updated_at
@@ -33,25 +33,33 @@ FactoryBot.define do
           created_at: branch.created_at,
           updated_at: branch.updated_at
         )
-        create_list(
-          :job_with_all_dependencies, 2,
+        create(
+          :job_with_all_dependencies_and_sibling,
           source_id: branch.id,
           source_type: 'Branch',
           created_at: branch.created_at,
           updated_at: branch.updated_at
         )
-        create_list(
-          :commit_with_all_dependencies, 2,
+        create(
+          :commit_with_all_dependencies_and_sibling,
           branch_id: branch.id,
           created_at: branch.created_at,
           updated_at: branch.updated_at
         )
-        create_list(
-          :request_with_all_dependencies, 2,
+        create(
+          :request_with_all_dependencies_and_sibling,
           branch_id: branch.id,
           created_at: branch.created_at,
           updated_at: branch.updated_at
         )
+      end
+      factory :branch_with_all_dependencies_and_sibling do
+        after(:create) do |branch|
+          create(:branch, {
+            **branch.attributes_without_id.symbolize_keys.reject {|k, v| k == :name},
+            name: "branch_#{Time.now.to_f}_2"
+          })
+        end
       end
     end
   end

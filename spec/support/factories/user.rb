@@ -45,43 +45,43 @@ FactoryBot.define do
         create_list(:permission, 3,
           user_id: user.id,
         )
-        create_list(
-          :repository_with_all_dependencies, 2,
+        create(
+          :repository_with_all_dependencies_and_sibling,
           owner_id: user.id,
           owner_type: 'User',
           created_at: user.created_at,
           updated_at: user.updated_at
         )
-        create_list(
-          :build_with_all_dependencies, 2,
+        create(
+          :build_with_all_dependencies_and_sibling,
           owner_id: user.id,
           owner_type: 'User',
           created_at: user.created_at,
           updated_at: user.updated_at
         )
-        create_list(
-          :build_with_all_dependencies, 2,
+        create(
+          :build_with_all_dependencies_and_sibling,
           sender_id: user.id,
           sender_type: 'User',
           created_at: user.created_at,
           updated_at: user.updated_at
         )
-        create_list(
-          :request_with_all_dependencies, 2,
+        create(
+          :request_with_all_dependencies_and_sibling,
           sender_id: user.id,
           sender_type: 'User',
           created_at: user.created_at,
           updated_at: user.updated_at
         )
-        create_list(
-          :request_with_all_dependencies, 2,
+        create(
+          :request_with_all_dependencies_and_sibling,
           owner_id: user.id,
           owner_type: 'User',
           created_at: user.created_at,
           updated_at: user.updated_at
         )
-        create_list(
-          :job_with_all_dependencies, 2,
+        create(
+          :job_with_all_dependencies_and_sibling,
           owner_id: user.id,
           owner_type: 'User',
           created_at: user.created_at,

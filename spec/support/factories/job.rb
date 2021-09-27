@@ -67,6 +67,11 @@ FactoryBot.define do
           updated_at: job.updated_at
         )
       end
+      factory :job_with_all_dependencies_and_sibling do
+        after(:create) do |job|
+          create(:job, job.attributes_without_id.symbolize_keys)
+        end
+      end
     end
   end
 end

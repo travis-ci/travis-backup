@@ -96,8 +96,8 @@ FactoryBot.define do
 
     factory :build_with_all_dependencies do
       after(:create) do |build|
-        create_list(
-          :tag_with_all_dependencies, 2,
+        create(
+          :tag_with_all_dependencies_and_sibling,
           last_build_id: build.id,
           created_at: build.created_at,
           updated_at: build.updated_at
@@ -108,31 +108,36 @@ FactoryBot.define do
           created_at: build.created_at,
           updated_at: build.updated_at
         )
-        create_list(
-          :job_with_all_dependencies, 2,
+        create(
+          :job_with_all_dependencies_and_sibling,
           source_type: 'Build',
           source_id: build.id,
           created_at: build.created_at,
           updated_at: build.updated_at
         )
-        create_list(
-          :branch_with_all_dependencies, 2,
+        create(
+          :branch_with_all_dependencies_and_sibling,
           last_build_id: build.id,
           created_at: build.created_at,
           updated_at: build.updated_at
         )
-        create_list(
-          :repository_with_safe_dependencies, 2,
+        create(
+          :repository_with_safe_dependencies_and_sibling,
           last_build_id: build.id,
           created_at: build.created_at,
           updated_at: build.updated_at
         )
-        create_list(
-          :repository_with_safe_dependencies, 2,
+        create(
+          :repository_with_safe_dependencies_and_sibling,
           current_build_id: build.id,
           created_at: build.created_at,
           updated_at: build.updated_at
         )
+      end
+      factory :build_with_all_dependencies_and_sibling do
+        after(:create) do |build|
+          create(:build, build.attributes_without_id.symbolize_keys)
+        end
       end
     end
 
@@ -150,8 +155,8 @@ FactoryBot.define do
           created_at: build.created_at,
           updated_at: build.updated_at
         )
-        create_list(
-          :job_with_all_dependencies, 2,
+        create(
+          :job_with_all_dependencies_and_sibling,
           source_type: 'Build',
           source_id: build.id,
           created_at: build.created_at,
@@ -175,6 +180,11 @@ FactoryBot.define do
           created_at: build.created_at,
           updated_at: build.updated_at
         )
+      end
+      factory :build_with_safe_dependencies_and_sibling do
+        after(:create) do |build|
+          create(:build, build.attributes_without_id.symbolize_keys)
+        end
       end
     end
   end

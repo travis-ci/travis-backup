@@ -31,24 +31,29 @@ FactoryBot.define do
 
     factory :commit_with_all_dependencies do
       after(:create) do |commit|
-        create_list(
-          :build_with_safe_dependencies, 2,
+        create(
+          :build_with_safe_dependencies_and_sibling,
           commit_id: commit.id,
           created_at: commit.created_at,
           updated_at: commit.updated_at
         )
-        create_list(
-          :job_with_all_dependencies, 2,
+        create(
+          :job_with_all_dependencies_and_sibling,
           commit_id: commit.id,
           created_at: commit.created_at,
           updated_at: commit.updated_at
         )
-        create_list(
-          :request_with_all_dependencies, 2,
+        create(
+          :request_with_all_dependencies_and_sibling,
           commit_id: commit.id,
           created_at: commit.created_at,
           updated_at: commit.updated_at
         )
+      end
+      factory :commit_with_all_dependencies_and_sibling do
+        after(:create) do |commit|
+          create(:commit, commit.attributes_without_id.symbolize_keys)
+        end
       end
     end
   end

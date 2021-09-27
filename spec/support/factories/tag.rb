@@ -23,24 +23,29 @@ FactoryBot.define do
 
     factory :tag_with_all_dependencies do
       after(:create) do |tag|
-        create_list(
-          :build_with_safe_dependencies, 2,
+        create(
+          :build_with_safe_dependencies_and_sibling,
           tag_id: tag.id,
           created_at: tag.created_at,
           updated_at: tag.updated_at
         )
-        create_list(
-          :commit_with_all_dependencies, 2,
+        create(
+          :commit_with_all_dependencies_and_sibling,
           tag_id: tag.id,
           created_at: tag.created_at,
           updated_at: tag.updated_at
         )
-        create_list(
-          :request_with_all_dependencies, 2,
+        create(
+          :request_with_all_dependencies_and_sibling,
           tag_id: tag.id,
           created_at: tag.created_at,
           updated_at: tag.updated_at
         )
+      end
+      factory :tag_with_all_dependencies_and_sibling do
+        after(:create) do |tag|
+          create(:tag, tag.attributes_without_id.symbolize_keys)
+        end
       end
     end
   end

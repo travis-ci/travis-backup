@@ -68,32 +68,32 @@ FactoryBot.define do
 
     factory :repository_with_all_dependencies do
       after(:create) do |repository|
-        create_list(
-          :build_with_all_dependencies, 2,
+        create(
+          :build_with_all_dependencies_and_sibling,
           repository_id: repository.id,
           created_at: repository.created_at,
           updated_at: repository.updated_at
         )
-        create_list(
-          :request_with_all_dependencies, 2,
+        create(
+          :request_with_all_dependencies_and_sibling,
           repository_id: repository.id,
           created_at: repository.created_at,
           updated_at: repository.updated_at
         )
-        create_list(
-          :job_with_all_dependencies, 2,
+        create(
+          :job_with_all_dependencies_and_sibling,
           repository_id: repository.id,
           created_at: repository.created_at,
           updated_at: repository.updated_at
         )
-        create_list(
-          :branch_with_all_dependencies, 2,
+        create(
+          :branch_with_all_dependencies_and_sibling,
           repository_id: repository.id,
           created_at: repository.created_at,
           updated_at: repository.updated_at
         )
-        create_list(
-          :commit_with_all_dependencies, 2,
+        create(
+          :commit_with_all_dependencies_and_sibling,
           repository_id: repository.id,
           created_at: repository.created_at,
           updated_at: repository.updated_at
@@ -114,18 +114,23 @@ FactoryBot.define do
           created_at: repository.created_at,
           updated_at: repository.updated_at
         )
-        create_list(
-          :pull_request_with_all_dependencies, 2,
+        create(
+          :pull_request_with_all_dependencies_and_sibling,
           repository_id: repository.id,
           created_at: repository.created_at,
           updated_at: repository.updated_at
         )
-        create_list(
-          :tag_with_all_dependencies, 2,
+        create(
+          :tag_with_all_dependencies_and_sibling,
           repository_id: repository.id,
           created_at: repository.created_at,
           updated_at: repository.updated_at
         )
+      end
+      factory :repository_with_all_dependencies_and_sibling do
+        after(:create) do |repository|
+          create(:repository, repository.attributes_without_id.symbolize_keys)
+        end
       end
     end
     factory :repository_with_safe_dependencies do
@@ -142,8 +147,8 @@ FactoryBot.define do
           created_at: repository.created_at,
           updated_at: repository.updated_at
         )
-        create_list(
-          :job_with_all_dependencies, 2,
+        create(
+          :job_with_all_dependencies_and_sibling,
           repository_id: repository.id,
           created_at: repository.created_at,
           updated_at: repository.updated_at
@@ -188,6 +193,11 @@ FactoryBot.define do
           created_at: repository.created_at,
           updated_at: repository.updated_at
         )
+      end
+      factory :repository_with_safe_dependencies_and_sibling do
+        after(:create) do |repository|
+          create(:repository, repository.attributes_without_id.symbolize_keys)
+        end
       end
     end
   end

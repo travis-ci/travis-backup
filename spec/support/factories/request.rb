@@ -52,12 +52,17 @@ FactoryBot.define do
           created_at: request.created_at,
           updated_at: request.updated_at
         )
-        create_list(
-          :build_with_safe_dependencies, 2,
+        create(
+          :build_with_safe_dependencies_and_sibling,
           request_id: request.id,
           created_at: request.created_at,
           updated_at: request.updated_at
         )
+      end
+      factory :request_with_all_dependencies_and_sibling do
+        after(:create) do |request|
+          create(:request, request.attributes_without_id.symbolize_keys)
+        end
       end
     end
   end
