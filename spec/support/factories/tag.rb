@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'models/tag'
 require 'factory_bot'
 
 FactoryBot.define do

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'models/ssl_key'
 require 'factory_bot'
 
 FactoryBot.define do

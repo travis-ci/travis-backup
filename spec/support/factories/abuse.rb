@@ -5,7 +5,7 @@ require 'factory_bot'
 
 FactoryBot.define do
   factory :abuse do
-    level { 0 }
+    sequence(:level) { |n| n }
     reason { 'some text' }
   end
 end
