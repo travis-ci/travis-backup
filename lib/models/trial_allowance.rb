@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'models/model'
+require 'model'
 
 class TrialAllowance < Model
   belongs_to :creator, polymorphic: true

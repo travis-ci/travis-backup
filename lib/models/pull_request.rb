@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'models/model'
+require 'model'
 
 class PullRequest < Model
   has_many :requests

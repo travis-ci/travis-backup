@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'models/job'
-require 'models/model'
+require 'model'
 require 'models/repository'
 
 # Build model

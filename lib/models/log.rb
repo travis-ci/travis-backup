@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'models/model'
+require 'model'
 
 class Log < Model
   belongs_to :job

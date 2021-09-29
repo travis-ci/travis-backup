@@ -61,7 +61,18 @@ class Backup
 
     def remove_user_with_dependencies(user_id)
       user = User.find(user_id)
-      user.ids_of_all_dependencies.each do |name, ids|
+      dependencies_to_filter = {
+        build: [
+          :repos_for_that_this_build_is_current,
+          :repos_for_that_this_build_is_last,
+          :tags_for_that_this_build_is_last,
+          :branches_for_that_this_build_is_last
+        ]
+      }
+      ids_of_all_dependencies = user.ids_of_all_dependencies(dependencies_to_filter)
+      puts '---'
+      puts ids_of_all_dependencies[:filtered_out]
+      ids_of_all_dependencies[:main].each do |name, ids|
         model = Model.subclasses.find{ |model| model.name == name.to_s.camelcase }
         model.delete(ids)
       end

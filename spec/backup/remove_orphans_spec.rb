@@ -32,7 +32,7 @@ describe Backup::RemoveOrphans do
         FactoryBot.create_list(:repository, 2)
         FactoryBot.create_list(:build, 2)
         FactoryBot.create_list(:job, 2)
-        FactoryBot.create_list(:branch, 2)
+        FactoryBot.create_list(:branch, 2, repository_id: 1)
         FactoryBot.create_list(:tag, 2)
         FactoryBot.create_list(:commit, 2)
         FactoryBot.create_list(:cron, 2)

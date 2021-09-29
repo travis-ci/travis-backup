@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'models/model'
+require 'model'
 
 class User < Model
   has_many :builds_for_that_this_user_is_owner, as: :owner, class_name: 'Build'

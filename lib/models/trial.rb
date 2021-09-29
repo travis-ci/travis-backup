@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'models/model'
+require 'model'
 
 class Trial < Model
   belongs_to :owner, polymorphic: true
