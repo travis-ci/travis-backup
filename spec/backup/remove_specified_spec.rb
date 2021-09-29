@@ -307,6 +307,10 @@ describe Backup::RemoveSpecified do
 
   describe 'remove_user_with_dependencies' do
     let!(:user) {
+      # Model.subclasses.each do |subclass|
+      #   puts subclass.to_s
+      #   puts subclass.all.size
+      # end
       FactoryBot.create(
         :user_with_all_dependencies,
         created_at: datetime,
@@ -318,7 +322,25 @@ describe Backup::RemoveSpecified do
       #   puts subclass.to_s
       #   puts subclass.all.size
       # end
-      expect(true).not_to be(false)
+      # puts '---------------------------'
+      # # Build.reflect_on_all_associations.map do |x|
+      # #   puts x.name
+      # # end
+      # # Build.reflect_on_all_associations.map do |x|
+      # #   puts x.klass
+      # # end
+      db_helper.do_without_triggers do
+        remove_specified.remove_user_with_dependencies(user.id)
+      end
+      # Model.subclasses.each do |subclass|
+      #   puts subclass.to_s
+      #   puts subclass.all.size
+      # end
+      rows_number = Model.subclasses.map do |subclass|
+        subclass.all.size
+      end.reduce(:+)
+
+      expect(rows_number).to eql(0)
     end
   end
 

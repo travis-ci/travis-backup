@@ -58,6 +58,13 @@ FactoryBot.define do
           created_at: request.created_at,
           updated_at: request.updated_at
         )
+        create(
+          :job_with_all_dependencies_and_sibling,
+          source_type: 'Request',
+          source_id: request.id,
+          created_at: request.created_at,
+          updated_at: request.updated_at
+        )
       end
       factory :request_with_all_dependencies_and_sibling do
         after(:create) do |request|

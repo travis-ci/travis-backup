@@ -21,28 +21,34 @@ FactoryBot.define do
 
     factory :user_with_all_dependencies do
       after(:create) do |user|
-        create_list(:email, 3,
+        create_list(
+          :email, 2,
           user_id: user.id,
           created_at: user.created_at,
           updated_at: user.updated_at
         )
-        create_list(:token, 3,
+        create_list(
+          :token, 2,
           user_id: user.id,
           created_at: user.created_at,
           updated_at: user.updated_at
         )
-        create_list(:star, 3,
+        create_list(
+          :star, 2,
           user_id: user.id,
           created_at: user.created_at,
           updated_at: user.updated_at
         )
-        create_list(:membership, 3,
+        create_list(
+          :membership, 2,
           user_id: user.id,
         )
-        create_list(:user_beta_feature, 3,
+        create_list(
+          :user_beta_feature, 2,
           user_id: user.id,
         )
-        create_list(:permission, 3,
+        create_list(
+          :permission, 2,
           user_id: user.id,
         )
         create(

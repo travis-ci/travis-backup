@@ -60,7 +60,13 @@ class Backup
     end
 
     def remove_user_with_dependencies(user_id)
-      
+      user = User.find(user_id)
+      # puts user.ids_of_all_dependencies
+      user.ids_of_all_dependencies.each do |name, ids|
+        model = Model.subclasses.find{ |model| model.name == name.to_s.camelcase }
+        model.delete(ids)
+      end
+      user.delete
     end
 
     def remove_org_with_dependencies(org_id)
