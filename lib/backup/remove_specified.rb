@@ -70,10 +70,8 @@ class Backup
         ]
       }
       ids_of_all_dependencies = user.ids_of_all_dependencies(dependencies_to_filter)
-      puts '---'
-      puts ids_of_all_dependencies[:filtered_out]
       ids_of_all_dependencies[:main].each do |name, ids|
-        model = Model.subclasses.find{ |model| model.name == name.to_s.camelcase }
+        model = Model.subclasses.find{ |m| m.name == name.to_s.camelcase }
         model.delete(ids)
       end
       user.delete

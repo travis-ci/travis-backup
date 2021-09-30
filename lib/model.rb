@@ -3,53 +3,69 @@
 require 'active_record'
 require './utils'
 
-# Model class
-class Model < ActiveRecord::Base
-  self.abstract_class = true
-
-  def attributes_without_id
-    self.attributes.reject{|k, v| k == "id"}
-  end
-
+module IdsOfAllDependencies
   def ids_of_all_dependencies(to_filter={})
     to_filter.default = []
-    main = {}
-    filtered_out = {}
+    result = { main: {}, filtered_out: {} }
     self_symbol = self.class.name.underscore.to_sym
 
     self.class.reflect_on_all_associations.map do |association|
       next if association.macro == :belongs_to
       symbol = association.klass.name.underscore.to_sym
-      self.send(association.name).map(&:id).map do |id|
-        # puts '.'
-        # puts self_symbol
-        # puts association.name
-        if to_filter[self_symbol].any? { |a| a == association.name }
-          hash_to_use = filtered_out
-        else
-          hash_to_use = main
-        end
+      context = { to_filter: to_filter, self_symbol: self_symbol, association: association }
 
-        if hash_to_use[symbol].nil?
-          hash_to_use[symbol] = [id]
+      self.send(association.name).map(&:id).map do |id|
+        hash_to_use = get_hash_to_use(context)
+        if result[hash_to_use][symbol].nil?
+          result[hash_to_use][symbol] = [id]
         else
-          hash_to_use[symbol] << id
+          result[hash_to_use][symbol] << id
         end
       end
-
-      grandchildren_hashes = self.send(association.name).map do |model|
-        next if to_filter[self_symbol].any? { |a| a == association.name }
-        model.ids_of_all_dependencies(to_filter)
-      end.compact
-
-      grandchildren_main = grandchildren_hashes.map { |hash| hash[:main] }
-      grandchildren_filtered_out = grandchildren_hashes.map { |hash| hash[:filtered_out] }
-
-      main = Utils.uniquely_join_hashes_of_arrays(main, *grandchildren_main)
-      filtered_out = Utils.uniquely_join_hashes_of_arrays(filtered_out, *grandchildren_filtered_out)
+      result = get_result_with_grandchildren_hashes(result, context)
     end
 
-    { main: main, filtered_out: filtered_out }
+    result
+  end
+
+  private
+
+  def get_result_with_grandchildren_hashes(result, context)
+    hashes = get_grandchildren_hashes(context)
+    main = hashes.map { |hash| hash[:main] }
+    filtered_out = hashes.map { |hash| hash[:filtered_out] }
+
+    result[:main] = Utils.uniquely_join_hashes_of_arrays(result[:main], *main)
+    result[:filtered_out] = Utils.uniquely_join_hashes_of_arrays(result[:filtered_out], *filtered_out)
+    result  
+  end
+
+  def get_grandchildren_hashes(context)
+    association = context[:association]
+    to_filter = context[:to_filter]
+    self.send(association.name).map do |model|
+      next if should_be_filtered?(**context)
+      model.ids_of_all_dependencies(to_filter)
+    end.compact
+  end
+
+  def get_hash_to_use(context)
+    should_be_filtered?(**context) ? :filtered_out : :main
+  end
+
+  def should_be_filtered?(to_filter:, self_symbol:, association:)
+    to_filter[self_symbol].any? { |a| a == association.name }
+  end
+end
+
+# Model class
+class Model < ActiveRecord::Base
+  include IdsOfAllDependencies
+
+  self.abstract_class = true
+
+  def attributes_without_id
+    self.attributes.reject{|k, v| k == "id"}
   end
 end
 

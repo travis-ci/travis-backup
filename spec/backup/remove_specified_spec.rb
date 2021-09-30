@@ -314,13 +314,6 @@ describe Backup::RemoveSpecified do
       )
     }
     it 'removes user with all his dependencies except those on current_build_id and last_build_id' do
-      Model.subclasses.each do |subclass|
-        puts subclass.to_s
-        puts subclass.all.size
-      end
-      puts '123----'
-      puts user.builds_for_that_this_user_is_owner.first.branches_for_that_this_build_is_last.to_json
-
       db_helper.do_without_triggers do
         remove_specified.remove_user_with_dependencies(user.id)
       end
@@ -329,12 +322,25 @@ describe Backup::RemoveSpecified do
         subclass.all.size
       end.reduce(:+)
 
-      Model.subclasses.each do |subclass|
-        puts subclass.to_s
-        puts subclass.all.size
-      end
-
-      expect(rows_number).to eql(0)
+      expect(rows_number).to eql(768)
+      expect(Log.all.size).to eql(56)
+      expect(Job.all.size).to eql(96)
+      expect(Build.all.size).to eql(72)
+      expect(Request.all.size).to eql(40)
+      expect(Repository.all.size).to eql(108)
+      expect(Branch.all.size).to eql(62)
+      expect(Tag.all.size).to eql(62)
+      expect(Commit.all.size).to eql(24)
+      expect(Cron.all.size).to eql(8)
+      expect(PullRequest.all.size).to eql(8)
+      expect(SslKey.all.size).to eql(8)
+      expect(Stage.all.size).to eql(32)
+      expect(Star.all.size).to eql(8)
+      expect(Permission.all.size).to eql(8)
+      expect(Message.all.size).to eql(32)
+      expect(Abuse.all.size).to eql(32)
+      expect(Annotation.all.size).to eql(56)
+      expect(QueueableJob.all.size).to eql(56)
     end
   end
 
