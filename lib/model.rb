@@ -5,7 +5,6 @@ require './utils'
 
 module IdsOfAllDependencies
   def ids_of_all_dependencies(to_filter={})
-    to_filter.default = []
     result = { main: {}, filtered_out: {} }
     self_symbol = self.class.name.underscore.to_sym
 
@@ -15,12 +14,9 @@ module IdsOfAllDependencies
       context = { to_filter: to_filter, self_symbol: self_symbol, association: association }
 
       self.send(association.name).map(&:id).map do |id|
-        hash_to_use = get_hash_to_use(context)
-        if result[hash_to_use][symbol].nil?
-          result[hash_to_use][symbol] = [id]
-        else
-          result[hash_to_use][symbol] << id
-        end
+        hash_to_use = get_hash_to_use(result, context)
+        hash_to_use[symbol] = [] if hash_to_use[symbol].nil?
+        hash_to_use[symbol] << id
       end
       result = get_result_with_grandchildren_hashes(result, context)
     end
@@ -37,24 +33,27 @@ module IdsOfAllDependencies
 
     result[:main] = Utils.uniquely_join_hashes_of_arrays(result[:main], *main)
     result[:filtered_out] = Utils.uniquely_join_hashes_of_arrays(result[:filtered_out], *filtered_out)
-    result  
+    result
   end
 
   def get_grandchildren_hashes(context)
     association = context[:association]
     to_filter = context[:to_filter]
+
     self.send(association.name).map do |model|
       next if should_be_filtered?(**context)
       model.ids_of_all_dependencies(to_filter)
     end.compact
   end
 
-  def get_hash_to_use(context)
-    should_be_filtered?(**context) ? :filtered_out : :main
+  def get_hash_to_use(result, context)
+    symbol = should_be_filtered?(**context) ? :filtered_out : :main
+    result[symbol]
   end
 
   def should_be_filtered?(to_filter:, self_symbol:, association:)
-    to_filter[self_symbol].any? { |a| a == association.name }
+    arr = to_filter[self_symbol]
+    arr.present? && arr.any? { |a| a == association.name }
   end
 end
 
