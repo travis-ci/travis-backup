@@ -24,4 +24,22 @@ describe Utils do
       end
     end
   end
+
+  describe 'self.difference_of_two_hashes_of_arrays' do
+    context 'when proper hashes with arrays are given' do
+      let(:hash1) {
+        {a: [1, 2, 3], b: [2, 3, 4], c: [1, 2]}
+      }
+      let(:hash2) {
+        {a: [1, 2, 3, 4], b: [2, 5], d: [3, 4]}
+      }
+      it 'returns proper hash with arrays joined uniquely' do
+        result = Utils.difference_of_two_hashes_of_arrays(hash1, hash2)
+        expect(result).to eql({
+          b: [3, 4],
+          c: [1, 2]
+        })
+      end
+    end
+  end
 end

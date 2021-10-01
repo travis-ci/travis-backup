@@ -12,4 +12,21 @@ class Utils
     end
     result
   end
+
+  def self.difference_of_two_hashes_of_arrays(hash1, hash2)
+    hash2.each do |key, array|
+      next if hash1[key].nil?
+
+      array.each do |el|
+        hash1[key].delete(el)
+      end
+
+      hash1.delete(key) if hash1[key].empty?
+    end
+    hash1
+  end
+
+  def self.get_model(name)
+    Model.subclasses.find{ |m| m.name == name.to_s.camelcase }
+  end
 end

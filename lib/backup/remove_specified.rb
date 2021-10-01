@@ -59,9 +59,8 @@ class Backup
       end
     end
 
-    def remove_user_with_dependencies(user_id)
-      user = User.find(user_id)
-      dependencies_to_filter = {
+    def dependencies_to_filter
+      {
         build: [
           :repos_for_that_this_build_is_current,
           :repos_for_that_this_build_is_last,
@@ -69,12 +68,68 @@ class Backup
           :branches_for_that_this_build_is_last
         ]
       }
+    end
+
+    def remove_user_with_dependencies(user_id)
+      user = User.find(user_id)
       ids_of_all_dependencies = user.ids_of_all_dependencies(dependencies_to_filter)
+      filter_dependent_on_strangers!(ids_of_all_dependencies)
+
       ids_of_all_dependencies[:main].each do |name, ids|
-        model = Model.subclasses.find{ |m| m.name == name.to_s.camelcase }
+        model = Utils.get_model(name)
         model.delete(ids)
       end
+
       user.delete
+    end
+
+    def filter_dependent_on_strangers!(ids_hash)
+      builds_to_filter = get_builds_to_filter(ids_hash)
+
+      hashes = builds_to_filter.map do |build|
+        build.ids_of_all_dependencies(dependencies_to_filter)[:main]
+      end
+
+      joined_hashes = Utils.uniquely_join_hashes_of_arrays(*hashes)
+      Utils.difference_of_two_hashes_of_arrays(ids_hash[:main], joined_hashes)
+      # filter_dependent_jobs!(ids_hash, builds_to_filter)
+      # filter_dependent_stages!(ids_hash, builds_to_filter)
+
+      # builds_to_filter.each do |id|
+      #   ids_hash[:main][:build].delete(id)
+      # end
+    end
+
+    def filter_dependent_jobs!(ids_hash, builds_to_filter)
+      jobs_to_filter = Job.where(source_id: builds_to_filter, source_type: 'Build').map(&:id)
+
+      jobs_to_filter.each do |id|
+        ids_hash[:main][:job].delete(id)
+      end
+    end
+
+    def filter_dependent_stages!(ids_hash, builds_to_filter)
+      stages_to_filter = Stage.where(build_id: builds_to_filter).map(&:id)
+      stages_to_filter.each do |id|
+        ids_hash[:main][:stage].delete(id)
+      end
+    end
+
+    def get_builds_to_filter(ids_hash)
+      builds_to_filter = []
+
+      ids_hash[:filtered_out].each do |name, ids|
+        model = Utils.get_model(name)
+        model.where(id: ids).each do |instance|
+          [:last_build_id, :current_build_id].each do |method|
+            build_id = instance.try(method)
+            builds_to_filter << build_id
+          end
+        end
+      end
+
+      builds_to_filter.compact!.uniq!
+      Build.where(id: builds_to_filter)
     end
 
     def remove_org_with_dependencies(org_id)
