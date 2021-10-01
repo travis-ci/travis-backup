@@ -26,4 +26,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'listen'
   s.add_development_dependency 'rubocop', '~> 0.75.1'
   s.add_development_dependency 'rubocop-rspec'
+  s.add_development_dependency 'database_cleaner-active_record'
 end
