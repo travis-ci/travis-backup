@@ -102,17 +102,17 @@ describe Backup do
       FactoryBot.create_list(:repository_with_current_build_id, 2)
       FactoryBot.create_list(:repository_orphaned_on_last_build_id, 2)
       FactoryBot.create_list(:repository_with_last_build_id, 2)
-      FactoryBot.create_list(:build_orphaned_on_repository_id, 2)
+      FactoryBot.create_list(:build_orphaned_on_repository_id_with_mutually_related_repo, 2)
       FactoryBot.create_list(:build_with_repository_id, 2)
       FactoryBot.create_list(:build_orphaned_on_commit_id_with_mutually_related_repo, 2)
       FactoryBot.create_list(:build_with_commit_id, 2)
-      FactoryBot.create_list(:build_orphaned_on_request_id, 2)
+      FactoryBot.create_list(:build_orphaned_on_request_id_with_mutually_related_repo, 2)
       FactoryBot.create_list(:build_with_request_id, 2)
-      FactoryBot.create_list(:build_orphaned_on_pull_request_id, 2)
+      FactoryBot.create_list(:build_orphaned_on_pull_request_id_with_mutually_related_repo, 2)
       FactoryBot.create_list(:build_with_pull_request_id, 2)
-      FactoryBot.create_list(:build_orphaned_on_branch_id, 2)
+      FactoryBot.create_list(:build_orphaned_on_branch_id_with_mutually_related_repo, 2)
       FactoryBot.create_list(:build_with_branch_id, 2)
-      FactoryBot.create_list(:build_orphaned_on_tag_id, 2)
+      FactoryBot.create_list(:build_orphaned_on_tag_id_with_mutually_related_repo, 2)
       FactoryBot.create_list(:build_with_tag_id, 2)
       FactoryBot.create_list(:job_orphaned_on_repository_id, 2)
       FactoryBot.create_list(:job_with_repository_id, 2)
@@ -152,7 +152,7 @@ describe Backup do
     it 'removes orphaned repositories (with these dependent on orphaned builds)' do
       expect {
         backup.remove_orphans
-      }.to change { Repository.all.size }.by -6
+      }.to change { Repository.all.size }.by -16
     end
 
     it 'removes orphaned builds' do
@@ -207,6 +207,33 @@ describe Backup do
       expect {
         backup.remove_orphans
       }.to change { Stage.all.size }.by -2
+    end
+
+    context 'when dry run mode is on' do
+      let!(:backup) { Backup.new(dry_run: true) }
+
+      before do
+        allow_any_instance_of(IO).to receive(:puts)
+      end
+
+      it 'prepares proper dry run report' do
+        backup.remove_orphans
+        expect(backup.dry_run_report[:repositories].size).to eql 16
+        expect(backup.dry_run_report[:builds].size).to eql 12
+        expect(backup.dry_run_report[:jobs].size).to eql 6
+        expect(backup.dry_run_report[:branches].size).to eql 4
+        expect(backup.dry_run_report[:tags].size).to eql 4
+        expect(backup.dry_run_report[:commits].size).to eql 6
+        expect(backup.dry_run_report[:crons].size).to eql 2
+        expect(backup.dry_run_report[:pull_requests].size).to eql 2
+        expect(backup.dry_run_report[:requests].size).to eql 8
+        expect(backup.dry_run_report[:stages].size).to eql 2
+      end
+
+      it 'prints dry run report' do
+        expect(backup).to receive(:print_dry_run_report).once
+        backup.run
+      end
     end
   end
 
