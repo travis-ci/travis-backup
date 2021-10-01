@@ -5,7 +5,7 @@ class ExpectedFiles
   end
 
   def builds_json
-    [[
+    [
       {
         "id": @repository.builds.first.id,
         "repository_id": @repository.id,
@@ -34,125 +34,7 @@ class ExpectedFiles
         "branch_id": nil,
         "tag_id": nil,
         "sender_id": nil,
-        "sender_type": nil,
-        "jobs": [{
-          "id": @repository.builds.first.jobs.first.id,
-          "repository_id": @repository.id,
-          "commit_id": nil,
-          "source_id": @repository.builds.first.id,
-          "source_type": "Build",
-          "queue": nil,
-          "type": nil,
-          "state": nil,
-          "number": nil,
-          "config": nil,
-          "worker": nil,
-          "started_at": nil,
-          "finished_at": nil,
-          "created_at": @datetime,
-          "updated_at": @datetime,
-          "tags": nil,
-          "allow_failure": false,
-          "owner_id": nil,
-          "owner_type": nil,
-          "result": nil,
-          "queued_at": nil,
-          "canceled_at": nil,
-          "received_at": nil,
-          "debug_options": nil,
-          "private": nil,
-          "stage_number": nil,
-          "stage_id": nil,
-          "logs": [
-            {
-              "id": @repository.builds.first.jobs.first.logs.first.id,
-              "job_id": @repository.builds.first.jobs.first.id,
-              "content": "some log content",
-              "removed_by": nil,
-              "created_at": @datetime,
-              "updated_at": @datetime,
-              "aggregated_at": nil,
-              "archived_at": nil,
-              "purged_at": nil,
-              "removed_at": nil,
-              "archiving": false,
-              "archive_verified": true
-            },
-            {
-              "id": @repository.builds.first.jobs.first.logs.second.id,
-              "job_id": @repository.builds.first.jobs.first.id,
-              "content": "some log content",
-              "removed_by": nil,
-              "created_at": @datetime,
-              "updated_at": @datetime,
-              "aggregated_at": nil,
-              "archived_at": nil,
-              "purged_at": nil,
-              "removed_at": nil,
-              "archiving": false,
-              "archive_verified": true
-            }
-          ]
-        },
-        {
-          "id": @repository.builds.first.jobs.second.id,
-          "repository_id": @repository.id,
-          "commit_id": nil,
-          "source_id": @repository.builds.first.id,
-          "source_type": "Build",
-          "queue": nil,
-          "type": nil,
-          "state": nil,
-          "number": nil,
-          "config": nil,
-          "worker": nil,
-          "started_at": nil,
-          "finished_at": nil,
-          "created_at": @datetime,
-          "updated_at": @datetime,
-          "tags": nil,
-          "allow_failure": false,
-          "owner_id": nil,
-          "owner_type": nil,
-          "result": nil,
-          "queued_at": nil,
-          "canceled_at": nil,
-          "received_at": nil,
-          "debug_options": nil,
-          "private": nil,
-          "stage_number": nil,
-          "stage_id": nil,
-          "logs": [
-            {
-              "id": @repository.builds.first.jobs.second.logs.first.id,
-              "job_id": @repository.builds.first.jobs.second.id,
-              "content": "some log content",
-              "removed_by": nil,
-              "created_at": @datetime,
-              "updated_at": @datetime,
-              "aggregated_at": nil,
-              "archived_at": nil,
-              "purged_at": nil,
-              "removed_at": nil,
-              "archiving": false,
-              "archive_verified": true
-            },
-            {
-              "id": @repository.builds.first.jobs.second.logs.second.id,
-              "job_id": @repository.builds.first.jobs.second.id,
-              "content": "some log content",
-              "removed_by": nil,
-              "created_at": @datetime,
-              "updated_at": @datetime,
-              "aggregated_at": nil,
-              "archived_at": nil,
-              "purged_at": nil,
-              "removed_at": nil,
-              "archiving": false,
-              "archive_verified": true
-            }
-          ]
-        }]
+        "sender_type": nil
       },
       {
         "id": @repository.builds.second.id,
@@ -183,130 +65,108 @@ class ExpectedFiles
         "tag_id": nil,
         "sender_id": nil,
         "sender_type": nil,
-        "jobs": [{
-          "id": @repository.builds.second.jobs.first.id,
-          "repository_id": @repository.id,
-          "commit_id": nil,
-          "source_id": @repository.builds.second.id,
-          "source_type": "Build",
-          "queue": nil,
-          "type": nil,
-          "state": nil,
-          "number": nil,
-          "config": nil,
-          "worker": nil,
-          "started_at": nil,
-          "finished_at": nil,
-          "created_at": @datetime,
-          "updated_at": @datetime,
-          "tags": nil,
-          "allow_failure": false,
-          "owner_id": nil,
-          "owner_type": nil,
-          "result": nil,
-          "queued_at": nil,
-          "canceled_at": nil,
-          "received_at": nil,
-          "debug_options": nil,
-          "private": nil,
-          "stage_number": nil,
-          "stage_id": nil,
-          "logs": [
-            {
-              "id": @repository.builds.second.jobs.first.logs.first.id,
-              "job_id": @repository.builds.second.jobs.first.id,
-              "content": "some log content",
-              "removed_by": nil,
-              "created_at": @datetime,
-              "updated_at": @datetime,
-              "aggregated_at": nil,
-              "archived_at": nil,
-              "purged_at": nil,
-              "removed_at": nil,
-              "archiving": false,
-              "archive_verified": true
-            },
-            {
-              "id": @repository.builds.second.jobs.first.logs.second.id,
-              "job_id": @repository.builds.second.jobs.first.id,
-              "content": "some log content",
-              "removed_by": nil,
-              "created_at": @datetime,
-              "updated_at": @datetime,
-              "aggregated_at": nil,
-              "archived_at": nil,
-              "purged_at": nil,
-              "removed_at": nil,
-              "archiving": false,
-              "archive_verified": true
-            }
-          ]
-        },
-        {
-          "id": @repository.builds.second.jobs.second.id,
-          "repository_id": @repository.id,
-          "commit_id": nil,
-          "source_id": @repository.builds.second.id,
-          "source_type": "Build",
-          "queue": nil,
-          "type": nil,
-          "state": nil,
-          "number": nil,
-          "config": nil,
-          "worker": nil,
-          "started_at": nil,
-          "finished_at": nil,
-          "created_at": @datetime,
-          "updated_at": @datetime,
-          "tags": nil,
-          "allow_failure": false,
-          "owner_id": nil,
-          "owner_type": nil,
-          "result": nil,
-          "queued_at": nil,
-          "canceled_at": nil,
-          "received_at": nil,
-          "debug_options": nil,
-          "private": nil,
-          "stage_number": nil,
-          "stage_id": nil,
-          "logs": [
-            {
-              "id": @repository.builds.second.jobs.second.logs.first.id,
-              "job_id": @repository.builds.second.jobs.second.id,
-              "content": "some log content",
-              "removed_by": nil,
-              "created_at": @datetime,
-              "updated_at": @datetime,
-              "aggregated_at": nil,
-              "archived_at": nil,
-              "purged_at": nil,
-              "removed_at": nil,
-              "archiving": false,
-              "archive_verified": true
-            },
-            {
-              "id": @repository.builds.second.jobs.second.logs.second.id,
-              "job_id": @repository.builds.second.jobs.second.id,
-              "content": "some log content",
-              "removed_by": nil,
-              "created_at": @datetime,
-              "updated_at": @datetime,
-              "aggregated_at": nil,
-              "archived_at": nil,
-              "purged_at": nil,
-              "removed_at": nil,
-              "archiving": false,
-              "archive_verified": true
-            }
-          ]
-        }]
       }
-    ]]
+    ]
+  end
+
+  def jobs_json(build)
+    [
+      {
+        "id": build.jobs.first.id,
+        "repository_id": @repository.id,
+        "commit_id": nil,
+        "source_id": build.id,
+        "source_type": "Build",
+        "queue": nil,
+        "type": nil,
+        "state": nil,
+        "number": nil,
+        "config": nil,
+        "worker": nil,
+        "started_at": nil,
+        "finished_at": nil,
+        "created_at": @datetime,
+        "updated_at": @datetime,
+        "tags": nil,
+        "allow_failure": false,
+        "owner_id": nil,
+        "owner_type": nil,
+        "result": nil,
+        "queued_at": nil,
+        "canceled_at": nil,
+        "received_at": nil,
+        "debug_options": nil,
+        "private": nil,
+        "stage_number": nil,
+        "stage_id": nil,
+      },
+      {
+        "id": build.jobs.second.id,
+        "repository_id": @repository.id,
+        "commit_id": nil,
+        "source_id": build.id,
+        "source_type": "Build",
+        "queue": nil,
+        "type": nil,
+        "state": nil,
+        "number": nil,
+        "config": nil,
+        "worker": nil,
+        "started_at": nil,
+        "finished_at": nil,
+        "created_at": @datetime,
+        "updated_at": @datetime,
+        "tags": nil,
+        "allow_failure": false,
+        "owner_id": nil,
+        "owner_type": nil,
+        "result": nil,
+        "queued_at": nil,
+        "canceled_at": nil,
+        "received_at": nil,
+        "debug_options": nil,
+        "private": nil,
+        "stage_number": nil,
+        "stage_id": nil,
+      }
+    ]
+  end
+
+  def logs_json(job)
+    [
+      {
+        "id": job.logs.first.id,
+        "job_id": job.id,
+        "content": "some log content",
+        "removed_by": nil,
+        "created_at": @datetime,
+        "updated_at": @datetime,
+        "aggregated_at": nil,
+        "archived_at": nil,
+        "purged_at": nil,
+        "removed_at": nil,
+        "archiving": false,
+        "archive_verified": true
+      },
+      {
+        "id": job.logs.second.id,
+        "job_id": job.id,
+        "content": "some log content",
+        "removed_by": nil,
+        "created_at": @datetime,
+        "updated_at": @datetime,
+        "aggregated_at": nil,
+        "archived_at": nil,
+        "purged_at": nil,
+        "removed_at": nil,
+        "archiving": false,
+        "archive_verified": true
+      }
+    ]
   end
 
   def requests_json
-    [[
+    [
       {
         "id": @repository.requests.first.id,
         "repository_id": @repository.id,
@@ -363,6 +223,6 @@ class ExpectedFiles
         "sender_id": nil,
         "sender_type": nil
       }
-    ]]
+    ]
   end
 end

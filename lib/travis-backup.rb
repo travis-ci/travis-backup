@@ -97,8 +97,13 @@ class Backup
     current_build_id = repository.current_build_id || -1
     repository.builds.where('created_at < ? and id != ?', threshold, current_build_id)
               .in_groups_of(@config.limit.to_i, false).map do |builds_batch|
-      @config.if_backup ? save_and_destroy_builds_batch(builds_batch, repository) : destroy_builds_batch(builds_batch)
-    end.compact
+      if @config.if_backup
+        file_prefix = "repository_#{repository.id}"
+        save_and_destroy_builds_batch(builds_batch, file_prefix)
+      else
+        destroy_builds_batch(builds_batch)
+      end
+    end.compact.reduce(&:&)
   end
 
   def process_repo_requests(repository)
@@ -266,14 +271,57 @@ class Backup
 
   private
 
-  def save_and_destroy_builds_batch(builds_batch, repository)
-    builds_export = export_builds(builds_batch)
-    file_name = "repository_#{repository.id}_builds_#{builds_batch.first.id}-#{builds_batch.last.id}.json"
-    pretty_json = JSON.pretty_generate(builds_export)
-    if save_file(file_name, pretty_json)
-      destroy_builds_batch(builds_batch)
+  def save_and_destroy_builds_batch(builds_batch, file_prefix)
+    builds_export = builds_batch.map(&:attributes)
+
+    dependencies_saved = builds_batch.map do |build|
+      save_build_jobs_and_logs(build, file_prefix)
+    end.reduce(&:&)
+
+    if dependencies_saved
+      file_name = "#{file_prefix}_builds_#{builds_batch.first.id}-#{builds_batch.last.id}.json"
+      pretty_json = JSON.pretty_generate(builds_export)
+      save_file(file_name, pretty_json) ? destroy_builds_batch(builds_batch) : false
+    else
+      false
     end
-    builds_export
+  end
+
+  def save_build_jobs_and_logs(build, file_prefix)
+    build.jobs.in_groups_of(@config.limit.to_i, false).map do |jobs_batch|
+      file_prefix = "#{file_prefix}_build_#{build.id}"
+      save_jobs_batch(jobs_batch, file_prefix)
+    end.compact.reduce(&:&)
+  end
+
+  def save_jobs_batch(jobs_batch, file_prefix)
+    jobs_export = jobs_batch.map(&:attributes)
+
+    logs_saved = jobs_batch.map do |job|
+      save_job_logs(job, file_prefix)
+    end.reduce(&:&)
+
+    if logs_saved
+      file_name = "#{file_prefix}_jobs_#{jobs_batch.first.id}-#{jobs_batch.last.id}.json"
+      pretty_json = JSON.pretty_generate(jobs_export)
+      save_file(file_name, pretty_json)
+    else
+      false
+    end
+  end
+
+  def save_job_logs(job, file_prefix)
+    job.logs.in_groups_of(@config.limit.to_i, false).map do |logs_batch|
+      file_prefix = "#{file_prefix}_job_#{job.id}"
+      save_logs_batch(logs_batch, file_prefix)
+    end.compact.reduce(&:&)
+  end
+
+  def save_logs_batch(logs_batch, file_prefix)
+    logs_export = logs_batch.map(&:attributes)
+    file_name = "#{file_prefix}_logs_#{logs_batch.first.id}-#{logs_batch.last.id}.json"
+    pretty_json = JSON.pretty_generate(logs_export)
+    save_file(file_name, pretty_json)
   end
 
   def destroy_builds_batch(builds_batch)
@@ -342,30 +390,6 @@ class Backup
 
   def file_path(file_name)
     "#{@config.files_location}/#{file_name}"
-  end
-
-  def export_builds(builds)
-    builds.map do |build|
-      build_export = build.attributes
-      build_export[:jobs] = export_jobs(build.jobs)
-
-      build_export
-    end
-  end
-
-  def export_jobs(jobs)
-    jobs.map do |job|
-      job_export = job.attributes
-      job_export[:logs] = export_logs(job.logs)
-
-      job_export
-    end
-  end
-
-  def export_logs(logs)
-    logs.map do |log|
-      log.attributes
-    end
   end
 
   def export_requests(requests)
