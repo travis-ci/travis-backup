@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+$: << 'lib'
+
+require 'travis-backup'
+
+Backup.new.run
