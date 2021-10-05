@@ -15,18 +15,24 @@ class Backup
 
       @db_helper.connect_db(@config.database_url)
       Log.order(:id).in_batches(of: @config.limit.to_i).map do |logs_batch|
-        log_hashes = logs_batch.as_json
-        @db_helper.connect_db(@config.destination_db_url)
-
-        log_hashes.each do |log_hash|
-          new_log = Log.new(log_hash)
-          new_log.save!
-        end
-
-        @db_helper.connect_db(@config.database_url)
-
-        logs_batch.each(&:destroy)
+        process_logs_batch(logs_batch)
       end
+    end
+
+    def process_logs_batch(logs_batch)
+      log_hashes = logs_batch.as_json
+      @db_helper.connect_db(@config.destination_db_url)
+
+      log_hashes.each do |log_hash|
+        new_log = Log.new(log_hash)
+        new_log.save!
+      end
+
+      @db_helper.connect_db(@config.database_url)
+
+      logs_batch.each(&:destroy)
+
+      GC.start
     end
 
     def run_dry
