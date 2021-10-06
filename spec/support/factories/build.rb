@@ -144,12 +144,6 @@ FactoryBot.define do
     factory :build_with_safe_dependencies do
       after(:create) do |build|
         create(
-          :tag,
-          last_build_id: build.id,
-          created_at: build.created_at,
-          updated_at: build.updated_at
-        )
-        create(
           :stage,
           build_id: build.id
         )
@@ -157,6 +151,12 @@ FactoryBot.define do
           :job,
           source_type: 'Build',
           source_id: build.id,
+          created_at: build.created_at,
+          updated_at: build.updated_at
+        )
+        create(
+          :tag,
+          last_build_id: build.id,
           created_at: build.created_at,
           updated_at: build.updated_at
         )

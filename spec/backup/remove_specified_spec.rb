@@ -10,7 +10,7 @@ require 'support/expected_files'
 require 'support/before_tests'
 require 'support/utils'
 require 'pry'
-
+require 'byebug'
 
 describe Backup::RemoveSpecified do
   before(:all) do
@@ -322,32 +322,49 @@ describe Backup::RemoveSpecified do
         subclass.all.size
       end.reduce(:+)
 
-      # Model.subclasses.each do |subclass|
-      #   puts subclass.to_s
-      #   puts subclass.all.size
-      # end
+      hashes = {
+        all: rows_number,
+        logs: Log.all.size,
+        jobs: Job.all.size,
+        builds: Build.all.size,
+        requests: Request.all.size,
+        repositories: Repository.all.size,
+        branches: Branch.all.size,
+        tags: Tag.all.size,
+        commits: Commit.all.size,
+        crons: Cron.all.size,
+        pull_requests: PullRequest.all.size,
+        ssl_keys: SslKey.all.size,
+        stages: Stage.all.size,
+        stars: Star.all.size,
+        permissions: Permission.all.size,
+        messages: Message.all.size,
+        abuses: Abuse.all.size,
+        annotations: Annotation.all.size,
+        queueable_jobs: QueueableJob.all.size
+      }
 
-      # TODO change these numbers, ensure that current code works properly
-
-      expect(rows_number).to eql(852)
-      expect(Log.all.size).to eql(56)
-      expect(Job.all.size).to eql(96)
-      expect(Build.all.size).to eql(90)
-      expect(Request.all.size).to eql(40)
-      expect(Repository.all.size).to eql(108)
-      expect(Branch.all.size).to eql(62)
-      expect(Tag.all.size).to eql(62)
-      expect(Commit.all.size).to eql(24)
-      expect(Cron.all.size).to eql(8)
-      expect(PullRequest.all.size).to eql(8)
-      expect(SslKey.all.size).to eql(8)
-      expect(Stage.all.size).to eql(32)
-      expect(Star.all.size).to eql(8)
-      expect(Permission.all.size).to eql(8)
-      expect(Message.all.size).to eql(32)
-      expect(Abuse.all.size).to eql(32)
-      expect(Annotation.all.size).to eql(56)
-      expect(QueueableJob.all.size).to eql(56)
+      expect(hashes).to eql(
+        all: 768,
+        logs: 56,
+        jobs: 96,
+        builds: 72,
+        requests: 40,
+        repositories: 108,
+        branches: 62,
+        tags: 62,
+        commits: 24,
+        crons: 8,
+        pull_requests: 8,
+        ssl_keys: 8,
+        stages: 32,
+        stars: 8,
+        permissions: 8,
+        messages: 32,
+        abuses: 32,
+        annotations: 56,
+        queueable_jobs: 56
+      )
     end
   end
 

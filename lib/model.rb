@@ -3,6 +3,23 @@
 require 'active_record'
 require './utils'
 
+module IdsOfAllDependenciesJson
+  def ids_of_all_dependencies_json
+    result = {}
+    self.class.reflect_on_all_associations.map do |association|
+      next if association.macro == :belongs_to
+      symbol = association.klass.name.underscore.to_sym
+      self.send(association.name).map do |associated_object|
+        result[symbol] = [] if result[symbol].nil?
+        result[symbol] << associated_object.ids_of_all_dependencies_json
+      end
+    end
+    result[:id] = "#{self.class.name.underscore}-#{id}"
+    result = result[:id] if result.size == 1
+    result
+  end
+end
+
 module IdsOfAllDependencies
   def ids_of_all_dependencies(to_filter={})
     result = { main: {}, filtered_out: {} }
@@ -41,8 +58,7 @@ module IdsOfAllDependencies
     to_filter = context[:to_filter]
 
     self.send(association.name).map do |model|
-      next if should_be_filtered?(**context)
-      model.ids_of_all_dependencies(to_filter)
+      model.ids_of_all_dependencies(get_to_filter_for_children(**context))
     end.compact
   end
 
@@ -52,14 +68,41 @@ module IdsOfAllDependencies
   end
 
   def should_be_filtered?(to_filter:, self_symbol:, association:)
-    arr = to_filter[self_symbol]
-    arr.present? && arr.any? { |a| a == association.name }
+    return false if to_filter == :none
+    return true if to_filter == :all
+
+    except_arr = to_filter[:except].try(:[], self_symbol)
+    only_arr = to_filter[:only].try(:[], self_symbol)
+
+    if except_arr.present?
+      except_arr.any? { |a| a == association.name }
+    elsif to_filter[:only].present?
+      only_arr.class != Array || only_arr.none? { |a| a == association.name }
+    else
+      false
+    end
+  end
+
+  def get_to_filter_for_children(to_filter:, self_symbol:, association:)
+    return to_filter if [:none, :all].include?(to_filter)
+
+    except_arr = to_filter[:except].try(:[], self_symbol)
+    only_arr = to_filter[:only].try(:[], self_symbol)
+
+    if except_arr.present?
+      return except_arr.any? { |a| a == association.name } ? :all : to_filter
+    elsif only_arr.present?
+      return only_arr.any? { |a| a == association.name } ? :none : to_filter
+    else
+      to_filter
+    end
   end
 end
 
 # Model class
 class Model < ActiveRecord::Base
   include IdsOfAllDependencies
+  include IdsOfAllDependenciesJson
 
   self.abstract_class = true
 

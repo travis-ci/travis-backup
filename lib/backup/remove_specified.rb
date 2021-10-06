@@ -72,7 +72,7 @@ class Backup
 
     def remove_user_with_dependencies(user_id)
       user = User.find(user_id)
-      ids_of_all_dependencies = user.ids_of_all_dependencies(dependencies_to_filter)
+      ids_of_all_dependencies = user.ids_of_all_dependencies(except: dependencies_to_filter)
       filter_dependent_on_strangers!(ids_of_all_dependencies)
 
       ids_of_all_dependencies[:main].each do |name, ids|
@@ -87,17 +87,11 @@ class Backup
       builds_to_filter = get_builds_to_filter(ids_hash)
 
       hashes = builds_to_filter.map do |build|
-        build.ids_of_all_dependencies(dependencies_to_filter)[:main]
+        build.ids_of_all_dependencies(only: dependencies_to_filter)[:main]
       end
 
       joined_hashes = Utils.uniquely_join_hashes_of_arrays(*hashes)
-      Utils.difference_of_two_hashes_of_arrays(ids_hash[:main], joined_hashes)
-      # filter_dependent_jobs!(ids_hash, builds_to_filter)
-      # filter_dependent_stages!(ids_hash, builds_to_filter)
-
-      # builds_to_filter.each do |id|
-      #   ids_hash[:main][:build].delete(id)
-      # end
+      ids_hash[:main] = Utils.difference_of_two_hashes_of_arrays(ids_hash[:main], joined_hashes)
     end
 
     def filter_dependent_jobs!(ids_hash, builds_to_filter)
@@ -128,7 +122,8 @@ class Backup
         end
       end
 
-      builds_to_filter.compact!.uniq!
+      builds_to_filter.compact!
+      builds_to_filter.uniq!
       Build.where(id: builds_to_filter)
     end
 

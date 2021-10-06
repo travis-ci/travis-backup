@@ -13,17 +13,26 @@ class Utils
     result
   end
 
+  def self.clone_hash_of_arrays(hash)
+    result = {}
+    hash.each do |key, array|
+      result[key] = hash[key].clone
+    end
+    result
+  end
+
   def self.difference_of_two_hashes_of_arrays(hash1, hash2)
+    result = self.clone_hash_of_arrays(hash1)
     hash2.each do |key, array|
       next if hash1[key].nil?
 
       array.each do |el|
-        hash1[key].delete(el)
+        result[key].delete(el)
       end
 
-      hash1.delete(key) if hash1[key].empty?
+      result.delete(key) if result[key].empty?
     end
-    hash1
+    result
   end
 
   def self.get_model(name)
