@@ -94,21 +94,6 @@ class Backup
       ids_hash[:main] = Utils.difference_of_two_hashes_of_arrays(ids_hash[:main], joined_hashes)
     end
 
-    def filter_dependent_jobs!(ids_hash, builds_to_filter)
-      jobs_to_filter = Job.where(source_id: builds_to_filter, source_type: 'Build').map(&:id)
-
-      jobs_to_filter.each do |id|
-        ids_hash[:main][:job].delete(id)
-      end
-    end
-
-    def filter_dependent_stages!(ids_hash, builds_to_filter)
-      stages_to_filter = Stage.where(build_id: builds_to_filter).map(&:id)
-      stages_to_filter.each do |id|
-        ids_hash[:main][:stage].delete(id)
-      end
-    end
-
     def get_builds_to_filter(ids_hash)
       builds_to_filter = []
 

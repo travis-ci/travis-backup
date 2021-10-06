@@ -6,15 +6,13 @@ require 'support/before_tests'
 require 'byebug'
 
 describe Model do
-  before(:all) do
+  before(:each) do
     BeforeTests.new.run
   end
 
-  describe 'ids_of_all_dependencies' do
-    let(:files_location) { "dump/tests" }
-    let!(:config) { Config.new(files_location: files_location, limit: 5) }
+  describe 'ids_of_all_dependencies' do  
+    let!(:config) { Config.new(limit: 5) }
     let!(:db_helper) { DbHelper.new(config) }
-    let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
     let(:datetime) { (Config.new.threshold + 1).months.ago.to_time.utc }
 
     let!(:commit) {
