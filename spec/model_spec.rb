@@ -10,7 +10,7 @@ describe Model do
     BeforeTests.new.run
   end
 
-  describe 'ids_of_all_dependencies' do  
+  describe 'ids_of_all_dependencies' do
     let!(:config) { Config.new(limit: 5) }
     let!(:db_helper) { DbHelper.new(config) }
     let(:datetime) { (Config.new.threshold + 1).months.ago.to_time.utc }

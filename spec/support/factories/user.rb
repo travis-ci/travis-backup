@@ -65,6 +65,11 @@ FactoryBot.define do
           created_at: user.created_at,
           updated_at: user.updated_at
         )
+        # repo = user.repositories.first
+        # repo.update(current_build_id: user.builds_for_that_this_user_is_owner.first.id)
+        # repo.update(last_build_id: user.builds_for_that_this_user_is_owner.second.id)
+        # puts user.builds_for_that_this_user_is_owner.first.id
+        # puts user.builds_for_that_this_user_is_owner.second.id
         create(
           :build_with_all_dependencies_and_sibling,
           sender_id: user.id,

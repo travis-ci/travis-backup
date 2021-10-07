@@ -345,10 +345,10 @@ describe Backup::RemoveSpecified do
       }
 
       expect(hashes).to eql(
-        all: 768,
+        all: 786,
         logs: 56,
         jobs: 96,
-        builds: 72,
+        builds: 90,
         requests: 40,
         repositories: 108,
         branches: 62,
