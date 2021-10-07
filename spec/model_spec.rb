@@ -44,49 +44,10 @@ describe Model do
       end
     end
 
-    context 'when the only filter is given' do
-      it 'returns all dependencies ids in hash' do
-        filter = {
-          only: {
-            request: [ :jobs, :builds ]
-          }
-        }
-        expect(commit.ids_of_all_dependencies(filter)).to eql({
-          filtered_out: {
-            abuse: [1, 2],
-            annotation: [1, 2],
-            branch: [73],
-            build: [1, 3],
-            job: [2, 4, 5],
-            log: [1, 2],
-            message: [1, 2],
-            queueable_job: [1, 2],
-            repository: [2, 1],
-            request: [1, 2],
-            stage: [20],
-            tag: [1]
-          },
-          main: {
-            annotation: [3, 4],
-            branch: [74],
-            build: [6, 8],
-            job: [9, 10, 7],
-            log: [3, 4],
-            queueable_job: [3, 4],
-            repository: [4, 3],
-            stage: [21],
-            tag: [2]
-          }
-        })
-      end
-    end
-
     context 'when the except filter is given' do
       it 'returns all dependencies ids in hash' do
         filter = {
-          except: {
-            request: [ :jobs, :builds ]
-          }
+          request: [ :jobs, :builds ]
         }
         expect(commit.ids_of_all_dependencies(filter)).to eql({
           main: {
@@ -104,15 +65,8 @@ describe Model do
             tag: [1]
           },
           filtered_out: {
-            annotation: [3, 4],
-            branch: [74],
             build: [6, 8],
-            job: [9, 10, 7],
-            log: [3, 4],
-            queueable_job: [3, 4],
-            repository: [4, 3],
-            stage: [21],
-            tag: [2]
+            job: [9, 10]
           }
         })
       end

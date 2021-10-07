@@ -72,7 +72,7 @@ class Backup
 
     def remove_user_with_dependencies(user_id)
       user = User.find(user_id)
-      ids_of_all_dependencies = user.ids_of_all_dependencies(except: dependencies_to_filter)
+      ids_of_all_dependencies = user.ids_of_all_dependencies(dependencies_to_filter)
       # puts ids_of_all_dependencies[:main][:build]
       # puts '--'
       # filter_builds_with_filtered_dependencies!(ids_of_all_dependencies)

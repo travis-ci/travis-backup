@@ -58,7 +58,8 @@ module IdsOfAllDependencies
     to_filter = context[:to_filter]
 
     self.send(association.name).map do |model|
-      model.ids_of_all_dependencies(get_to_filter_for_children(**context))
+      next if should_be_filtered?(**context)
+      model.ids_of_all_dependencies(to_filter)
     end.compact
   end
 
@@ -68,34 +69,8 @@ module IdsOfAllDependencies
   end
 
   def should_be_filtered?(to_filter:, self_symbol:, association:)
-    return false if to_filter == :none
-    return true if to_filter == :all
-
-    except_arr = to_filter[:except].try(:[], self_symbol)
-    only_arr = to_filter[:only].try(:[], self_symbol)
-
-    if except_arr.present?
-      except_arr.any? { |a| a == association.name }
-    elsif to_filter[:only].present?
-      only_arr.class != Array || only_arr.none? { |a| a == association.name }
-    else
-      false
-    end
-  end
-
-  def get_to_filter_for_children(to_filter:, self_symbol:, association:)
-    return to_filter if [:none, :all].include?(to_filter)
-
-    except_arr = to_filter[:except].try(:[], self_symbol)
-    only_arr = to_filter[:only].try(:[], self_symbol)
-
-    if except_arr.present?
-      return except_arr.any? { |a| a == association.name } ? :all : to_filter
-    elsif only_arr.present?
-      return only_arr.any? { |a| a == association.name } ? :none : to_filter
-    else
-      to_filter
-    end
+    arr = to_filter[self_symbol]
+    arr.present? && arr.any? { |a| a == association.name }
   end
 end
 
