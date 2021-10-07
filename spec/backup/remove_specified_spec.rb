@@ -345,9 +345,9 @@ describe Backup::RemoveSpecified do
       }
 
       expect(hashes).to eql(
-        all: 786,
-        logs: 56,
-        jobs: 96,
+        all: 870,
+        logs: 64,
+        jobs: 134,
         builds: 90,
         requests: 40,
         repositories: 108,
@@ -357,13 +357,13 @@ describe Backup::RemoveSpecified do
         crons: 8,
         pull_requests: 8,
         ssl_keys: 8,
-        stages: 32,
+        stages: 54,
         stars: 8,
         permissions: 8,
         messages: 32,
         abuses: 32,
-        annotations: 56,
-        queueable_jobs: 56
+        annotations: 64,
+        queueable_jobs: 64
       )
     end
   end

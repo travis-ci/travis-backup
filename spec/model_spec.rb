@@ -51,22 +51,19 @@ describe Model do
         }
         expect(commit.ids_of_all_dependencies(filter)).to eql({
           main: {
-            abuse: [1, 2],
             annotation: [1, 2],
             branch: [73],
             build: [1, 3],
             job: [2, 4, 5],
             log: [1, 2],
-            message: [1, 2],
             queueable_job: [1, 2],
             repository: [2, 1],
-            request: [1, 2],
+            request: [2],
             stage: [20],
             tag: [1]
           },
           filtered_out: {
-            build: [6, 8],
-            job: [9, 10]
+            request: [1]
           }
         })
       end

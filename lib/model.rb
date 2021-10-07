@@ -23,17 +23,16 @@ end
 module IdsOfAllDependencies
   def ids_of_all_dependencies(to_filter={})
     result = { main: {}, filtered_out: {} }
-    self_symbol = self.class.name.underscore.to_sym
 
     self.class.reflect_on_all_associations.map do |association|
       next if association.macro == :belongs_to
       symbol = association.klass.name.underscore.to_sym
-      context = { to_filter: to_filter, self_symbol: self_symbol, association: association }
+      context = { to_filter: to_filter, association: association }
 
-      self.send(association.name).map(&:id).map do |id|
-        hash_to_use = get_hash_to_use(result, context)
+      self.send(association.name).map do |associated_object|
+        hash_to_use = get_hash_to_use(result, **context, object: associated_object)
         hash_to_use[symbol] = [] if hash_to_use[symbol].nil?
-        hash_to_use[symbol] << id
+        hash_to_use[symbol] << associated_object.id
       end
       result = get_result_with_grandchildren_hashes(result, context)
     end
@@ -57,9 +56,9 @@ module IdsOfAllDependencies
     association = context[:association]
     to_filter = context[:to_filter]
 
-    self.send(association.name).map do |model|
-      next if should_be_filtered?(**context)
-      model.ids_of_all_dependencies(to_filter)
+    self.send(association.name).map do |associated_object|
+      next if should_be_filtered?(**context, object: associated_object)
+      associated_object.ids_of_all_dependencies(to_filter)
     end.compact
   end
 
@@ -68,8 +67,21 @@ module IdsOfAllDependencies
     result[symbol]
   end
 
-  def should_be_filtered?(to_filter:, self_symbol:, association:)
-    arr = to_filter[self_symbol]
+  def should_be_filtered?(to_filter:, association:, object:)
+    symbol = association.klass.name.underscore.to_sym
+
+    association.klass.reflect_on_all_associations.each do |association2|
+      next if association2.macro == :belongs_to
+
+      context = { to_filter: to_filter, symbol: symbol, association: association2 }
+      return true if object.send(association2.name).any? && is_this_association_filtered(context)
+    end
+
+    false
+  end
+
+  def is_this_association_filtered(to_filter:, symbol:, association:)
+    arr = to_filter[symbol]
     arr.present? && arr.any? { |a| a == association.name }
   end
 end
