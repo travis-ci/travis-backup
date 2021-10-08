@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+require 'backup/save_file'
+
 module RemoveWithAllDependencies
+  include SaveFile
+
   def dependencies_to_filter
     {
       build: [

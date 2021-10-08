@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+require 'backup/save_file'
+
 module RemoveHeavyData
+  include SaveFile
+
   def remove_heavy_data_for_repos_owned_by(owner_id, owner_type)
     Repository.where('owner_id = ? and owner_type = ?', owner_id, owner_type).order(:id).each do |repository|
       remove_heavy_data_for_repo(repository)
@@ -114,7 +118,7 @@ module RemoveHeavyData
   end
 
   def save_and_destroy_requests_batch(requests_batch, repository)
-    requests_export = export_requests(requests_batch)
+    requests_export = requests_batch.map(&:attributes)
     file_name = "repository_#{repository.id}_requests_#{requests_batch.first.id}-#{requests_batch.last.id}.json"
     pretty_json = JSON.pretty_generate(requests_export)
     if save_file(file_name, pretty_json)
@@ -131,35 +135,5 @@ module RemoveHeavyData
 
   def destroy_requests_batch_dry(requests_batch)
     @dry_run_reporter.add_to_report(:requests, *requests_batch.map(&:id))
-  end
-
-  def save_file(file_name, content) # rubocop:disable Metrics/MethodLength
-    return true if @config.dry_run
-
-    saved = false
-    begin
-      unless File.directory?(@config.files_location)
-        FileUtils.mkdir_p(@config.files_location)
-      end
-
-      File.open(file_path(file_name), 'w') do |file|
-        file.write(content)
-        file.close
-        saved = true
-      end
-    rescue => e
-      print "Failed to save #{file_name}, error: #{e.inspect}\n"
-    end
-    saved
-  end
-
-  def file_path(file_name)
-    "#{@config.files_location}/#{file_name}"
-  end
-
-  def export_requests(requests)
-    requests.map do |request|
-      request.attributes
-    end
   end
 end
