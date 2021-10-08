@@ -23,23 +23,23 @@ describe Backup::RemoveSpecified do
   let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
   let(:datetime) { (Config.new.threshold + 1).months.ago.to_time.utc }
 
-  describe 'process_repo' do
+  describe 'remove_heavy_data_for_repo' do
     let!(:repository) {
       FactoryBot.create(:repository)
     }
 
     it 'processes repository builds' do
-      expect(remove_specified).to receive(:process_repo_builds).once.with(repository)
-      remove_specified.process_repo(repository)
+      expect(remove_specified).to receive(:remove_repo_builds).once.with(repository)
+      remove_specified.remove_heavy_data_for_repo(repository)
     end
 
     it 'processes repository requests' do
-      expect(remove_specified).to receive(:process_repo_requests).once.with(repository)
-      remove_specified.process_repo(repository)
+      expect(remove_specified).to receive(:remove_repo_requests).once.with(repository)
+      remove_specified.remove_heavy_data_for_repo(repository)
     end
   end
 
-  describe 'process_repo_builds' do
+  describe 'remove_repo_builds' do
     after(:each) do
       Repository.destroy_all
       Build.destroy_all
@@ -85,13 +85,13 @@ describe Backup::RemoveSpecified do
 
     shared_context 'removing builds and jobs' do
       it 'should delete all builds of the repository' do
-        remove_specified.process_repo_builds(repository)
+        remove_specified.remove_repo_builds(repository)
         expect(Build.all.map(&:repository_id)).to eq([repository2.id])
       end
 
       it 'should delete all jobs of removed builds and leave the rest' do
         expect {
-          remove_specified.process_repo_builds(repository)
+          remove_specified.remove_repo_builds(repository)
         }.to change { Job.all.size }.by -4
 
         build_id = Build.first.id
@@ -100,7 +100,7 @@ describe Backup::RemoveSpecified do
 
       it 'should delete all logs of removed jobs and leave the rest' do
         expect {
-          remove_specified.process_repo_builds(repository)
+          remove_specified.remove_repo_builds(repository)
         }.to change { Log.all.size }.by -8
 
         build_id = Build.first.id
@@ -111,7 +111,7 @@ describe Backup::RemoveSpecified do
     shared_context 'not saving JSON to file' do
       it 'should not save JSON to file' do
         expect(File).not_to receive(:open)
-        remove_specified.process_repo_builds(repository)
+        remove_specified.remove_repo_builds(repository)
       end
     end
 
@@ -123,7 +123,7 @@ describe Backup::RemoveSpecified do
           allow_instances: true,
           arguments_to_check: :first
         ) do
-          remove_specified.process_repo_builds(repository)
+          remove_specified.remove_repo_builds(repository)
         end
       end
 
@@ -137,7 +137,7 @@ describe Backup::RemoveSpecified do
           allow_instances: true,
           arguments_to_check: :first
         ) do
-          remove_specified.process_repo_builds(repository)
+          remove_specified.remove_repo_builds(repository)
         end
       end
 
@@ -153,7 +153,7 @@ describe Backup::RemoveSpecified do
           allow_instances: true,
           arguments_to_check: :first
         ) do
-          remove_specified.process_repo_builds(repository)
+          remove_specified.remove_repo_builds(repository)
         end
       end
 
@@ -172,7 +172,7 @@ describe Backup::RemoveSpecified do
           match_mode: :match,
           arguments_to_check: :first
         ) do
-          remove_specified.process_repo_builds(repository)
+          remove_specified.remove_repo_builds(repository)
         end
       end
 
@@ -186,7 +186,7 @@ describe Backup::RemoveSpecified do
 
         it 'should create needed folders' do
           expect(FileUtils).to receive(:mkdir_p).once.with(random_files_location).and_call_original
-          remove_specified.process_repo_builds(repository)
+          remove_specified.remove_repo_builds(repository)
         end
       end
     end
@@ -207,19 +207,19 @@ describe Backup::RemoveSpecified do
 
       it 'should not delete builds' do
         expect {
-          remove_specified.process_repo_builds(repository)
+          remove_specified.remove_repo_builds(repository)
         }.not_to change { Build.all.size }
       end
 
       it 'should not delete jobs' do
         expect {
-          remove_specified.process_repo_builds(repository)
+          remove_specified.remove_repo_builds(repository)
         }.not_to change { Job.all.size }
       end
     end
   end
 
-  describe 'process_repo_requests' do
+  describe 'remove_repo_requests' do
     after(:each) do
       Repository.destroy_all
       Request.destroy_all
@@ -246,7 +246,7 @@ describe Backup::RemoveSpecified do
 
     shared_context 'removing requests' do
       it 'should delete all requests of the repository' do
-        remove_specified.process_repo_requests(repository)
+        remove_specified.remove_repo_requests(repository)
         expect(Request.all.map(&:repository_id)).to eq([repository2.id])
       end
     end
@@ -254,19 +254,19 @@ describe Backup::RemoveSpecified do
     shared_context 'not saving JSON to file' do
       it 'should not save JSON to file' do
         expect(File).not_to receive(:open)
-        remove_specified.process_repo_requests(repository)
+        remove_specified.remove_repo_requests(repository)
       end
     end
 
     context 'when if_backup config is set to true' do
       it 'should save proper build JSON to file' do
         expect_any_instance_of(File).to receive(:write).once.with(JSON.pretty_generate(expected_requests_json))
-        remove_specified.process_repo_requests(repository)
+        remove_specified.remove_repo_requests(repository)
       end
 
       it 'should save JSON to file at proper path' do
         expect(File).to receive(:open).once.with(Regexp.new(files_location), 'w')
-        remove_specified.process_repo_requests(repository)
+        remove_specified.remove_repo_requests(repository)
       end
 
       it_behaves_like 'removing requests'
@@ -278,7 +278,7 @@ describe Backup::RemoveSpecified do
 
         it 'should create needed folders' do
           expect(FileUtils).to receive(:mkdir_p).once.with(random_files_location).and_call_original
-          remove_specified.process_repo_requests(repository)
+          remove_specified.remove_repo_requests(repository)
         end
       end
     end
@@ -299,7 +299,7 @@ describe Backup::RemoveSpecified do
 
       it 'should not delete requests' do
         expect {
-          remove_specified.process_repo_requests(repository)
+          remove_specified.remove_repo_requests(repository)
         }.not_to change { Request.all.size }
       end
     end

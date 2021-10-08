@@ -49,7 +49,7 @@ describe Backup do
     context 'when no id arguments are given' do
       it 'processes every repository' do
         Repository.all.each do |repository|
-          expect_any_instance_of(Backup::RemoveSpecified).to receive(:process_repo_builds).once.with(repository)
+          expect_any_instance_of(Backup::RemoveSpecified).to receive(:remove_repo_builds).once.with(repository)
         end
         backup.run
       end
@@ -61,7 +61,7 @@ describe Backup do
 
         expect_method_calls_on(
           Backup::RemoveSpecified,
-          :process_repo_builds,
+          :remove_repo_builds,
           user_repos,
           allow_instances: true,
           arguments_to_check: :first
@@ -77,7 +77,7 @@ describe Backup do
 
         expect_method_calls_on(
           Backup::RemoveSpecified,
-          :process_repo_builds,
+          :remove_repo_builds,
           org_repos,
           allow_instances: true,
           arguments_to_check: :first
@@ -90,7 +90,7 @@ describe Backup do
     context 'when repo_id is given' do
       it 'processes only the repository with the given id' do
         repo = Repository.first
-        expect_any_instance_of(Backup::RemoveSpecified).to receive(:process_repo_builds).once.with(repo)
+        expect_any_instance_of(Backup::RemoveSpecified).to receive(:remove_repo_builds).once.with(repo)
         backup.run(repo_id: repo.id)
       end
     end
@@ -144,7 +144,7 @@ describe Backup do
       let!(:backup) { Backup.new(files_location: files_location, limit: 5, move_logs: true) }
 
       it 'does not process repositories' do
-        expect(backup).not_to receive(:process_repo)
+        expect(backup).not_to receive(:remove_heavy_data_for_repo)
         backup.run
       end
 
@@ -158,7 +158,7 @@ describe Backup do
       let!(:backup) { Backup.new(files_location: files_location, limit: 5, remove_orphans: true) }
 
       it 'does not process repositories' do
-        expect(backup).not_to receive(:process_repo)
+        expect(backup).not_to receive(:remove_heavy_data_for_repo)
         backup.run
       end
 
