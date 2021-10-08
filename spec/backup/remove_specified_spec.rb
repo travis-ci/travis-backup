@@ -313,10 +313,8 @@ describe Backup::RemoveSpecified do
         updated_at: datetime
       )
     }
-    it 'removes user with all his dependencies except those on current_build_id and last_build_id' do
-      db_helper.do_without_triggers do
-        remove_specified.remove_user_with_dependencies(user.id)
-      end
+    it 'removes user with all his dependencies with proper exceptions' do
+      remove_specified.remove_user_with_dependencies(user.id)
 
       rows_number = Model.subclasses.map do |subclass|
         subclass.all.size

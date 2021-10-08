@@ -21,7 +21,13 @@ module IdsOfAllDependenciesJson
 end
 
 module IdsOfAllDependencies
-  def ids_of_all_dependencies(to_filter={})
+  def ids_of_all_dependencies(to_filter=nil)
+    ids_hash = ids_of_all_dependencies_without_reflection(to_filter || {})
+    return ids_hash unless to_filter
+    move_wrongly_assigned_to_main(to_filter, ids_hash)
+  end
+
+  def ids_of_all_dependencies_without_reflection(to_filter)
     result = { main: {}, filtered_out: {} }
 
     self.class.reflect_on_all_associations.map do |association|
@@ -42,6 +48,36 @@ module IdsOfAllDependencies
 
   private
 
+  def move_wrongly_assigned_to_main(to_filter, ids_hash)
+    ids_hash[:filtered_out].each do |model_symbol, array|
+      array.each do |id|
+        object = Utils.get_model(model_symbol).find(id)
+        move_object_to_main_if_necessary(to_filter[model_symbol], ids_hash, object)
+      end
+    end
+    ids_hash
+  end
+
+  def move_object_to_main_if_necessary(associations_to_filter, ids_hash, object)
+    if should_object_be_moved?(associations_to_filter, ids_hash, object)
+      symbol = object.class.name.underscore.to_sym
+      ids_hash[:filtered_out][symbol].delete(object.id)
+      ids_hash[:main][symbol] = [] if ids_hash[:main][symbol].nil?
+      ids_hash[:main][symbol] << object.id
+    end
+  end
+
+  def should_object_be_moved?(associations_to_filter, ids_hash, object)
+    associations_to_filter.map do |association|
+      associated = object.send(association)
+
+      associated.to_a.empty? || associated.map do |associated_object|
+        class_symbol = associated_object.class.name.underscore.to_sym
+        ids_hash[:main][class_symbol]&.include?(associated_object.id)
+      end.reduce(:&)
+    end.reduce(:&)
+  end
+
   def get_result_with_grandchildren_hashes(result, context)
     hashes = get_grandchildren_hashes(context)
     main = hashes.map { |hash| hash[:main] }
@@ -58,7 +94,7 @@ module IdsOfAllDependencies
 
     self.send(association.name).map do |associated_object|
       next if should_be_filtered?(**context, object: associated_object)
-      associated_object.ids_of_all_dependencies(to_filter)
+      associated_object.ids_of_all_dependencies_without_reflection(to_filter)
     end.compact
   end
 
@@ -74,7 +110,7 @@ module IdsOfAllDependencies
       next if association2.macro == :belongs_to
 
       context = { to_filter: to_filter, symbol: symbol, association: association2 }
-      return true if object.send(association2.name).any? && is_this_association_filtered(context)
+      return true if object.send(association2.name).any? && is_this_association_filtered(**context)
     end
 
     false

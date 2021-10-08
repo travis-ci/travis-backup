@@ -86,13 +86,14 @@ class Backup
     end
 
     def remove_ids_from_hash(ids_hash)
-      Build.delete(ids_hash[:build])
       ids_hash.each do |name, ids|
         next if name == :build
 
         model = Utils.get_model(name)
         model.delete(ids)
       end
+      Build.delete(ids_hash[:build])
+      # order important because of foreign key constraint between builds and repos
     end
 
     def filter_builds_with_filtered_dependencies!(ids_of_all_dependencies)
