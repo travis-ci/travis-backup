@@ -1,0 +1,96 @@
+{
+  "table_name": "users",
+  "data": [
+    {
+      "id": 9,
+      "name": null,
+      "login": null,
+      "email": null,
+      "created_at": "2021-03-11 22:34:07 UTC",
+      "updated_at": "2021-03-11 22:34:07 UTC",
+      "is_admin": false,
+      "github_id": null,
+      "github_oauth_token": null,
+      "gravatar_id": null,
+      "locale": null,
+      "is_syncing": null,
+      "synced_at": null,
+      "github_scopes": null,
+      "education": null,
+      "first_logged_in_at": null,
+      "avatar_url": null,
+      "suspended": false,
+      "suspended_at": null,
+      "_dependencies_": {
+        "build": [
+          161,
+          210,
+          211,
+          260
+        ],
+        "repository": [
+          66,
+          1
+        ],
+        "job": [
+          271,
+          272
+        ],
+        "request": [
+          57,
+          58,
+          55,
+          56
+        ],
+        "abuse": [
+          51,
+          52
+        ],
+        "subscription": [
+          1,
+          2
+        ],
+        "owner_group": [
+          1,
+          2
+        ],
+        "trial": [
+          1,
+          2
+        ],
+        "trial_allowance": [
+          5,
+          6
+        ],
+        "broadcast": [
+          1,
+          2
+        ],
+        "star": [
+          1,
+          2
+        ],
+        "permission": [
+          1,
+          2
+        ],
+        "token": [
+          9,
+          10
+        ],
+        "email": [
+          9,
+          10
+        ],
+        "membership": [
+          1,
+          2
+        ],
+        "user_beta_feature": [
+          1,
+          2
+        ]
+      }
+    }
+  ]
+}

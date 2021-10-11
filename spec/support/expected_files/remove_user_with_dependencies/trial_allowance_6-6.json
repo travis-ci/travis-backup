@@ -1,0 +1,17 @@
+{
+  "table_name": "trial_allowances",
+  "data": [
+    {
+      "id": 6,
+      "trial_id": null,
+      "creator_id": 9,
+      "creator_type": "User",
+      "builds_allowed": null,
+      "builds_remaining": null,
+      "created_at": "2021-03-11 22:34:07 UTC",
+      "updated_at": "2021-03-11 22:34:07 UTC",
+      "_dependencies_": {
+      }
+    }
+  ]
+}

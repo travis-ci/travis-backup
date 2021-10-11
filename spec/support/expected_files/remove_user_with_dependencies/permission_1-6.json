@@ -1,0 +1,45 @@
+{
+  "table_name": "permissions",
+  "data": [
+    {
+      "id": 1,
+      "user_id": 9,
+      "repository_id": null,
+      "admin": false,
+      "push": false,
+      "pull": false,
+      "_dependencies_": {
+      }
+    },
+    {
+      "id": 2,
+      "user_id": 9,
+      "repository_id": null,
+      "admin": false,
+      "push": false,
+      "pull": false,
+      "_dependencies_": {
+      }
+    },
+    {
+      "id": 5,
+      "user_id": null,
+      "repository_id": 1,
+      "admin": false,
+      "push": false,
+      "pull": false,
+      "_dependencies_": {
+      }
+    },
+    {
+      "id": 6,
+      "user_id": null,
+      "repository_id": 1,
+      "admin": false,
+      "push": false,
+      "pull": false,
+      "_dependencies_": {
+      }
+    }
+  ]
+}

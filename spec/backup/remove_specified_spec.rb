@@ -6,7 +6,7 @@ require 'models/job'
 require 'models/organization'
 require 'models/user'
 require 'support/factories'
-require 'support/expected_files'
+require 'support/expected_files_provider'
 require 'support/before_tests'
 require 'support/utils'
 require 'pry'
@@ -65,7 +65,7 @@ describe Backup::RemoveSpecified do
       )
     }
     let(:expected_files_creator) {
-      ExpectedFiles.new(repository, datetime)
+      ExpectedFilesProvider.new(repository, datetime)
     }
     let!(:expected_builds_json) {
       expected_files_creator.builds_json
@@ -241,7 +241,7 @@ describe Backup::RemoveSpecified do
       )
     }
     let!(:expected_requests_json) {
-      ExpectedFiles.new(repository, datetime).requests_json
+      ExpectedFilesProvider.new(repository, datetime).requests_json
     }
 
     shared_context 'removing requests' do
@@ -306,12 +306,18 @@ describe Backup::RemoveSpecified do
   end
 
   describe 'remove_user_with_dependencies' do
+    before(:each) do
+      BeforeTests.new.run
+    end
+
     let!(:user) {
-      FactoryBot.create(
-        :user_with_all_dependencies,
-        created_at: datetime,
-        updated_at: datetime
-      )
+      db_helper.do_without_triggers do
+        FactoryBot.create(
+          :user_with_all_dependencies,
+          created_at: datetime,
+          updated_at: datetime
+        )
+      end
     }
     it 'removes user with all his dependencies with proper exceptions' do
       remove_specified.remove_user_with_dependencies(user.id)
@@ -363,6 +369,24 @@ describe Backup::RemoveSpecified do
         annotations: 64,
         queueable_jobs: 64
       )
+    end
+
+    def get_expected_files(datetime)
+      Dir['spec/support/expected_files/**/*.json'].map do |file_path|
+        content = File.read(file_path)
+        content.gsub(/"[^"]+ UTC"/, "\"#{datetime.to_s}\"")
+      end
+    end
+
+    it 'saves removed data to files in proper format' do
+      expect_method_calls_on(
+        File, :write,
+        get_expected_files(datetime),
+        allow_instances: true,
+        arguments_to_check: :first
+      ) do
+        remove_specified.remove_user_with_dependencies(user.id)
+      end
     end
   end
 

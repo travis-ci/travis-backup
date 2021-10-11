@@ -5,7 +5,7 @@ require 'factory_bot'
 
 FactoryBot.define do
   factory :branch do
-    name { "branch_#{Time.now.to_f}" }
+    sequence(:name) { |n| "branch_#{n}" }
 
     factory :branch_orphaned_on_repository_id do
       repository_id { 2_000_000_000 }
@@ -59,8 +59,7 @@ FactoryBot.define do
       factory :branch_with_all_dependencies_and_sibling do
         after(:create) do |branch|
           create(:branch, {
-            **branch.attributes_without_id.symbolize_keys.reject {|k, v| k == :name},
-            name: "branch_#{Time.now.to_f}_2"
+            **branch.attributes_without_id.symbolize_keys.reject {|k, v| k == :name}
           })
         end
       end

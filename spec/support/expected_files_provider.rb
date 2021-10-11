@@ -1,4 +1,4 @@
-class ExpectedFiles
+class ExpectedFilesProvider
   def initialize(repository, datetime)
     @repository = repository
     @datetime = datetime

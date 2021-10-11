@@ -1,0 +1,39 @@
+{
+  "table_name": "tags",
+  "data": [
+    {
+      "id": 33,
+      "repository_id": 1,
+      "name": null,
+      "last_build_id": null,
+      "exists_on_github": null,
+      "created_at": "2021-03-11 22:34:07 UTC",
+      "updated_at": "2021-03-11 22:34:07 UTC",
+      "_dependencies_": {
+        "build": [
+          143,
+          145
+        ],
+        "commit": [
+          227,
+          228
+        ],
+        "request": [
+          33,
+          34
+        ]
+      }
+    },
+    {
+      "id": 38,
+      "repository_id": 1,
+      "name": null,
+      "last_build_id": null,
+      "exists_on_github": null,
+      "created_at": "2021-03-11 22:34:07 UTC",
+      "updated_at": "2021-03-11 22:34:07 UTC",
+      "_dependencies_": {
+      }
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "table_name": "tokens",
+  "data": [
+    {
+      "id": 9,
+      "user_id": 9,
+      "token": null,
+      "created_at": "2021-03-11 22:34:07 UTC",
+      "updated_at": "2021-03-11 22:34:07 UTC",
+      "_dependencies_": {
+      }
+    },
+    {
+      "id": 10,
+      "user_id": 9,
+      "token": null,
+      "created_at": "2021-03-11 22:34:07 UTC",
+      "updated_at": "2021-03-11 22:34:07 UTC",
+      "_dependencies_": {
+      }
+    }
+  ]
+}

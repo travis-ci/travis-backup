@@ -1,0 +1,25 @@
+{
+  "table_name": "owner_groups",
+  "data": [
+    {
+      "id": 1,
+      "uuid": null,
+      "owner_id": 9,
+      "owner_type": "User",
+      "created_at": "2021-03-11 22:34:07 UTC",
+      "updated_at": "2021-03-11 22:34:07 UTC",
+      "_dependencies_": {
+      }
+    },
+    {
+      "id": 2,
+      "uuid": null,
+      "owner_id": 9,
+      "owner_type": "User",
+      "created_at": "2021-03-11 22:34:07 UTC",
+      "updated_at": "2021-03-11 22:34:07 UTC",
+      "_dependencies_": {
+      }
+    }
+  ]
+}

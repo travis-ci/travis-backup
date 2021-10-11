@@ -1,0 +1,21 @@
+{
+  "table_name": "memberships",
+  "data": [
+    {
+      "id": 1,
+      "organization_id": null,
+      "user_id": 9,
+      "role": null,
+      "_dependencies_": {
+      }
+    },
+    {
+      "id": 2,
+      "organization_id": null,
+      "user_id": 9,
+      "role": null,
+      "_dependencies_": {
+      }
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "table_name": "subscriptions",
+  "data": [
+    {
+      "id": 1,
+      "cc_token": null,
+      "valid_to": null,
+      "owner_id": 9,
+      "owner_type": "User",
+      "first_name": null,
+      "last_name": null,
+      "company": null,
+      "zip_code": null,
+      "address": null,
+      "address2": null,
+      "city": null,
+      "state": null,
+      "country": null,
+      "vat_id": null,
+      "customer_id": null,
+      "created_at": "2021-03-11 22:34:07 UTC",
+      "updated_at": "2021-03-11 22:34:07 UTC",
+      "cc_owner": null,
+      "cc_last_digits": null,
+      "cc_expiration_date": null,
+      "billing_email": null,
+      "selected_plan": null,
+      "coupon": null,
+      "contact_id": null,
+      "canceled_at": null,
+      "canceled_by_id": null,
+      "status": null,
+      "source": "unknown",
+      "concurrency": null,
+      "_dependencies_": {
+        "invoice": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "cc_token": null,
+      "valid_to": null,
+      "owner_id": 9,
+      "owner_type": "User",
+      "first_name": null,
+      "last_name": null,
+      "company": null,
+      "zip_code": null,
+      "address": null,
+      "address2": null,
+      "city": null,
+      "state": null,
+      "country": null,
+      "vat_id": null,
+      "customer_id": null,
+      "created_at": "2021-03-11 22:34:07 UTC",
+      "updated_at": "2021-03-11 22:34:07 UTC",
+      "cc_owner": null,
+      "cc_last_digits": null,
+      "cc_expiration_date": null,
+      "billing_email": null,
+      "selected_plan": null,
+      "coupon": null,
+      "contact_id": null,
+      "canceled_at": null,
+      "canceled_by_id": null,
+      "status": null,
+      "source": "unknown",
+      "concurrency": null,
+      "_dependencies_": {
+        "invoice": [
+          3,
+          4
+        ]
+      }
+    }
+  ]
+}
