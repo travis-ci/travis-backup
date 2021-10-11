@@ -3,24 +3,55 @@
 require 'active_record'
 require './utils'
 
-module IdsOfAllDependenciesJson
-  def ids_of_all_dependencies_json
+module IdsOfAllDirectDependencies
+  def ids_of_all_direct_dependencies
     result = {}
+
     self.class.reflect_on_all_associations.map do |association|
       next if association.macro == :belongs_to
+
       symbol = association.klass.name.underscore.to_sym
       self.send(association.name).map do |associated_object|
         result[symbol] = [] if result[symbol].nil?
-        result[symbol] << associated_object.ids_of_all_dependencies_json
+        result[symbol] << associated_object.id
       end
     end
-    result[:id] = "#{self.class.name.underscore}-#{id}"
+
+    result
+  end
+end
+
+module IdsOfAllDependenciesNested
+  def ids_of_all_dependencies_nested(depth = Float::INFINITY)
+    result = depth > 0 ? get_associations(depth) : {}
+    result[:id] = id
     result = result[:id] if result.size == 1
+    result
+  end
+
+  private
+
+  def get_associations(depth)
+    result = {}
+
+    self.class.reflect_on_all_associations.map do |association|
+      next if association.macro == :belongs_to
+
+      symbol = association.klass.name.underscore.to_sym
+      self.send(association.name).map do |associated_object|
+        result[symbol] = [] if result[symbol].nil?
+        result[symbol] << associated_object.ids_of_all_dependencies_nested(depth - 1)
+      end
+    end
+
     result
   end
 end
 
 module IdsOfAllDependencies
+  include IdsOfAllDependenciesNested
+  include IdsOfAllDirectDependencies
+
   def ids_of_all_dependencies(to_filter=nil)
     ids_hash = ids_of_all_dependencies_without_reflection(to_filter || {})
     return ids_hash unless to_filter
@@ -125,7 +156,6 @@ end
 # Model class
 class Model < ActiveRecord::Base
   include IdsOfAllDependencies
-  include IdsOfAllDependenciesJson
 
   self.abstract_class = true
 
