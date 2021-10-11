@@ -1,0 +1,65 @@
+{
+  "table_name": "annotations",
+  "data": [
+    {
+      "id": 32,
+      "job_id": 86,
+      "url": null,
+      "description": "some text",
+      "created_at": "2021-03-11 23:26:29 UTC",
+      "updated_at": "2021-03-11 23:26:29 UTC",
+      "annotation_provider_id": 0,
+      "status": null,
+      "_dependencies_": {
+      }
+    },
+    {
+      "id": 49,
+      "job_id": 141,
+      "url": null,
+      "description": "some text",
+      "created_at": "2021-03-11 23:26:29 UTC",
+      "updated_at": "2021-03-11 23:26:29 UTC",
+      "annotation_provider_id": 0,
+      "status": null,
+      "_dependencies_": {
+      }
+    },
+    {
+      "id": 50,
+      "job_id": 141,
+      "url": null,
+      "description": "some text",
+      "created_at": "2021-03-11 23:26:29 UTC",
+      "updated_at": "2021-03-11 23:26:29 UTC",
+      "annotation_provider_id": 0,
+      "status": null,
+      "_dependencies_": {
+      }
+    },
+    {
+      "id": 51,
+      "job_id": 149,
+      "url": null,
+      "description": "some text",
+      "created_at": "2021-03-11 23:26:29 UTC",
+      "updated_at": "2021-03-11 23:26:29 UTC",
+      "annotation_provider_id": 0,
+      "status": null,
+      "_dependencies_": {
+      }
+    },
+    {
+      "id": 52,
+      "job_id": 149,
+      "url": null,
+      "description": "some text",
+      "created_at": "2021-03-11 23:26:29 UTC",
+      "updated_at": "2021-03-11 23:26:29 UTC",
+      "annotation_provider_id": 0,
+      "status": null,
+      "_dependencies_": {
+      }
+    }
+  ]
+}

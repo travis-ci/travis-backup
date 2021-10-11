@@ -21,6 +21,11 @@ def expect_method_calls_on(cl, method, call_with, options)
   case match_mode
   when :including
     call_with.each do |args|
+      puts 'args:'
+      puts args
+      puts 'calls_args:'
+      puts calls_args
+      # byebug
       expect(calls_args).to include(args)
     end
   when :match

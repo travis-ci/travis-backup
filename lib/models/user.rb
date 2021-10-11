@@ -23,6 +23,5 @@ class User < Model
   has_many :memberships
   has_many :user_beta_features
 
-
   self.table_name = 'users'
 end

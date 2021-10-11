@@ -38,4 +38,10 @@ class Utils
   def self.get_model(name)
     Model.subclasses.find{ |m| m.name == name.to_s.camelcase }
   end
+
+  def self.get_sum_of_rows_of_all_models
+    Model.subclasses.map do |subclass|
+      subclass.all.size
+    end.reduce(:+)
+  end
 end
