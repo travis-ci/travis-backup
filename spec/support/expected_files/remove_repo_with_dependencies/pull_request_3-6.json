@@ -1,0 +1,41 @@
+{
+  "table_name": "pull_requests",
+  "data": [
+    {
+      "id": 3,
+      "repository_id": 1,
+      "number": null,
+      "title": null,
+      "state": null,
+      "head_repo_github_id": null,
+      "head_repo_slug": null,
+      "head_ref": null,
+      "created_at": "2021-03-12 18:18:22 UTC",
+      "updated_at": "2021-03-12 18:18:22 UTC",
+      "_dependencies_": {
+        "request": [
+          29,
+          30
+        ],
+        "build": [
+          88,
+          137
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "repository_id": 1,
+      "number": null,
+      "title": null,
+      "state": null,
+      "head_repo_github_id": null,
+      "head_repo_slug": null,
+      "head_ref": null,
+      "created_at": "2021-03-12 18:18:22 UTC",
+      "updated_at": "2021-03-12 18:18:22 UTC",
+      "_dependencies_": {
+      }
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "table_name": "abuses",
+  "data": [
+    {
+      "id": 14,
+      "owner_id": null,
+      "owner_type": null,
+      "request_id": 15,
+      "level": 14,
+      "reason": "some text",
+      "created_at": "2021-03-12 18:18:22 UTC",
+      "updated_at": "2021-03-12 18:18:22 UTC",
+      "_dependencies_": {
+      }
+    },
+    {
+      "id": 15,
+      "owner_id": null,
+      "owner_type": null,
+      "request_id": 17,
+      "level": 15,
+      "reason": "some text",
+      "created_at": "2021-03-12 18:18:22 UTC",
+      "updated_at": "2021-03-12 18:18:22 UTC",
+      "_dependencies_": {
+      }
+    },
+    {
+      "id": 16,
+      "owner_id": null,
+      "owner_type": null,
+      "request_id": 17,
+      "level": 16,
+      "reason": "some text",
+      "created_at": "2021-03-12 18:18:22 UTC",
+      "updated_at": "2021-03-12 18:18:22 UTC",
+      "_dependencies_": {
+      }
+    },
+    {
+      "id": 25,
+      "owner_id": null,
+      "owner_type": null,
+      "request_id": 29,
+      "level": 25,
+      "reason": "some text",
+      "created_at": "2021-03-12 18:18:22 UTC",
+      "updated_at": "2021-03-12 18:18:22 UTC",
+      "_dependencies_": {
+      }
+    },
+    {
+      "id": 26,
+      "owner_id": null,
+      "owner_type": null,
+      "request_id": 29,
+      "level": 26,
+      "reason": "some text",
+      "created_at": "2021-03-12 18:18:22 UTC",
+      "updated_at": "2021-03-12 18:18:22 UTC",
+      "_dependencies_": {
+      }
+    }
+  ]
+}

@@ -6,32 +6,29 @@ module RemoveWithAllDependencies
   include SaveFile
 
   def remove_user_with_dependencies(user_id)
-    date = actual_time_for_subfolder
-    @subfolder = "user_#{user_id}_#{date}"
-    user = User.find(user_id)
-    ids_to_remove = user.ids_of_all_dependencies(dependencies_to_filter)[:main]
-    ids_to_remove[:user] = [user_id]
-    save_ids_hash_to_file(ids_to_remove)
-    remove_ids_from_hash(ids_to_remove)
+    remove_entry_with_dependencies(:user, user_id)
   end
 
   def remove_org_with_dependencies(org_id)
-    date = actual_time_for_subfolder
-    @subfolder = "organization_#{org_id}_#{date}"
-    organization = Organization.find(org_id)
-    ids_to_remove = organization.ids_of_all_dependencies(dependencies_to_filter)[:main]
-    ids_to_remove[:organization] = [org_id]
-    save_ids_hash_to_file(ids_to_remove)
-    remove_ids_from_hash(ids_to_remove)    
+    remove_entry_with_dependencies(:organization, org_id)
   end
 
   def remove_repo_with_dependencies(repo_id)
-    
+    remove_entry_with_dependencies(:repository, repo_id)
   end
 
   private
 
-  def actual_time_for_subfolder
+  def remove_entry_with_dependencies(model_name, id)
+    @subfolder = "#{model_name}_#{id}_#{time_for_subfolder}"
+    entry = Utils.get_model(model_name).find(id)
+    ids_to_remove = entry.ids_of_all_dependencies(dependencies_to_filter)[:main]
+    ids_to_remove[model_name] = [id]
+    save_ids_hash_to_file(ids_to_remove)
+    remove_ids_from_hash(ids_to_remove)        
+  end
+
+  def time_for_subfolder
     Time.now.to_s.parameterize.underscore
   end
 

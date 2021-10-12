@@ -305,6 +305,30 @@ describe Backup::RemoveSpecified do
     end
   end
 
+  def db_summary_hash
+    {
+      all: Utils.get_sum_of_rows_of_all_models,
+      logs: Log.all.size,
+      jobs: Job.all.size,
+      builds: Build.all.size,
+      requests: Request.all.size,
+      repositories: Repository.all.size,
+      branches: Branch.all.size,
+      tags: Tag.all.size,
+      commits: Commit.all.size,
+      crons: Cron.all.size,
+      pull_requests: PullRequest.all.size,
+      ssl_keys: SslKey.all.size,
+      stages: Stage.all.size,
+      stars: Star.all.size,
+      permissions: Permission.all.size,
+      messages: Message.all.size,
+      abuses: Abuse.all.size,
+      annotations: Annotation.all.size,
+      queueable_jobs: QueueableJob.all.size
+    }    
+  end
+
   describe 'remove_user_with_dependencies' do
     before(:each) do
       BeforeTests.new.run
@@ -325,29 +349,7 @@ describe Backup::RemoveSpecified do
     it 'removes user with all his dependencies with proper exceptions' do
       remove_specified.remove_user_with_dependencies(user.id)
 
-      hashes = {
-        all: Utils.get_sum_of_rows_of_all_models,
-        logs: Log.all.size,
-        jobs: Job.all.size,
-        builds: Build.all.size,
-        requests: Request.all.size,
-        repositories: Repository.all.size,
-        branches: Branch.all.size,
-        tags: Tag.all.size,
-        commits: Commit.all.size,
-        crons: Cron.all.size,
-        pull_requests: PullRequest.all.size,
-        ssl_keys: SslKey.all.size,
-        stages: Stage.all.size,
-        stars: Star.all.size,
-        permissions: Permission.all.size,
-        messages: Message.all.size,
-        abuses: Abuse.all.size,
-        annotations: Annotation.all.size,
-        queueable_jobs: QueueableJob.all.size
-      }
-
-      expect(hashes).to eql(
+      expect(db_summary_hash).to eql(
         all: 870,
         logs: 64,
         jobs: 134,
@@ -409,29 +411,7 @@ describe Backup::RemoveSpecified do
     it 'removes organization with all its dependencies with proper exceptions' do
       remove_specified.remove_org_with_dependencies(organization.id)
 
-      hashes = {
-        all: Utils.get_sum_of_rows_of_all_models,
-        logs: Log.all.size,
-        jobs: Job.all.size,
-        builds: Build.all.size,
-        requests: Request.all.size,
-        repositories: Repository.all.size,
-        branches: Branch.all.size,
-        tags: Tag.all.size,
-        commits: Commit.all.size,
-        crons: Cron.all.size,
-        pull_requests: PullRequest.all.size,
-        ssl_keys: SslKey.all.size,
-        stages: Stage.all.size,
-        stars: Star.all.size,
-        permissions: Permission.all.size,
-        messages: Message.all.size,
-        abuses: Abuse.all.size,
-        annotations: Annotation.all.size,
-        queueable_jobs: QueueableJob.all.size
-      }
-
-      expect(hashes).to eql(
+      expect(db_summary_hash).to eql(
         all: 870,
         logs: 64,
         jobs: 134,
@@ -474,6 +454,64 @@ describe Backup::RemoveSpecified do
   end
 
   describe 'remove_repo_with_dependencies' do
-    
+    before(:each) do
+      BeforeTests.new.run
+    end
+
+    let!(:repository) {
+      FactoryBot.rewind_sequences
+
+      db_helper.do_without_triggers do
+        FactoryBot.create(
+          :repository_with_all_dependencies,
+          created_at: datetime,
+          updated_at: datetime
+        )
+      end
+    }
+
+    it 'removes repository with all its dependencies with proper exceptions' do
+      remove_specified.remove_repo_with_dependencies(repository.id)
+
+      expect(db_summary_hash).to eql(
+        all: 470,
+        logs: 32,
+        jobs: 72,
+        builds: 50,
+        requests: 20,
+        repositories: 64,
+        branches: 36,
+        tags: 36,
+        commits: 12,
+        crons: 4,
+        pull_requests: 4,
+        ssl_keys: 4,
+        stages: 32,
+        stars: 4,
+        permissions: 4,
+        messages: 16,
+        abuses: 16,
+        annotations: 32,
+        queueable_jobs: 32
+      )
+    end
+
+    def get_expected_files(datetime)
+      Dir['spec/support/expected_files/remove_repo_with_dependencies/*.json'].map do |file_path|
+        content = File.read(file_path)
+        content.gsub(/"[^"]+ UTC"/, "\"#{datetime.to_s}\"")
+      end
+    end
+
+    it 'saves removed data to files in proper format' do
+      expect_method_calls_on(
+        File, :write,
+        get_expected_files(datetime),
+        allow_instances: true,
+        arguments_to_check: :first
+      ) do
+        remove_specified.remove_repo_with_dependencies(repository.id)
+      end
+    end
   end
 end
