@@ -48,8 +48,10 @@ FactoryBot.define do
         )
 
         repo = organization.repositories.first
+        Repository.record_timestamps = false
         repo.update(current_build_id: organization.builds_for_that_this_organization_is_owner.second.id)
         repo.update(last_build_id: organization.builds_for_that_this_organization_is_sender.second.id)
+        Repository.record_timestamps = true
 
         create(
           :request_with_all_dependencies_and_sibling,
