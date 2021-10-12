@@ -4,8 +4,8 @@
     {
       "id": 1,
       "object": null,
-      "created_at": "2021-03-11 22:34:07 UTC",
-      "updated_at": "2021-03-11 22:34:07 UTC",
+      "created_at": "2021-03-12 09:32:06 UTC",
+      "updated_at": "2021-03-12 09:32:06 UTC",
       "subscription_id": 1,
       "invoice_id": null,
       "stripe_id": null,
@@ -16,8 +16,8 @@
     {
       "id": 2,
       "object": null,
-      "created_at": "2021-03-11 22:34:07 UTC",
-      "updated_at": "2021-03-11 22:34:07 UTC",
+      "created_at": "2021-03-12 09:32:06 UTC",
+      "updated_at": "2021-03-12 09:32:06 UTC",
       "subscription_id": 1,
       "invoice_id": null,
       "stripe_id": null,
@@ -28,8 +28,8 @@
     {
       "id": 3,
       "object": null,
-      "created_at": "2021-03-11 22:34:07 UTC",
-      "updated_at": "2021-03-11 22:34:07 UTC",
+      "created_at": "2021-03-12 09:32:06 UTC",
+      "updated_at": "2021-03-12 09:32:06 UTC",
       "subscription_id": 2,
       "invoice_id": null,
       "stripe_id": null,
@@ -40,8 +40,8 @@
     {
       "id": 4,
       "object": null,
-      "created_at": "2021-03-11 22:34:07 UTC",
-      "updated_at": "2021-03-11 22:34:07 UTC",
+      "created_at": "2021-03-12 09:32:06 UTC",
+      "updated_at": "2021-03-12 09:32:06 UTC",
       "subscription_id": 2,
       "invoice_id": null,
       "stripe_id": null,
