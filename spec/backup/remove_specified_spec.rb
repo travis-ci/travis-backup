@@ -311,6 +311,8 @@ describe Backup::RemoveSpecified do
     end
 
     let!(:user) {
+      FactoryBot.rewind_sequences
+
       db_helper.do_without_triggers do
         FactoryBot.create(
           :user_with_all_dependencies,
@@ -393,6 +395,8 @@ describe Backup::RemoveSpecified do
     end
 
     let!(:organization) {
+      FactoryBot.rewind_sequences
+
       db_helper.do_without_triggers do
         FactoryBot.create(
           :organization_with_all_dependencies,
