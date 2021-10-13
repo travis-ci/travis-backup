@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 require 'model'
+require 'models/abuse'
+require 'models/subscription'
+require 'models/owner_group'
+require 'models/trial'
+require 'models/trial_allowance'
+require 'models/broadcast'
+require 'models/star'
+require 'models/permission'
+require 'models/token'
+require 'models/email'
+require 'models/membership'
+require 'models/user_beta_feature'
 
 class User < Model
   has_many :builds_for_that_this_user_is_owner, as: :owner, class_name: 'Build'

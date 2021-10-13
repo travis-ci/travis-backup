@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'backup/save_file'
+require 'models/user'
+require 'models/repository'
 
 module RemoveWithAllDependencies
   include SaveFile
@@ -24,8 +26,13 @@ module RemoveWithAllDependencies
     entry = Utils.get_model(model_name).find(id)
     ids_to_remove = entry.ids_of_all_dependencies(dependencies_to_filter)[:main]
     ids_to_remove[model_name] = [id]
-    save_ids_hash_to_file(ids_to_remove)
-    remove_ids_from_hash(ids_to_remove)        
+
+    if @config.dry_run
+      @dry_run_reporter.add_to_report(ids_to_remove)
+    else
+      save_ids_hash_to_file(ids_to_remove)
+      remove_ids_from_hash(ids_to_remove)
+    end
   end
 
   def time_for_subfolder

@@ -3,6 +3,8 @@
 require 'model'
 require 'models/build'
 require 'models/request'
+require 'models/permission'
+require 'models/star'
 
 # Repository model
 class Repository < Model

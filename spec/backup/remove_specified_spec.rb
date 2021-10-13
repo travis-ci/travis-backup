@@ -389,6 +389,22 @@ describe Backup::RemoveSpecified do
         remove_specified.remove_user_with_dependencies(user.id)
       end
     end
+
+    context 'when dry_run config is set to true' do
+      let!(:config) { Config.new(files_location: files_location, limit: 2, dry_run: true) }
+      let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
+
+      it 'does not save files' do
+        expect_any_instance_of(File).not_to receive(:write)
+        remove_specified.remove_user_with_dependencies(user.id)
+      end
+
+      it 'does not remove entries from db' do
+        expect {
+          remove_specified.remove_user_with_dependencies(user.id)
+        }.not_to change { Utils.get_sum_of_rows_of_all_models }
+      end
+    end
   end
 
   describe 'remove_org_with_dependencies' do

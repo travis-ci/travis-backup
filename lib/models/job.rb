@@ -3,6 +3,8 @@
 require 'model'
 require 'models/repository'
 require 'models/log'
+require 'models/annotation'
+require 'models/queueable_job'
 
 # Job model
 class Job < Model

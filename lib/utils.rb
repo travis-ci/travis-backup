@@ -1,3 +1,5 @@
+require 'models/repository'
+
 class Utils
   def self.uniquely_join_hashes_of_arrays(*hashes)
     result = {}
