@@ -30,7 +30,7 @@ module RemoveWithAllDependencies
     if @config.dry_run
       @dry_run_reporter.add_to_report(ids_to_remove)
     else
-      save_ids_hash_to_file(ids_to_remove)
+      save_ids_hash_to_file(ids_to_remove) if @config.if_backup
       remove_ids_from_hash(ids_to_remove)
     end
   end

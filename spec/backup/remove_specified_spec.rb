@@ -205,16 +205,10 @@ describe Backup::RemoveSpecified do
 
       it_behaves_like 'not saving JSON to file'
 
-      it 'should not delete builds' do
+      it 'does not remove entries from db' do
         expect {
           remove_specified.remove_repo_builds(repository)
-        }.not_to change { Build.all.size }
-      end
-
-      it 'should not delete jobs' do
-        expect {
-          remove_specified.remove_repo_builds(repository)
-        }.not_to change { Job.all.size }
+        }.not_to change { Utils.get_sum_of_rows_of_all_models }
       end
     end
   end
@@ -297,10 +291,10 @@ describe Backup::RemoveSpecified do
 
       it_behaves_like 'not saving JSON to file'
 
-      it 'should not delete requests' do
+      it 'does not remove entries from db' do
         expect {
           remove_specified.remove_repo_requests(repository)
-        }.not_to change { Request.all.size }
+        }.not_to change { Utils.get_sum_of_rows_of_all_models }
       end
     end
   end
@@ -346,31 +340,42 @@ describe Backup::RemoveSpecified do
       end
     }
 
-    it 'removes user with all his dependencies with proper exceptions' do
-      remove_specified.remove_user_with_dependencies(user.id)
-
-      expect(db_summary_hash).to eql(
-        all: 870,
-        logs: 64,
-        jobs: 134,
-        builds: 90,
-        requests: 40,
-        repositories: 108,
-        branches: 62,
-        tags: 62,
-        commits: 24,
-        crons: 8,
-        pull_requests: 8,
-        ssl_keys: 8,
-        stages: 54,
-        stars: 8,
-        permissions: 8,
-        messages: 32,
-        abuses: 32,
-        annotations: 64,
-        queueable_jobs: 64
-      )
+    shared_context 'not saving files' do
+      it 'does not save files' do
+        expect_any_instance_of(File).not_to receive(:write)
+        remove_specified.remove_user_with_dependencies(user.id)
+      end
     end
+
+    shared_context 'removing user with dependencies' do
+      it 'removes user with all his dependencies with proper exceptions' do
+        remove_specified.remove_user_with_dependencies(user.id)
+
+        expect(db_summary_hash).to eql(
+          all: 870,
+          logs: 64,
+          jobs: 134,
+          builds: 90,
+          requests: 40,
+          repositories: 108,
+          branches: 62,
+          tags: 62,
+          commits: 24,
+          crons: 8,
+          pull_requests: 8,
+          ssl_keys: 8,
+          stages: 54,
+          stars: 8,
+          permissions: 8,
+          messages: 32,
+          abuses: 32,
+          annotations: 64,
+          queueable_jobs: 64
+        )
+      end
+    end
+
+    it_behaves_like 'removing user with dependencies'
 
     def get_expected_files(datetime)
       Dir['spec/support/expected_files/remove_user_with_dependencies/*.json'].map do |file_path|
@@ -390,14 +395,20 @@ describe Backup::RemoveSpecified do
       end
     end
 
-    context 'when dry_run config is set to true' do
-      let!(:config) { Config.new(files_location: files_location, limit: 2, dry_run: true) }
+    context 'when if_backup config is set to false' do
+      let!(:config) { Config.new(files_location: files_location, limit: 5, if_backup: false) }
       let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
 
-      it 'does not save files' do
-        expect_any_instance_of(File).not_to receive(:write)
-        remove_specified.remove_user_with_dependencies(user.id)
-      end
+      it_behaves_like 'not saving files'
+      it_behaves_like 'removing user with dependencies'
+    end
+
+
+    context 'when dry_run config is set to true' do
+      let!(:config) { Config.new(files_location: files_location, limit: 5, dry_run: true) }
+      let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
+
+      it_behaves_like 'not saving files'
 
       it 'does not remove entries from db' do
         expect {
@@ -424,30 +435,63 @@ describe Backup::RemoveSpecified do
       end
     }
 
-    it 'removes organization with all its dependencies with proper exceptions' do
-      remove_specified.remove_org_with_dependencies(organization.id)
+    shared_context 'not saving files' do
+      it 'does not save files' do
+        expect_any_instance_of(File).not_to receive(:write)
+        remove_specified.remove_org_with_dependencies(organization.id)
+      end
+    end
 
-      expect(db_summary_hash).to eql(
-        all: 870,
-        logs: 64,
-        jobs: 134,
-        builds: 90,
-        requests: 40,
-        repositories: 108,
-        branches: 62,
-        tags: 62,
-        commits: 24,
-        crons: 8,
-        pull_requests: 8,
-        ssl_keys: 8,
-        stages: 54,
-        stars: 8,
-        permissions: 8,
-        messages: 32,
-        abuses: 32,
-        annotations: 64,
-        queueable_jobs: 64
-      )
+    shared_context 'removing organization with dependencies' do
+      it 'removes organization with all its dependencies with proper exceptions' do
+        remove_specified.remove_org_with_dependencies(organization.id)
+
+        expect(db_summary_hash).to eql(
+          all: 870,
+          logs: 64,
+          jobs: 134,
+          builds: 90,
+          requests: 40,
+          repositories: 108,
+          branches: 62,
+          tags: 62,
+          commits: 24,
+          crons: 8,
+          pull_requests: 8,
+          ssl_keys: 8,
+          stages: 54,
+          stars: 8,
+          permissions: 8,
+          messages: 32,
+          abuses: 32,
+          annotations: 64,
+          queueable_jobs: 64
+        )
+      end
+    end
+
+    it_behaves_like 'removing organization with dependencies'
+
+    context 'when if_backup config is set to false' do
+      let!(:config) { Config.new(files_location: files_location, limit: 5, if_backup: false) }
+      let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
+
+      it_behaves_like 'not saving files'
+      it_behaves_like 'removing organization with dependencies'
+    end
+
+
+    context 'when dry_run config is set to true' do
+      let!(:config) { Config.new(files_location: files_location, limit: 5, dry_run: true) }
+      let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
+
+      it_behaves_like 'not saving files'
+
+      it 'does not remove entries from db' do
+        expect {
+          remove_specified.remove_org_with_dependencies(organization.id)
+        }.not_to change { Utils.get_sum_of_rows_of_all_models }
+      end
     end
 
     def get_expected_files(datetime)
@@ -486,30 +530,62 @@ describe Backup::RemoveSpecified do
       end
     }
 
-    it 'removes repository with all its dependencies with proper exceptions' do
-      remove_specified.remove_repo_with_dependencies(repository.id)
+    shared_context 'not saving files' do
+      it 'does not save files' do
+        expect_any_instance_of(File).not_to receive(:write)
+        remove_specified.remove_repo_with_dependencies(repository.id)
+      end
+    end
 
-      expect(db_summary_hash).to eql(
-        all: 470,
-        logs: 32,
-        jobs: 72,
-        builds: 50,
-        requests: 20,
-        repositories: 64,
-        branches: 36,
-        tags: 36,
-        commits: 12,
-        crons: 4,
-        pull_requests: 4,
-        ssl_keys: 4,
-        stages: 32,
-        stars: 4,
-        permissions: 4,
-        messages: 16,
-        abuses: 16,
-        annotations: 32,
-        queueable_jobs: 32
-      )
+    shared_context 'removing repository with dependencies' do
+      it 'removes repository with all its dependencies with proper exceptions' do
+        remove_specified.remove_repo_with_dependencies(repository.id)
+
+        expect(db_summary_hash).to eql(
+          all: 470,
+          logs: 32,
+          jobs: 72,
+          builds: 50,
+          requests: 20,
+          repositories: 64,
+          branches: 36,
+          tags: 36,
+          commits: 12,
+          crons: 4,
+          pull_requests: 4,
+          ssl_keys: 4,
+          stages: 32,
+          stars: 4,
+          permissions: 4,
+          messages: 16,
+          abuses: 16,
+          annotations: 32,
+          queueable_jobs: 32
+        )
+      end
+    end
+
+    it_behaves_like 'removing repository with dependencies'
+
+    context 'when if_backup config is set to false' do
+      let!(:config) { Config.new(files_location: files_location, limit: 5, if_backup: false) }
+      let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
+
+      it_behaves_like 'not saving files'
+      it_behaves_like 'removing repository with dependencies'
+    end
+
+    context 'when dry_run config is set to true' do
+      let!(:config) { Config.new(files_location: files_location, limit: 5, dry_run: true) }
+      let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
+
+      it_behaves_like 'not saving files'
+
+      it 'does not remove entries from db' do
+        expect {
+          remove_specified.remove_repo_with_dependencies(repository.id)
+        }.not_to change { Utils.get_sum_of_rows_of_all_models }
+      end
     end
 
     def get_expected_files(datetime)
