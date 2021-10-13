@@ -84,12 +84,12 @@ describe Backup::RemoveSpecified do
     }
 
     shared_context 'removing builds and jobs' do
-      it 'should delete all builds of the repository' do
+      it 'deletes all builds of the repository' do
         remove_specified.remove_repo_builds(repository)
         expect(Build.all.map(&:repository_id)).to eq([repository2.id])
       end
 
-      it 'should delete all jobs of removed builds and leave the rest' do
+      it 'deletes all jobs of removed builds and leaves the rest' do
         expect {
           remove_specified.remove_repo_builds(repository)
         }.to change { Job.all.size }.by -4
@@ -98,7 +98,7 @@ describe Backup::RemoveSpecified do
         expect(Job.all.map(&:source_id)).to eq([build_id, build_id])
       end
 
-      it 'should delete all logs of removed jobs and leave the rest' do
+      it 'deletes all logs of removed jobs and leaves the rest' do
         expect {
           remove_specified.remove_repo_builds(repository)
         }.to change { Log.all.size }.by -8
@@ -109,14 +109,14 @@ describe Backup::RemoveSpecified do
     end
 
     shared_context 'not saving JSON to file' do
-      it 'should not save JSON to file' do
+      it 'does not save JSON to file' do
         expect(File).not_to receive(:open)
         remove_specified.remove_repo_builds(repository)
       end
     end
 
     context 'when if_backup config is set to true' do
-      it 'should save proper build JSON file' do
+      it 'saves proper build JSON file' do
         expect_method_calls_on(
           File, :write,
           [JSON.pretty_generate(expected_builds_json)],
@@ -127,7 +127,7 @@ describe Backup::RemoveSpecified do
         end
       end
 
-      it 'should save proper job JSON files' do
+      it 'saves proper job JSON files' do
         expect_method_calls_on(
           File, :write,
           [
@@ -141,7 +141,7 @@ describe Backup::RemoveSpecified do
         end
       end
 
-      it 'should save proper log JSON files' do
+      it 'saves proper log JSON files' do
         expect_method_calls_on(
           File, :write,
           [
@@ -157,7 +157,7 @@ describe Backup::RemoveSpecified do
         end
       end
 
-      it 'should save JSON files at proper paths' do
+      it 'saves JSON files at proper paths' do
         expect_method_calls_on(
           File, :open,
           [
@@ -184,7 +184,7 @@ describe Backup::RemoveSpecified do
         let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
       
 
-        it 'should create needed folders' do
+        it 'creates needed folders' do
           expect(FileUtils).to receive(:mkdir_p).once.with(random_files_location).and_call_original
           remove_specified.remove_repo_builds(repository)
         end
@@ -239,26 +239,26 @@ describe Backup::RemoveSpecified do
     }
 
     shared_context 'removing requests' do
-      it 'should delete all requests of the repository' do
+      it 'deletes all requests of the repository' do
         remove_specified.remove_repo_requests(repository)
         expect(Request.all.map(&:repository_id)).to eq([repository2.id])
       end
     end
 
     shared_context 'not saving JSON to file' do
-      it 'should not save JSON to file' do
+      it 'does not save JSON to file' do
         expect(File).not_to receive(:open)
         remove_specified.remove_repo_requests(repository)
       end
     end
 
     context 'when if_backup config is set to true' do
-      it 'should save proper build JSON to file' do
+      it 'saves proper build JSON to file' do
         expect_any_instance_of(File).to receive(:write).once.with(JSON.pretty_generate(expected_requests_json))
         remove_specified.remove_repo_requests(repository)
       end
 
-      it 'should save JSON to file at proper path' do
+      it 'saves JSON to file at proper path' do
         expect(File).to receive(:open).once.with(Regexp.new(files_location), 'w')
         remove_specified.remove_repo_requests(repository)
       end
@@ -270,7 +270,7 @@ describe Backup::RemoveSpecified do
         let!(:config) { Config.new(files_location: random_files_location, limit: 2) }
         let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
 
-        it 'should create needed folders' do
+        it 'creates needed folders' do
           expect(FileUtils).to receive(:mkdir_p).once.with(random_files_location).and_call_original
           remove_specified.remove_repo_requests(repository)
         end
