@@ -323,6 +323,13 @@ describe Backup::RemoveSpecified do
     }    
   end
 
+  def get_expected_files(directory, datetime)
+    Dir["spec/support/expected_files/#{directory}/*.json"].map do |file_path|
+      content = File.read(file_path)
+      content.gsub(/"[^"]+ UTC"/, "\"#{datetime.to_s}\"")
+    end
+  end
+
   describe 'remove_user_with_dependencies' do
     before(:each) do
       BeforeTests.new.run
@@ -377,21 +384,16 @@ describe Backup::RemoveSpecified do
 
     it_behaves_like 'removing user with dependencies'
 
-    def get_expected_files(datetime)
-      Dir['spec/support/expected_files/remove_user_with_dependencies/*.json'].map do |file_path|
-        content = File.read(file_path)
-        content.gsub(/"[^"]+ UTC"/, "\"#{datetime.to_s}\"")
-      end
-    end
-
-    it 'saves removed data to files in proper format' do
-      expect_method_calls_on(
-        File, :write,
-        get_expected_files(datetime),
-        allow_instances: true,
-        arguments_to_check: :first
-      ) do
-        remove_specified.remove_user_with_dependencies(user.id)
+    context 'when if_backup config is set to true' do
+      it 'saves removed data to files in proper format' do
+        expect_method_calls_on(
+          File, :write,
+          get_expected_files('remove_user_with_dependencies', datetime),
+          allow_instances: true,
+          arguments_to_check: :first
+        ) do
+          remove_specified.remove_user_with_dependencies(user.id)
+        end
       end
     end
 
@@ -472,6 +474,19 @@ describe Backup::RemoveSpecified do
 
     it_behaves_like 'removing organization with dependencies'
 
+    context 'when if_backup config is set to true' do
+      it 'saves removed data to files in proper format' do
+        expect_method_calls_on(
+          File, :write,
+          get_expected_files('remove_org_with_dependencies', datetime),
+          allow_instances: true,
+          arguments_to_check: :first
+        ) do
+          remove_specified.remove_org_with_dependencies(organization.id)
+        end
+      end
+    end
+
     context 'when if_backup config is set to false' do
       let!(:config) { Config.new(files_location: files_location, limit: 5, if_backup: false) }
       let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
@@ -479,7 +494,6 @@ describe Backup::RemoveSpecified do
       it_behaves_like 'not saving files'
       it_behaves_like 'removing organization with dependencies'
     end
-
 
     context 'when dry_run config is set to true' do
       let!(:config) { Config.new(files_location: files_location, limit: 5, dry_run: true) }
@@ -491,24 +505,6 @@ describe Backup::RemoveSpecified do
         expect {
           remove_specified.remove_org_with_dependencies(organization.id)
         }.not_to change { Utils.get_sum_of_rows_of_all_models }
-      end
-    end
-
-    def get_expected_files(datetime)
-      Dir['spec/support/expected_files/remove_org_with_dependencies/*.json'].map do |file_path|
-        content = File.read(file_path)
-        content.gsub(/"[^"]+ UTC"/, "\"#{datetime.to_s}\"")
-      end
-    end
-
-    it 'saves removed data to files in proper format' do
-      expect_method_calls_on(
-        File, :write,
-        get_expected_files(datetime),
-        allow_instances: true,
-        arguments_to_check: :first
-      ) do
-        remove_specified.remove_org_with_dependencies(organization.id)
       end
     end
   end
@@ -567,6 +563,19 @@ describe Backup::RemoveSpecified do
 
     it_behaves_like 'removing repository with dependencies'
 
+    context 'when if_backup config is set to true' do
+      it 'saves removed data to files in proper format' do
+        expect_method_calls_on(
+          File, :write,
+          get_expected_files('remove_repo_with_dependencies', datetime),
+          allow_instances: true,
+          arguments_to_check: :first
+        ) do
+          remove_specified.remove_repo_with_dependencies(repository.id)
+        end
+      end
+    end
+
     context 'when if_backup config is set to false' do
       let!(:config) { Config.new(files_location: files_location, limit: 5, if_backup: false) }
       let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
@@ -585,24 +594,6 @@ describe Backup::RemoveSpecified do
         expect {
           remove_specified.remove_repo_with_dependencies(repository.id)
         }.not_to change { Utils.get_sum_of_rows_of_all_models }
-      end
-    end
-
-    def get_expected_files(datetime)
-      Dir['spec/support/expected_files/remove_repo_with_dependencies/*.json'].map do |file_path|
-        content = File.read(file_path)
-        content.gsub(/"[^"]+ UTC"/, "\"#{datetime.to_s}\"")
-      end
-    end
-
-    it 'saves removed data to files in proper format' do
-      expect_method_calls_on(
-        File, :write,
-        get_expected_files(datetime),
-        allow_instances: true,
-        arguments_to_check: :first
-      ) do
-        remove_specified.remove_repo_with_dependencies(repository.id)
       end
     end
   end
