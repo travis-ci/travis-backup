@@ -1,6 +1,6 @@
 # README
 
-*travis-backup* is an application that helps with housekeeping and backup for Travis CI database v2.2 and with migration to v3.0 database. By default it removes requests and builds with their corresponding jobs and logs, as long as they are older than given threshold says (and backups them in files, if this option is active). Although it can be also run with special modes: `move_logs`, for moving logs from one database to another, and `remove_orphans`, for deleting all orphaned data.
+*travis-backup* is an application that helps with housekeeping and backup for Travis CI database v2.2 and with migration to v3.0 database. By default it removes requests and builds with their corresponding jobs and logs, as long as they are older than given threshold says (and backups them in files, if this option is active). Although it can be also run in special modes to perform other specific tasks.
 
 ### Installation and run
 
@@ -62,7 +62,9 @@ Using `--move_logs` flag you can move all logs to database at `destination_db_ur
 
 Using `--remove_orphans` flag you can remove all orphaned data from tables. When you run gem in this mode no files are created.
 
-Using `--dry_run` flag you can check which data would be removed by gem, but without removing them actually. Instead of that reports will be printed on standard output. This flag can be also combined with `--move_logs` or `--remove_orphans`.
+Using `--user_id`, `--org_id` or `--repo_id` flag without setting `--threshold` results in removing the specified user/organization/repository with all its dependencies. It can be combined with `--backup` flag in order to save removed data in files.
+
+Using `--dry_run` flag you can check which data would be removed by gem, but without removing them actually. Instead of that reports will be printed on standard output. This flag can be also combined with special modes.
 
 ### Configuration options
 
