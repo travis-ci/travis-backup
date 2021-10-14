@@ -71,6 +71,10 @@ describe Backup::RemoveSpecified do
   end
 
   describe 'remove_repo_builds' do
+    before(:each) do
+      BeforeTests.new.run
+    end
+
     after(:each) do
       Repository.destroy_all
       Build.destroy_all
@@ -139,9 +143,9 @@ describe Backup::RemoveSpecified do
       end
     end
 
-    shared_context 'not saving JSON to file' do
-      it 'does not save JSON to file' do
-        expect(File).not_to receive(:open)
+    shared_context 'not saving files' do
+      it 'does not save files' do
+        expect_any_instance_of(File).not_to receive(:write)
         remove_specified.remove_repo_builds(repository)
       end
     end
@@ -177,7 +181,7 @@ describe Backup::RemoveSpecified do
       let!(:config) { Config.new(files_location: files_location, limit: 2, if_backup: false) }
       let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
 
-      it_behaves_like 'not saving JSON to file'
+      it_behaves_like 'not saving files'
       it_behaves_like 'removing builds and jobs'
     end
 
@@ -185,7 +189,7 @@ describe Backup::RemoveSpecified do
       let!(:config) { Config.new(files_location: files_location, limit: 2, dry_run: true) }
       let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
 
-      it_behaves_like 'not saving JSON to file'
+      it_behaves_like 'not saving files'
 
       it 'does not remove entries from db' do
         expect {
@@ -196,9 +200,8 @@ describe Backup::RemoveSpecified do
   end
 
   describe 'remove_repo_requests' do
-    after(:each) do
-      Repository.destroy_all
-      Request.destroy_all
+    before(:each) do
+      BeforeTests.new.run
     end
 
     let!(:repository) {
@@ -227,17 +230,23 @@ describe Backup::RemoveSpecified do
       end
     end
 
-    shared_context 'not saving JSON to file' do
-      it 'does not save JSON to file' do
-        expect(File).not_to receive(:open)
+    shared_context 'not saving files' do
+      it 'does not save files' do
+        expect_any_instance_of(File).not_to receive(:write)
         remove_specified.remove_repo_requests(repository)
       end
     end
 
     context 'when if_backup config is set to true' do
-      it 'saves proper build JSON to file' do
-        expect_any_instance_of(File).to receive(:write).once.with(JSON.pretty_generate(expected_requests_json))
-        remove_specified.remove_repo_requests(repository)
+      it 'saves removed data to files in proper format' do
+        expect_method_calls_on(
+          File, :write,
+          get_expected_files('remove_repo_requests', datetime),
+          allow_instances: true,
+          arguments_to_check: :first
+        ) do
+          remove_specified.remove_repo_requests(repository)
+        end
       end
 
       it 'saves JSON to file at proper path' do
@@ -253,7 +262,8 @@ describe Backup::RemoveSpecified do
         let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
 
         it 'creates needed folders' do
-          expect(FileUtils).to receive(:mkdir_p).once.with(random_files_location).and_call_original
+          path_regexp = Regexp.new("#{random_files_location}/.+")
+          expect(FileUtils).to receive(:mkdir_p).once.with(path_regexp).and_call_original
           remove_specified.remove_repo_requests(repository)
         end
       end
@@ -263,7 +273,7 @@ describe Backup::RemoveSpecified do
       let!(:config) { Config.new(files_location: files_location, limit: 2, if_backup: false) }
       let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
 
-      it_behaves_like 'not saving JSON to file'
+      it_behaves_like 'not saving files'
       it_behaves_like 'removing requests'
     end
 
@@ -271,7 +281,7 @@ describe Backup::RemoveSpecified do
       let!(:config) { Config.new(files_location: files_location, limit: 2, dry_run: true) }
       let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
 
-      it_behaves_like 'not saving JSON to file'
+      it_behaves_like 'not saving files'
 
       it 'does not remove entries from db' do
         expect {
