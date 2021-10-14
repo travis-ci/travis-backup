@@ -1,0 +1,75 @@
+{
+  "table_name": "jobs",
+  "data": [
+    {
+      "id": 29,
+      "repository_id": 7,
+      "commit_id": null,
+      "source_id": 28,
+      "source_type": "Build",
+      "queue": null,
+      "type": null,
+      "state": null,
+      "number": null,
+      "config": null,
+      "worker": null,
+      "started_at": null,
+      "finished_at": null,
+      "created_at": "2021-03-14 10:18:55 UTC",
+      "updated_at": "2021-03-14 10:18:55 UTC",
+      "tags": null,
+      "allow_failure": false,
+      "owner_id": null,
+      "owner_type": null,
+      "result": null,
+      "queued_at": null,
+      "canceled_at": null,
+      "received_at": null,
+      "debug_options": null,
+      "private": null,
+      "stage_number": null,
+      "stage_id": null,
+      "_dependencies_": {
+        "log": [
+          37,
+          38
+        ]
+      }
+    },
+    {
+      "id": 30,
+      "repository_id": 7,
+      "commit_id": null,
+      "source_id": 28,
+      "source_type": "Build",
+      "queue": null,
+      "type": null,
+      "state": null,
+      "number": null,
+      "config": null,
+      "worker": null,
+      "started_at": null,
+      "finished_at": null,
+      "created_at": "2021-03-14 10:18:55 UTC",
+      "updated_at": "2021-03-14 10:18:55 UTC",
+      "tags": null,
+      "allow_failure": false,
+      "owner_id": null,
+      "owner_type": null,
+      "result": null,
+      "queued_at": null,
+      "canceled_at": null,
+      "received_at": null,
+      "debug_options": null,
+      "private": null,
+      "stage_number": null,
+      "stage_id": null,
+      "_dependencies_": {
+        "log": [
+          39,
+          40
+        ]
+      }
+    }
+  ]
+}

@@ -13,6 +13,37 @@ require 'pry'
 require 'byebug'
 
 describe Backup::RemoveSpecified do
+  def db_summary_hash
+    {
+      all: Model.get_sum_of_rows_of_all_models,
+      logs: Log.all.size,
+      jobs: Job.all.size,
+      builds: Build.all.size,
+      requests: Request.all.size,
+      repositories: Repository.all.size,
+      branches: Branch.all.size,
+      tags: Tag.all.size,
+      commits: Commit.all.size,
+      crons: Cron.all.size,
+      pull_requests: PullRequest.all.size,
+      ssl_keys: SslKey.all.size,
+      stages: Stage.all.size,
+      stars: Star.all.size,
+      permissions: Permission.all.size,
+      messages: Message.all.size,
+      abuses: Abuse.all.size,
+      annotations: Annotation.all.size,
+      queueable_jobs: QueueableJob.all.size
+    }    
+  end
+
+  def get_expected_files(directory, datetime)
+    Dir["spec/support/expected_files/#{directory}/*.json"].map do |file_path|
+      content = File.read(file_path)
+      content.gsub(/"[^"]+ UTC"/, "\"#{datetime.to_s}\"")
+    end
+  end
+
   before(:all) do
     BeforeTests.new.run
   end
@@ -116,76 +147,27 @@ describe Backup::RemoveSpecified do
     end
 
     context 'when if_backup config is set to true' do
-      it 'saves proper build JSON file' do
-        expect_method_calls_on(
-          File, :write,
-          [JSON.pretty_generate(expected_builds_json)],
-          allow_instances: true,
-          arguments_to_check: :first
-        ) do
-          remove_specified.remove_repo_builds(repository)
-        end
-      end
-
-      it 'saves proper job JSON files' do
-        expect_method_calls_on(
-          File, :write,
-          [
-            JSON.pretty_generate(expected_jobs_jsons.first),
-            JSON.pretty_generate(expected_jobs_jsons.second)
-          ],
-          allow_instances: true,
-          arguments_to_check: :first
-        ) do
-          remove_specified.remove_repo_builds(repository)
-        end
-      end
-
-      it 'saves proper log JSON files' do
-        expect_method_calls_on(
-          File, :write,
-          [
-            JSON.pretty_generate(expected_logs_jsons.first),
-            JSON.pretty_generate(expected_logs_jsons.second),
-            JSON.pretty_generate(expected_logs_jsons.third),
-            JSON.pretty_generate(expected_logs_jsons.fourth),
-          ],
-          allow_instances: true,
-          arguments_to_check: :first
-        ) do
-          remove_specified.remove_repo_builds(repository)
-        end
-      end
-
-      it 'saves JSON files at proper paths' do
-        expect_method_calls_on(
-          File, :open,
-          [
-            Regexp.new('dump/tests/repository_\d+_build_\d+_job_\d+_logs_\d+-\d+.json'),
-            Regexp.new('dump/tests/repository_\d+_build_\d+_job_\d+_logs_\d+-\d+.json'),
-            Regexp.new('dump/tests/repository_\d+_build_\d+_jobs_\d+-\d+.json'),
-            Regexp.new('dump/tests/repository_\d+_build_\d+_job_\d+_logs_\d+-\d+.json'),
-            Regexp.new('dump/tests/repository_\d+_build_\d+_job_\d+_logs_\d+-\d+.json'),
-            Regexp.new('dump/tests/repository_\d+_build_\d+_jobs_\d+-\d+.json'),
-            Regexp.new('dump/tests/repository_\d+_builds_\d+-\d+.json')
-          ],
-          match_mode: :match,
-          arguments_to_check: :first
-        ) do
-          remove_specified.remove_repo_builds(repository)
-        end
-      end
-
       it_behaves_like 'removing builds and jobs'
+
+      it 'saves removed data to files in proper format' do
+        expect_method_calls_on(
+          File, :write,
+          get_expected_files('remove_repo_builds', datetime),
+          allow_instances: true,
+          arguments_to_check: :first
+        ) do
+          remove_specified.remove_repo_builds(repository)
+        end
+      end
 
       context 'when path with nonexistent folders is given' do
         let(:random_files_location) { "dump/tests/#{rand(100000)}" }
         let!(:config) { Config.new(files_location: random_files_location, limit: 2) }
         let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
       
-
         it 'creates needed folders' do
-          expect(FileUtils).to receive(:mkdir_p).once.with(random_files_location).and_call_original
+          path_regexp = Regexp.new("#{random_files_location}/.+")
+          expect(FileUtils).to receive(:mkdir_p).once.with(path_regexp).and_call_original
           remove_specified.remove_repo_builds(repository)
         end
       end
@@ -296,37 +278,6 @@ describe Backup::RemoveSpecified do
           remove_specified.remove_repo_requests(repository)
         }.not_to change { Model.get_sum_of_rows_of_all_models }
       end
-    end
-  end
-
-  def db_summary_hash
-    {
-      all: Model.get_sum_of_rows_of_all_models,
-      logs: Log.all.size,
-      jobs: Job.all.size,
-      builds: Build.all.size,
-      requests: Request.all.size,
-      repositories: Repository.all.size,
-      branches: Branch.all.size,
-      tags: Tag.all.size,
-      commits: Commit.all.size,
-      crons: Cron.all.size,
-      pull_requests: PullRequest.all.size,
-      ssl_keys: SslKey.all.size,
-      stages: Stage.all.size,
-      stars: Star.all.size,
-      permissions: Permission.all.size,
-      messages: Message.all.size,
-      abuses: Abuse.all.size,
-      annotations: Annotation.all.size,
-      queueable_jobs: QueueableJob.all.size
-    }    
-  end
-
-  def get_expected_files(directory, datetime)
-    Dir["spec/support/expected_files/#{directory}/*.json"].map do |file_path|
-      content = File.read(file_path)
-      content.gsub(/"[^"]+ UTC"/, "\"#{datetime.to_s}\"")
     end
   end
 
