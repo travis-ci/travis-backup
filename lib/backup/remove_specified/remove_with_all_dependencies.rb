@@ -23,7 +23,7 @@ module RemoveWithAllDependencies
 
   def remove_entry_with_dependencies(model_name, id)
     @subfolder = "#{model_name}_#{id}_#{time_for_subfolder}"
-    entry = Utils.get_model(model_name).find(id)
+    entry = Model.get_model(model_name).find(id)
     ids_to_remove = entry.ids_of_all_dependencies(dependencies_to_filter)[:main]
     ids_to_remove[model_name] = [id]
 
@@ -31,7 +31,8 @@ module RemoveWithAllDependencies
       @dry_run_reporter.add_to_report(ids_to_remove)
     else
       save_ids_hash_to_file(ids_to_remove) if @config.if_backup
-      remove_ids_from_hash(ids_to_remove)
+      ids_to_remove.remove_entries_from_db(as_last: [:build])
+      # order important because of foreign key constraint between builds and repos
     end
   end
 
@@ -48,7 +49,7 @@ module RemoveWithAllDependencies
   end
 
   def save_ids_batch_to_file(name, ids_batch)
-    model = Utils.get_model(name)
+    model = Model.get_model(name)
 
     export = {}
     export[:table_name] = model.table_name
@@ -77,16 +78,5 @@ module RemoveWithAllDependencies
         :branches_for_that_this_build_is_last
       ]
     }
-  end
-
-  def remove_ids_from_hash(ids_hash)
-    ids_hash.each do |name, ids|
-      next if name == :build
-
-      model = Utils.get_model(name)
-      model.delete(ids)
-    end
-    Build.delete(ids_hash[:build])
-    # order important because of foreign key constraint between builds and repos
   end
 end
