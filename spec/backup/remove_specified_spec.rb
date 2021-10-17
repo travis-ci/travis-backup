@@ -75,71 +75,46 @@ describe Backup::RemoveSpecified do
       BeforeTests.new.run
     end
 
-    after(:each) do
-      Repository.destroy_all
-      Build.destroy_all
-      Job.destroy_all
-      Log.destroy_all
-    end
-
     let!(:repository) {
-      db_helper.do_without_triggers do
-        FactoryBot.create(
-          :repository_with_builds_jobs_and_logs,
-          created_at: datetime,
-          updated_at: datetime
-        )
-      end
-    }
-    let!(:repository2) {
       FactoryBot.create(
-        :repository_with_builds_jobs_and_logs,
+        :repository_for_removing_heavy_data,
         created_at: datetime,
-        updated_at: datetime,
-        builds_count: 1
+        updated_at: datetime
       )
     }
-    let(:expected_files_creator) {
-      ExpectedFilesProvider.new(repository, datetime)
-    }
-    let!(:expected_builds_json) {
-      expected_files_creator.builds_json
-    }
-    let!(:expected_jobs_jsons) {
-      repository.builds.map do |build|
-        expected_files_creator.jobs_json(build)
-      end
-    }
-    let!(:expected_logs_jsons) {
-      repository.builds.map do |build|
-        build.jobs.map do |job|
-          expected_files_creator.logs_json(job)
-        end
-      end.flatten(1)
-    }
+    # let!(:repository2) {
+    #   FactoryBot.create(
+    #     :repository_with_all_dependencies,
+    #     created_at: datetime,
+    #     updated_at: datetime
+    #   )
+    # }
 
     shared_context 'removing builds and jobs' do
-      it 'deletes all builds of the repository' do
+      it 'removes builds with all its dependencies' do
         remove_specified.remove_repo_builds(repository)
-        expect(Build.all.map(&:repository_id)).to eq([repository2.id])
-      end
 
-      it 'deletes all jobs of removed builds and leaves the rest' do
-        expect {
-          remove_specified.remove_repo_builds(repository)
-        }.to change { Job.all.size }.by -4
-
-        build_id = Build.first.id
-        expect(Job.all.map(&:source_id)).to eq([build_id, build_id])
-      end
-
-      it 'deletes all logs of removed jobs and leaves the rest' do
-        expect {
-          remove_specified.remove_repo_builds(repository)
-        }.to change { Log.all.size }.by -8
-
-        build_id = Build.first.id
-        expect(Log.all.map(&:job).map(&:source_id)).to eq(Array.new(4, build_id))
+        expect(db_summary_hash).to eql(
+          all: 672,
+          logs: 60,
+          jobs: 108,
+          builds: 65,
+          requests: 34,
+          repositories: 65,
+          branches: 38,
+          tags: 38,
+          commits: 18,
+          crons: 6,
+          pull_requests: 6,
+          ssl_keys: 6,
+          stages: 36,
+          stars: 6,
+          permissions: 6,
+          messages: 30,
+          abuses: 30,
+          annotations: 60,
+          queueable_jobs: 60
+        )
       end
     end
 

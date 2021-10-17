@@ -127,9 +127,32 @@ FactoryBot.define do
           updated_at: repository.updated_at
         )
       end
+
       factory :repository_with_all_dependencies_and_sibling do
         after(:create) do |repository|
           create(:repository, repository.attributes_without_id.symbolize_keys)
+        end
+      end
+
+      factory :repository_for_removing_heavy_data do
+        after(:create) do |repository|
+          create(
+            :build_for_removing_heavy_data,
+            repository_id: repository.id,
+            created_at: repository.created_at,
+            updated_at: repository.updated_at
+          )
+          create(
+            :build_for_removing_heavy_data,
+            repository_id: repository.id
+          )
+          last_build = create(
+            :build_for_removing_heavy_data,
+            repository_id: repository.id,
+            created_at: repository.created_at,
+            updated_at: repository.updated_at
+          )
+          repository.update(last_build_id: last_build.id)
         end
       end
     end

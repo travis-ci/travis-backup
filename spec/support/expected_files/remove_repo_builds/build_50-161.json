@@ -2,13 +2,13 @@
   "table_name": "builds",
   "data": [
     {
-      "id": 1,
+      "id": 50,
       "repository_id": 1,
       "number": null,
       "started_at": null,
       "finished_at": null,
-      "created_at": "2021-03-14 10:46:41 UTC",
-      "updated_at": "2021-03-14 10:46:41 UTC",
+      "created_at": "2021-03-17 21:28:08 UTC",
+      "updated_at": "2021-10-17 20:28:09 UTC",
       "config": null,
       "commit_id": null,
       "request_id": null,
@@ -31,20 +31,16 @@
       "sender_id": null,
       "sender_type": null,
       "_dependencies_": {
-        "job": [
-          2,
-          3
-        ]
       }
     },
     {
-      "id": 4,
+      "id": 161,
       "repository_id": 1,
       "number": null,
       "started_at": null,
       "finished_at": null,
-      "created_at": "2021-03-14 10:46:41 UTC",
-      "updated_at": "2021-03-14 10:46:41 UTC",
+      "created_at": "2021-03-17 21:28:08 UTC",
+      "updated_at": "2021-10-17 20:28:10 UTC",
       "config": null,
       "commit_id": null,
       "request_id": null,
@@ -68,8 +64,12 @@
       "sender_type": null,
       "_dependencies_": {
         "job": [
-          5,
-          6
+          166,
+          167
+        ],
+        "stage": [
+          52,
+          53
         ]
       }
     }

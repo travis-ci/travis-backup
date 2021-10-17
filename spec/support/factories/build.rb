@@ -94,7 +94,7 @@ FactoryBot.define do
       tag_id { Tag.first.id }
     end
 
-    factory :build_with_all_dependencies do
+    factory :build_for_removing_heavy_data do
       after(:create) do |build|
         create_list(
           :stage_with_jobs, 2,
@@ -109,34 +109,39 @@ FactoryBot.define do
           created_at: build.created_at,
           updated_at: build.updated_at
         )
-        create(
-          :tag_with_all_dependencies_and_sibling,
-          last_build_id: build.id,
-          created_at: build.created_at,
-          updated_at: build.updated_at
-        )
-        create(
-          :branch_with_all_dependencies_and_sibling,
-          last_build_id: build.id,
-          created_at: build.created_at,
-          updated_at: build.updated_at
-        )
-        create(
-          :repository_with_safe_dependencies_and_sibling,
-          last_build_id: build.id,
-          created_at: build.created_at,
-          updated_at: build.updated_at
-        )
-        create(
-          :repository_with_safe_dependencies_and_sibling,
-          current_build_id: build.id,
-          created_at: build.created_at,
-          updated_at: build.updated_at
-        )
       end
-      factory :build_with_all_dependencies_and_sibling do
+
+      factory :build_with_all_dependencies do
         after(:create) do |build|
-          create(:build, build.attributes_without_id.symbolize_keys)
+          create(
+            :tag_with_all_dependencies_and_sibling,
+            last_build_id: build.id,
+            created_at: build.created_at,
+            updated_at: build.updated_at
+          )
+          create(
+            :branch_with_all_dependencies_and_sibling,
+            last_build_id: build.id,
+            created_at: build.created_at,
+            updated_at: build.updated_at
+          )
+          create(
+            :repository_with_safe_dependencies_and_sibling,
+            last_build_id: build.id,
+            created_at: build.created_at,
+            updated_at: build.updated_at
+          )
+          create(
+            :repository_with_safe_dependencies_and_sibling,
+            current_build_id: build.id,
+            created_at: build.created_at,
+            updated_at: build.updated_at
+          )
+        end
+        factory :build_with_all_dependencies_and_sibling do
+          after(:create) do |build|
+            create(:build, build.attributes_without_id.symbolize_keys)
+          end
         end
       end
     end
