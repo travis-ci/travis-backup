@@ -85,7 +85,7 @@ describe Backup::RemoveSpecified do
       end
     }
 
-    shared_context 'removing builds and jobs' do
+    shared_context 'removing builds with dependencies' do
       it 'removes builds with all its dependencies' do
         remove_specified.remove_repo_builds(repository)
 
@@ -121,7 +121,7 @@ describe Backup::RemoveSpecified do
     end
 
     context 'when if_backup config is set to true' do
-      it_behaves_like 'removing builds and jobs'
+      it_behaves_like 'removing builds with dependencies'
 
       it 'saves removed data to files in proper format' do
         expect_method_calls_on(
@@ -152,7 +152,7 @@ describe Backup::RemoveSpecified do
       let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
 
       it_behaves_like 'not saving files'
-      it_behaves_like 'removing builds and jobs'
+      it_behaves_like 'removing builds with dependencies'
     end
 
     context 'when dry_run config is set to true' do
@@ -175,28 +175,42 @@ describe Backup::RemoveSpecified do
     end
 
     let!(:repository) {
-      FactoryBot.create(
-        :repository_with_requests,
-        created_at: datetime,
-        updated_at: datetime
-      )
-    }
-    let!(:repository2) {
-      FactoryBot.create(
-        :repository_with_requests,
-        created_at: datetime,
-        updated_at: datetime,
-        requests_count: 1
-      )
-    }
-    let!(:expected_requests_json) {
-      ExpectedFilesProvider.new(repository, datetime).requests_json
+      FactoryBot.rewind_sequences
+
+      db_helper.do_without_triggers do
+        FactoryBot.create(
+          :repository_with_all_dependencies,
+          created_at: datetime,
+          updated_at: datetime
+        )
+      end
     }
 
-    shared_context 'removing requests' do
-      it 'deletes all requests of the repository' do
+    shared_context 'removing requests with dependencies' do
+      it 'removes requests with all its dependencies' do
         remove_specified.remove_repo_requests(repository)
-        expect(Request.all.map(&:repository_id)).to eq([repository2.id])
+
+        expect(db_summary_hash).to eql(
+          all: 628,
+          logs: 54,
+          jobs: 94,
+          builds: 63,
+          requests: 32,
+          repositories: 65,
+          branches: 38,
+          tags: 38,
+          commits: 18,
+          crons: 6,
+          pull_requests: 6,
+          ssl_keys: 6,
+          stages: 32,
+          stars: 6,
+          permissions: 6,
+          messages: 28,
+          abuses: 28,
+          annotations: 54,
+          queueable_jobs: 54
+        )
       end
     end
 
@@ -208,6 +222,8 @@ describe Backup::RemoveSpecified do
     end
 
     context 'when if_backup config is set to true' do
+      it_behaves_like 'removing requests with dependencies'
+
       it 'saves removed data to files in proper format' do
         expect_method_calls_on(
           File, :write,
@@ -218,13 +234,6 @@ describe Backup::RemoveSpecified do
           remove_specified.remove_repo_requests(repository)
         end
       end
-
-      it 'saves JSON to file at proper path' do
-        expect(File).to receive(:open).once.with(Regexp.new(files_location), 'w')
-        remove_specified.remove_repo_requests(repository)
-      end
-
-      it_behaves_like 'removing requests'
 
       context 'when path with nonexistent folders is given' do
         let(:random_files_location) { "dump/tests/#{rand(100000)}" }
@@ -244,7 +253,7 @@ describe Backup::RemoveSpecified do
       let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
 
       it_behaves_like 'not saving files'
-      it_behaves_like 'removing requests'
+      it_behaves_like 'removing requests with dependencies'
     end
 
     context 'when dry_run config is set to true' do
