@@ -76,19 +76,14 @@ describe Backup::RemoveSpecified do
     end
 
     let!(:repository) {
-      FactoryBot.create(
-        :repository_for_removing_heavy_data,
-        created_at: datetime,
-        updated_at: datetime
-      )
+      db_helper.do_without_triggers do
+        FactoryBot.create(
+          :repository_for_removing_heavy_data,
+          created_at: datetime,
+          updated_at: datetime
+        )
+      end
     }
-    # let!(:repository2) {
-    #   FactoryBot.create(
-    #     :repository_with_all_dependencies,
-    #     created_at: datetime,
-    #     updated_at: datetime
-    #   )
-    # }
 
     shared_context 'removing builds and jobs' do
       it 'removes builds with all its dependencies' do
