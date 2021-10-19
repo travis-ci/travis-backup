@@ -13,7 +13,9 @@ class Config
     :org_id,
     :move_logs,
     :remove_orphans,
-    :destination_db_url
+    :destination_db_url,
+    :load_from_files,
+    :id_gap
 
   def initialize(args={}) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
     set_values(args)
@@ -102,10 +104,24 @@ class Config
       ENV['BACKUP_DESTINATION_DB_URL'],
       connection_details.dig(ENV['RAILS_ENV'], 'destination')
     )
+    @load_from_files = first_not_nil(
+      args[:load_from_files],
+      argv_opts[:load_from_files],
+      ENV['BACKUP_LOAD_FROM_FILES'],
+      config.dig('backup', 'load_from_files'),
+      false
+    )
+    @id_gap = first_not_nil(
+      args[:id_gap],
+      argv_opts[:id_gap],
+      ENV['BACKUP_ID_GAP'],
+      config.dig('backup', 'id_gap'),
+      1000
+    )
   end
 
   def check_values
-    if !@move_logs && !@remove_orphans && !@threshold && !@user_id && !org_id && !repo_id
+    if !@move_logs && !@remove_orphans && !@threshold && !@user_id && !org_id && !repo_id && !load_from_files
       message = abort_message("Please provide the threshold argument. Data younger than it will be omitted. " +
         "Threshold defines number of months from now. Alternatively you can define user_id, org_id or repo_id " +
         "to remove whole user, organization or repository with all dependencies.")
@@ -151,6 +167,8 @@ class Config
       opt.on('--move_logs') { |o| options[:move_logs] = o }
       opt.on('--remove_orphans') { |o| options[:remove_orphans] = o }
       opt.on('--destination_db_url X') { |o| options[:destination_db_url] = o }
+      opt.on('--load_from_files') { |o| options[:load_from_files] = o }
+      opt.on('--id_gap X') { |o| options[:id_gap] = o.to_i }
     end.parse!
 
     options[:database_url] = ARGV.shift if ARGV[0]

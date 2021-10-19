@@ -168,6 +168,15 @@ describe Backup do
       end
     end
 
+    context 'when load from files mode is on' do
+      let!(:backup) { Backup.new(files_location: files_location, limit: 5, load_from_files: true) }
+
+      it 'loads data from files to the database' do
+        expect_any_instance_of(Backup::LoadFromFiles).to receive(:run).once
+        backup.run
+      end
+    end
+
     context 'when dry run mode is on' do
       let!(:backup) { Backup.new(files_location: files_location, limit: 10, dry_run: true, threshold: 0) }
 
