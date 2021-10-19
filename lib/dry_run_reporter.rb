@@ -8,7 +8,7 @@ class DryRunReporter
   end
 
   def add_to_report(*args)
-    if args.first.class == Hash
+    if args.first.is_a?(Hash)
       add_to_report_as_hash(args.first)
     else
       add_to_report_as_key_and_values(*args)
