@@ -24,7 +24,7 @@ module RemoveWithAllDependencies
   def remove_entry_with_dependencies(model_name, id)
     @subfolder = "#{model_name}_#{id}_#{time_for_subfolder}"
     entry = Model.get_model(model_name).find(id)
-    ids_to_remove = entry.ids_of_all_dependencies(dependencies_to_filter)[:main]
+    ids_to_remove = entry.ids_of_all_dependencies(dependencies_to_filter)
     ids_to_remove[model_name] = [id]
 
     if @config.dry_run

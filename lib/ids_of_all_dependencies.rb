@@ -49,6 +49,10 @@ module IdsOfAllDependencies
   include IdsOfAllDirectDependencies
 
   def ids_of_all_dependencies(to_filter=nil)
+    ids_of_all_dependencies_with_filtered(to_filter)[:main]
+  end
+
+  def ids_of_all_dependencies_with_filtered(to_filter=nil)
     id_hash = ids_of_all_dependencies_without_reflection(to_filter || {})
     return id_hash unless to_filter
     move_wrongly_assigned_to_main(to_filter, id_hash)

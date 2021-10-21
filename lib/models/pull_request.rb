@@ -3,6 +3,7 @@
 require 'model'
 
 class PullRequest < Model
+  belongs_to :repository
   has_many :requests
   has_many :builds
 

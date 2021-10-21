@@ -10,7 +10,7 @@ describe Model do
     BeforeTests.new.run
   end
 
-  describe 'ids_of_all_dependencies' do
+  describe 'ids_of_all_dependencies_with_filtered' do
     let!(:config) { Config.new(limit: 5) }
     let!(:db_helper) { DbHelper.new(config) }
     let(:datetime) { (Config.new.threshold + 1).months.ago.to_time.utc }
@@ -24,7 +24,7 @@ describe Model do
     }
     context 'when no filters are given' do
       it 'returns all dependencies ids in hash' do
-        expect(commit.ids_of_all_dependencies).to eql({
+        expect(commit.ids_of_all_dependencies_with_filtered).to eql({
           filtered_out: {},
           main: {
             abuse: [1, 2],
@@ -49,7 +49,7 @@ describe Model do
         filter = {
           request: [ :jobs, :builds ]
         }
-        expect(commit.ids_of_all_dependencies(filter)).to eql({
+        expect(commit.ids_of_all_dependencies_with_filtered(filter)).to eql({
           main: {
             annotation: [1, 2],
             branch: [73],

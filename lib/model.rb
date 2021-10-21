@@ -17,6 +17,10 @@ class Model < ActiveRecord::Base
     self.subclasses.find{ |m| m.name == name.to_s.camelcase }
   end
 
+  def self.get_model_by_table_name(name)
+    self.subclasses.find{ |m| m.table_name == name.to_s }
+  end
+
   def self.get_sum_of_rows_of_all_models
     self.subclasses.map do |subclass|
       subclass.all.size

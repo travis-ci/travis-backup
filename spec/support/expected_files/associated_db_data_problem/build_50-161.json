@@ -1,0 +1,77 @@
+{
+  "table_name": "builds",
+  "data": [
+    {
+      "id": 50,
+      "repository_id": 1,
+      "number": null,
+      "started_at": null,
+      "finished_at": null,
+      "created_at": "2021-03-17 21:29:24 UTC",
+      "updated_at": "2021-10-17 20:29:25 UTC",
+      "config": null,
+      "commit_id": null,
+      "request_id": null,
+      "state": null,
+      "duration": null,
+      "owner_id": null,
+      "owner_type": null,
+      "event_type": null,
+      "previous_state": null,
+      "pull_request_title": null,
+      "pull_request_number": null,
+      "branch": null,
+      "canceled_at": null,
+      "cached_matrix_ids": null,
+      "received_at": null,
+      "private": null,
+      "pull_request_id": null,
+      "branch_id": null,
+      "tag_id": null,
+      "sender_id": null,
+      "sender_type": null,
+      "_dependencies_": {
+      }
+    },
+    {
+      "id": 161,
+      "repository_id": 1,
+      "number": null,
+      "started_at": null,
+      "finished_at": null,
+      "created_at": "2021-03-17 21:29:24 UTC",
+      "updated_at": "2021-10-17 20:29:26 UTC",
+      "config": null,
+      "commit_id": null,
+      "request_id": null,
+      "state": null,
+      "duration": null,
+      "owner_id": null,
+      "owner_type": null,
+      "event_type": null,
+      "previous_state": null,
+      "pull_request_title": null,
+      "pull_request_number": null,
+      "branch": null,
+      "canceled_at": null,
+      "cached_matrix_ids": null,
+      "received_at": null,
+      "private": null,
+      "pull_request_id": null,
+      "branch_id": null,
+      "tag_id": null,
+      "sender_id": null,
+      "sender_type": null,
+      "_dependencies_": {
+        "job": [
+          166,
+          167
+        ],
+        "stage": [
+          52,
+          53
+        ]
+      }
+    }
+  ]
+}

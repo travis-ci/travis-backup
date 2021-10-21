@@ -2,7 +2,7 @@
 require 'optparse'
 
 class Config
-  attr_reader :if_backup,
+  attr_accessor :if_backup,
     :dry_run,
     :limit,
     :threshold,

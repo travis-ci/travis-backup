@@ -21,7 +21,7 @@ module RemoveHeavyData
     builds_dependencies = repository.builds.where('created_at < ?', threshold).map do |build|
       next if should_build_be_filtered?(build)
 
-      result = build.ids_of_all_dependencies[:main]
+      result = build.ids_of_all_dependencies
       result.add(:build, build.id)
       result
     end.compact
@@ -34,7 +34,7 @@ module RemoveHeavyData
   def remove_repo_requests(repository)
     threshold = @config.threshold.to_i.months.ago.to_datetime
     requests_dependencies = repository.requests.where('created_at < ?', threshold).map do |request|
-      result = request.ids_of_all_dependencies(dependencies_to_filter)[:main]
+      result = request.ids_of_all_dependencies(dependencies_to_filter)
       result.add(:request, request.id)
       result
     end
@@ -77,7 +77,7 @@ module RemoveHeavyData
   end
 
   def has_filtered_dependencies(build)
-    build.ids_of_all_dependencies(dependencies_to_filter)[:filtered_out].any?
+    build.ids_of_all_dependencies_with_filtered(dependencies_to_filter)[:filtered_out].any?
   end
 
   def save_and_destroy_requests_batch(requests_batch, repository)

@@ -9,6 +9,8 @@ require 'models/star'
 # Repository model
 class Repository < Model
   belongs_to :owner, polymorphic: true
+  belongs_to :current_build, foreign_key: :current_build_id, class_name: 'Build'
+  belongs_to :last_build, foreign_key: :last_build_id, class_name: 'Build'
   has_many :builds, -> { order('id') }
   has_many :requests, -> { order('id') }, dependent: :destroy
   has_many :jobs
