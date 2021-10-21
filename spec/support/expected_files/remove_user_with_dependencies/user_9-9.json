@@ -20,77 +20,7 @@
       "first_logged_in_at": null,
       "avatar_url": null,
       "suspended": false,
-      "suspended_at": null,
-      "_dependencies_": {
-        "build": [
-          161,
-          210,
-          211,
-          260
-        ],
-        "repository": [
-          1,
-          66
-        ],
-        "job": [
-          271,
-          272
-        ],
-        "request": [
-          57,
-          58,
-          55,
-          56
-        ],
-        "abuse": [
-          51,
-          52
-        ],
-        "subscription": [
-          1,
-          2
-        ],
-        "owner_group": [
-          1,
-          2
-        ],
-        "trial": [
-          1,
-          2
-        ],
-        "trial_allowance": [
-          5,
-          6
-        ],
-        "broadcast": [
-          1,
-          2
-        ],
-        "star": [
-          1,
-          2
-        ],
-        "permission": [
-          1,
-          2
-        ],
-        "token": [
-          9,
-          10
-        ],
-        "email": [
-          9,
-          10
-        ],
-        "membership": [
-          1,
-          2
-        ],
-        "user_beta_feature": [
-          1,
-          2
-        ]
-      }
+      "suspended_at": null
     }
   ]
 }

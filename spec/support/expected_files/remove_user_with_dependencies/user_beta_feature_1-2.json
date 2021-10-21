@@ -7,9 +7,7 @@
       "beta_feature_id": null,
       "enabled": null,
       "last_deactivated_at": null,
-      "last_activated_at": null,
-      "_dependencies_": {
-      }
+      "last_activated_at": null
     },
     {
       "id": 2,
@@ -17,9 +15,7 @@
       "beta_feature_id": null,
       "enabled": null,
       "last_deactivated_at": null,
-      "last_activated_at": null,
-      "_dependencies_": {
-      }
+      "last_activated_at": null
     }
   ]
 }

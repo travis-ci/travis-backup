@@ -27,25 +27,7 @@
       "branch_id": null,
       "tag_id": null,
       "sender_id": null,
-      "sender_type": null,
-      "_dependencies_": {
-        "abuse": [
-          9,
-          10
-        ],
-        "message": [
-          9,
-          10
-        ],
-        "job": [
-          54,
-          55
-        ],
-        "build": [
-          51,
-          53
-        ]
-      }
+      "sender_type": null
     },
     {
       "id": 12,
@@ -73,9 +55,7 @@
       "branch_id": null,
       "tag_id": null,
       "sender_id": null,
-      "sender_type": null,
-      "_dependencies_": {
-      }
+      "sender_type": null
     },
     {
       "id": 13,
@@ -103,25 +83,7 @@
       "branch_id": null,
       "tag_id": null,
       "sender_id": null,
-      "sender_type": null,
-      "_dependencies_": {
-        "abuse": [
-          11,
-          12
-        ],
-        "message": [
-          11,
-          12
-        ],
-        "job": [
-          71,
-          72
-        ],
-        "build": [
-          68,
-          70
-        ]
-      }
+      "sender_type": null
     },
     {
       "id": 14,
@@ -149,9 +111,7 @@
       "branch_id": null,
       "tag_id": null,
       "sender_id": null,
-      "sender_type": null,
-      "_dependencies_": {
-      }
+      "sender_type": null
     },
     {
       "id": 15,
@@ -179,25 +139,7 @@
       "branch_id": 86,
       "tag_id": null,
       "sender_id": null,
-      "sender_type": null,
-      "_dependencies_": {
-        "abuse": [
-          13,
-          14
-        ],
-        "message": [
-          13,
-          14
-        ],
-        "job": [
-          76,
-          77
-        ],
-        "build": [
-          73,
-          75
-        ]
-      }
+      "sender_type": null
     }
   ]
 }

@@ -10,9 +10,7 @@
       "expired": null,
       "created_at": "2021-03-12 10:36:58 UTC",
       "updated_at": "2021-03-12 10:36:58 UTC",
-      "category": null,
-      "_dependencies_": {
-      }
+      "category": null
     },
     {
       "id": 2,
@@ -23,9 +21,7 @@
       "expired": null,
       "created_at": "2021-03-12 10:36:58 UTC",
       "updated_at": "2021-03-12 10:36:58 UTC",
-      "category": null,
-      "_dependencies_": {
-      }
+      "category": null
     }
   ]
 }

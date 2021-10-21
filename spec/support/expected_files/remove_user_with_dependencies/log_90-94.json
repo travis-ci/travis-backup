@@ -13,9 +13,7 @@
       "purged_at": null,
       "removed_at": null,
       "archiving": false,
-      "archive_verified": true,
-      "_dependencies_": {
-      }
+      "archive_verified": true
     },
     {
       "id": 91,
@@ -29,9 +27,7 @@
       "purged_at": null,
       "removed_at": null,
       "archiving": false,
-      "archive_verified": true,
-      "_dependencies_": {
-      }
+      "archive_verified": true
     },
     {
       "id": 92,
@@ -45,9 +41,7 @@
       "purged_at": null,
       "removed_at": null,
       "archiving": false,
-      "archive_verified": true,
-      "_dependencies_": {
-      }
+      "archive_verified": true
     },
     {
       "id": 93,
@@ -61,9 +55,7 @@
       "purged_at": null,
       "removed_at": null,
       "archiving": false,
-      "archive_verified": true,
-      "_dependencies_": {
-      }
+      "archive_verified": true
     },
     {
       "id": 94,
@@ -77,9 +69,7 @@
       "purged_at": null,
       "removed_at": null,
       "archiving": false,
-      "archive_verified": true,
-      "_dependencies_": {
-      }
+      "archive_verified": true
     }
   ]
 }

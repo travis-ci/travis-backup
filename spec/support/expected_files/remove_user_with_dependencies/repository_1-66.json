@@ -26,49 +26,7 @@
       "settings": null,
       "next_build_number": null,
       "invalidated_at": null,
-      "current_build_id": 210,
-      "_dependencies_": {
-        "build": [
-          1,
-          50
-        ],
-        "request": [
-          11,
-          12
-        ],
-        "job": [
-          56,
-          57
-        ],
-        "branch": [
-          86,
-          91
-        ],
-        "ssl_key": [
-          33,
-          34
-        ],
-        "commit": [
-          219,
-          220
-        ],
-        "permission": [
-          5,
-          6
-        ],
-        "star": [
-          5,
-          6
-        ],
-        "pull_request": [
-          3,
-          6
-        ],
-        "tag": [
-          33,
-          38
-        ]
-      }
+      "current_build_id": 210
     },
     {
       "id": 66,
@@ -95,9 +53,7 @@
       "settings": null,
       "next_build_number": null,
       "invalidated_at": null,
-      "current_build_id": null,
-      "_dependencies_": {
-      }
+      "current_build_id": null
     }
   ]
 }

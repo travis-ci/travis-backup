@@ -7,9 +7,7 @@
       "repository_id": 1,
       "admin": false,
       "push": false,
-      "pull": false,
-      "_dependencies_": {
-      }
+      "pull": false
     },
     {
       "id": 4,
@@ -17,9 +15,7 @@
       "repository_id": 1,
       "admin": false,
       "push": false,
-      "pull": false,
-      "_dependencies_": {
-      }
+      "pull": false
     }
   ]
 }

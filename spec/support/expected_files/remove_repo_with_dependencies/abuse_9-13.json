@@ -9,9 +9,7 @@
       "level": 9,
       "reason": "some text",
       "created_at": "2021-03-12 18:18:22 UTC",
-      "updated_at": "2021-03-12 18:18:22 UTC",
-      "_dependencies_": {
-      }
+      "updated_at": "2021-03-12 18:18:22 UTC"
     },
     {
       "id": 10,
@@ -21,9 +19,7 @@
       "level": 10,
       "reason": "some text",
       "created_at": "2021-03-12 18:18:22 UTC",
-      "updated_at": "2021-03-12 18:18:22 UTC",
-      "_dependencies_": {
-      }
+      "updated_at": "2021-03-12 18:18:22 UTC"
     },
     {
       "id": 11,
@@ -33,9 +29,7 @@
       "level": 11,
       "reason": "some text",
       "created_at": "2021-03-12 18:18:22 UTC",
-      "updated_at": "2021-03-12 18:18:22 UTC",
-      "_dependencies_": {
-      }
+      "updated_at": "2021-03-12 18:18:22 UTC"
     },
     {
       "id": 12,
@@ -45,9 +39,7 @@
       "level": 12,
       "reason": "some text",
       "created_at": "2021-03-12 18:18:22 UTC",
-      "updated_at": "2021-03-12 18:18:22 UTC",
-      "_dependencies_": {
-      }
+      "updated_at": "2021-03-12 18:18:22 UTC"
     },
     {
       "id": 13,
@@ -57,9 +49,7 @@
       "level": 13,
       "reason": "some text",
       "created_at": "2021-03-12 18:18:22 UTC",
-      "updated_at": "2021-03-12 18:18:22 UTC",
-      "_dependencies_": {
-      }
+      "updated_at": "2021-03-12 18:18:22 UTC"
     }
   ]
 }

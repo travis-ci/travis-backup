@@ -10,13 +10,7 @@
       ],
       "status": "new",
       "created_at": "2021-03-12 10:36:58 UTC",
-      "updated_at": "2021-03-12 10:36:58 UTC",
-      "_dependencies_": {
-        "trial_allowance": [
-          1,
-          2
-        ]
-      }
+      "updated_at": "2021-03-12 10:36:58 UTC"
     },
     {
       "id": 2,
@@ -27,13 +21,7 @@
       ],
       "status": "new",
       "created_at": "2021-03-12 10:36:58 UTC",
-      "updated_at": "2021-03-12 10:36:58 UTC",
-      "_dependencies_": {
-        "trial_allowance": [
-          3,
-          4
-        ]
-      }
+      "updated_at": "2021-03-12 10:36:58 UTC"
     }
   ]
 }

@@ -9,9 +9,7 @@
       "level": 9,
       "reason": "some text",
       "created_at": "2021-03-18 12:32:24 UTC",
-      "updated_at": "2021-03-18 12:32:24 UTC",
-      "_dependencies_": {
-      }
+      "updated_at": "2021-03-18 12:32:24 UTC"
     },
     {
       "id": 10,
@@ -21,9 +19,7 @@
       "level": 10,
       "reason": "some text",
       "created_at": "2021-03-18 12:32:24 UTC",
-      "updated_at": "2021-03-18 12:32:24 UTC",
-      "_dependencies_": {
-      }
+      "updated_at": "2021-03-18 12:32:24 UTC"
     }
   ]
 }

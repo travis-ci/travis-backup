@@ -27,9 +27,7 @@
       "branch_id": null,
       "tag_id": null,
       "sender_id": 1,
-      "sender_type": "Organization",
-      "_dependencies_": {
-      }
+      "sender_type": "Organization"
     },
     {
       "id": 57,
@@ -57,25 +55,7 @@
       "branch_id": null,
       "tag_id": null,
       "sender_id": null,
-      "sender_type": null,
-      "_dependencies_": {
-        "abuse": [
-          49,
-          50
-        ],
-        "message": [
-          49,
-          50
-        ],
-        "job": [
-          269,
-          270
-        ],
-        "build": [
-          266,
-          268
-        ]
-      }
+      "sender_type": null
     },
     {
       "id": 58,
@@ -103,9 +83,7 @@
       "branch_id": null,
       "tag_id": null,
       "sender_id": null,
-      "sender_type": null,
-      "_dependencies_": {
-      }
+      "sender_type": null
     }
   ]
 }

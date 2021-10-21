@@ -28,9 +28,7 @@
       "debug_options": null,
       "private": null,
       "stage_number": null,
-      "stage_id": null,
-      "_dependencies_": {
-      }
+      "stage_id": null
     }
   ]
 }

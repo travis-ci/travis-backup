@@ -29,12 +29,7 @@
       "branch_id": null,
       "tag_id": null,
       "sender_id": 1,
-      "sender_type": "Organization",
-      "_dependencies_": {
-        "repository": [
-          1
-        ]
-      }
+      "sender_type": "Organization"
     },
     {
       "id": 263,
@@ -64,9 +59,7 @@
       "branch_id": null,
       "tag_id": null,
       "sender_id": null,
-      "sender_type": null,
-      "_dependencies_": {
-      }
+      "sender_type": null
     },
     {
       "id": 268,
@@ -96,9 +89,7 @@
       "branch_id": null,
       "tag_id": null,
       "sender_id": null,
-      "sender_type": null,
-      "_dependencies_": {
-      }
+      "sender_type": null
     }
   ]
 }

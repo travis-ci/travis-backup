@@ -3,27 +3,19 @@
   "data": [
     {
       "id": 53,
-      "job_id": 154,
-      "_dependencies_": {
-      }
+      "job_id": 154
     },
     {
       "id": 54,
-      "job_id": 154,
-      "_dependencies_": {
-      }
+      "job_id": 154
     },
     {
       "id": 55,
-      "job_id": 159,
-      "_dependencies_": {
-      }
+      "job_id": 159
     },
     {
       "id": 56,
-      "job_id": 159,
-      "_dependencies_": {
-      }
+      "job_id": 159
     }
   ]
 }

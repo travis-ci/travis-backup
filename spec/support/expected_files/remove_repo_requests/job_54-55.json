@@ -28,21 +28,7 @@
       "debug_options": null,
       "private": null,
       "stage_number": null,
-      "stage_id": null,
-      "_dependencies_": {
-        "log": [
-          17,
-          18
-        ],
-        "annotation": [
-          17,
-          18
-        ],
-        "queueable_job": [
-          17,
-          18
-        ]
-      }
+      "stage_id": null
     },
     {
       "id": 55,
@@ -71,9 +57,7 @@
       "debug_options": null,
       "private": null,
       "stage_number": null,
-      "stage_id": null,
-      "_dependencies_": {
-      }
+      "stage_id": null
     }
   ]
 }

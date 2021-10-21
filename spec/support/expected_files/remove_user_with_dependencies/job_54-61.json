@@ -28,21 +28,7 @@
       "debug_options": null,
       "private": null,
       "stage_number": null,
-      "stage_id": null,
-      "_dependencies_": {
-        "log": [
-          17,
-          18
-        ],
-        "annotation": [
-          17,
-          18
-        ],
-        "queueable_job": [
-          17,
-          18
-        ]
-      }
+      "stage_id": null
     },
     {
       "id": 55,
@@ -71,9 +57,7 @@
       "debug_options": null,
       "private": null,
       "stage_number": null,
-      "stage_id": null,
-      "_dependencies_": {
-      }
+      "stage_id": null
     },
     {
       "id": 56,
@@ -102,21 +86,7 @@
       "debug_options": null,
       "private": null,
       "stage_number": null,
-      "stage_id": null,
-      "_dependencies_": {
-        "log": [
-          19,
-          20
-        ],
-        "annotation": [
-          19,
-          20
-        ],
-        "queueable_job": [
-          19,
-          20
-        ]
-      }
+      "stage_id": null
     },
     {
       "id": 57,
@@ -145,9 +115,7 @@
       "debug_options": null,
       "private": null,
       "stage_number": null,
-      "stage_id": null,
-      "_dependencies_": {
-      }
+      "stage_id": null
     },
     {
       "id": 61,
@@ -176,21 +144,7 @@
       "debug_options": null,
       "private": null,
       "stage_number": null,
-      "stage_id": null,
-      "_dependencies_": {
-        "log": [
-          21,
-          22
-        ],
-        "annotation": [
-          21,
-          22
-        ],
-        "queueable_job": [
-          21,
-          22
-        ]
-      }
+      "stage_id": null
     }
   ]
 }

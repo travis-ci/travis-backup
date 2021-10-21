@@ -27,25 +27,7 @@
       "branch_id": null,
       "tag_id": null,
       "sender_id": null,
-      "sender_type": null,
-      "_dependencies_": {
-        "abuse": [
-          9,
-          10
-        ],
-        "message": [
-          9,
-          10
-        ],
-        "job": [
-          54,
-          55
-        ],
-        "build": [
-          51,
-          53
-        ]
-      }
+      "sender_type": null
     },
     {
       "id": 12,
@@ -73,9 +55,7 @@
       "branch_id": null,
       "tag_id": null,
       "sender_id": null,
-      "sender_type": null,
-      "_dependencies_": {
-      }
+      "sender_type": null
     }
   ]
 }

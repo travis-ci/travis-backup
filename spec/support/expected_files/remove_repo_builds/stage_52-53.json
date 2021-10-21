@@ -8,13 +8,7 @@
       "name": null,
       "state": null,
       "started_at": null,
-      "finished_at": null,
-      "_dependencies_": {
-        "job": [
-          162,
-          163
-        ]
-      }
+      "finished_at": null
     },
     {
       "id": 53,
@@ -23,13 +17,7 @@
       "name": null,
       "state": null,
       "started_at": null,
-      "finished_at": null,
-      "_dependencies_": {
-        "job": [
-          164,
-          165
-        ]
-      }
+      "finished_at": null
     }
   ]
 }

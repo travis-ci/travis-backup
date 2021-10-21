@@ -5,17 +5,13 @@
       "id": 1,
       "organization_id": null,
       "user_id": 9,
-      "role": null,
-      "_dependencies_": {
-      }
+      "role": null
     },
     {
       "id": 2,
       "organization_id": null,
       "user_id": 9,
-      "role": null,
-      "_dependencies_": {
-      }
+      "role": null
     }
   ]
 }

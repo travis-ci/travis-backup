@@ -28,8 +28,6 @@ module SaveIdHashToFile
 
   def get_exported_object(model, id)
     object = model.find(id)
-    result = object.attributes
-    result[:_dependencies_] = object.ids_of_all_direct_dependencies
-    result
+    object.attributes
   end
 end

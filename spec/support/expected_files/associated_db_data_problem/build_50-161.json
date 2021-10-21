@@ -29,9 +29,7 @@
       "branch_id": null,
       "tag_id": null,
       "sender_id": null,
-      "sender_type": null,
-      "_dependencies_": {
-      }
+      "sender_type": null
     },
     {
       "id": 161,
@@ -61,17 +59,7 @@
       "branch_id": null,
       "tag_id": null,
       "sender_id": null,
-      "sender_type": null,
-      "_dependencies_": {
-        "job": [
-          166,
-          167
-        ],
-        "stage": [
-          52,
-          53
-        ]
-      }
+      "sender_type": null
     }
   ]
 }

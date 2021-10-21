@@ -99,7 +99,6 @@ class Backup
 
         data_file.data_hash.map do |entry_hash|
           entry_hash.symbolize_keys!
-          entry_hash.delete(:_dependencies_)
           entry_hash[:id] += @id_offsets[data_file.table_name.to_sym]
           add_offset_to_foreign_keys!(model, entry_hash)
           model.create(entry_hash)  

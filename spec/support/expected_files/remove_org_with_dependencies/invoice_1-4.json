@@ -9,9 +9,7 @@
       "subscription_id": 1,
       "invoice_id": null,
       "stripe_id": null,
-      "cc_last_digits": null,
-      "_dependencies_": {
-      }
+      "cc_last_digits": null
     },
     {
       "id": 2,
@@ -21,9 +19,7 @@
       "subscription_id": 1,
       "invoice_id": null,
       "stripe_id": null,
-      "cc_last_digits": null,
-      "_dependencies_": {
-      }
+      "cc_last_digits": null
     },
     {
       "id": 3,
@@ -33,9 +29,7 @@
       "subscription_id": 2,
       "invoice_id": null,
       "stripe_id": null,
-      "cc_last_digits": null,
-      "_dependencies_": {
-      }
+      "cc_last_digits": null
     },
     {
       "id": 4,
@@ -45,9 +39,7 @@
       "subscription_id": 2,
       "invoice_id": null,
       "stripe_id": null,
-      "cc_last_digits": null,
-      "_dependencies_": {
-      }
+      "cc_last_digits": null
     }
   ]
 }

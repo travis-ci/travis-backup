@@ -9,9 +9,7 @@
       "updated_at": "2021-03-12 10:46:10 UTC",
       "next_run": null,
       "last_run": null,
-      "dont_run_if_recent_build_exists": false,
-      "_dependencies_": {
-      }
+      "dont_run_if_recent_build_exists": false
     },
     {
       "id": 4,
@@ -21,9 +19,7 @@
       "updated_at": "2021-03-12 10:46:10 UTC",
       "next_run": null,
       "last_run": null,
-      "dont_run_if_recent_build_exists": false,
-      "_dependencies_": {
-      }
+      "dont_run_if_recent_build_exists": false
     }
   ]
 }

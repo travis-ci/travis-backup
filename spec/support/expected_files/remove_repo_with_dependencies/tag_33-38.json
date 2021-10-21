@@ -8,21 +8,7 @@
       "last_build_id": null,
       "exists_on_github": null,
       "created_at": "2021-03-12 18:18:22 UTC",
-      "updated_at": "2021-03-12 18:18:22 UTC",
-      "_dependencies_": {
-        "build": [
-          143,
-          145
-        ],
-        "commit": [
-          227,
-          228
-        ],
-        "request": [
-          33,
-          34
-        ]
-      }
+      "updated_at": "2021-03-12 18:18:22 UTC"
     },
     {
       "id": 38,
@@ -31,9 +17,7 @@
       "last_build_id": null,
       "exists_on_github": null,
       "created_at": "2021-03-12 18:18:22 UTC",
-      "updated_at": "2021-03-12 18:18:22 UTC",
-      "_dependencies_": {
-      }
+      "updated_at": "2021-03-12 18:18:22 UTC"
     }
   ]
 }

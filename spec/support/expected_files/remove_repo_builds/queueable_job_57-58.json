@@ -3,15 +3,11 @@
   "data": [
     {
       "id": 57,
-      "job_id": 166,
-      "_dependencies_": {
-      }
+      "job_id": 166
     },
     {
       "id": 58,
-      "job_id": 166,
-      "_dependencies_": {
-      }
+      "job_id": 166
     }
   ]
 }
