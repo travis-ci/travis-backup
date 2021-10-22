@@ -53,8 +53,6 @@ class Backup
 
     def set_id_sequences
       @touched_models.each do |model|
-        next if [Build, Job].include?(model)
-
         value = model.last.id + 1
         seq = model.table_name + '_id_seq'
         set_sequence(seq, value)
@@ -93,17 +91,39 @@ class Backup
     end
 
     def load_data_with_offsets
+      @repository_files = []
+
       @loaded_entries = files.map do |data_file|
         model = Model.get_model_by_table_name(data_file.table_name)
-        @touched_models << model
 
-        data_file.data_hash.map do |entry_hash|
-          entry_hash.symbolize_keys!
-          entry_hash[:id] += @id_offsets[data_file.table_name.to_sym]
-          add_offset_to_foreign_keys!(model, entry_hash)
-          model.create(entry_hash)  
+        if model == Repository
+          @repository_files << data_file
+          next
         end
+
+        load_file(model, data_file)
+      end.flatten.compact
+
+      repository_entries = @repository_files.map do |data_file|
+        load_file(Repository, data_file)
       end.flatten
+
+      @loaded_entries.concat(repository_entries)
+    end
+
+    def load_file(model, data_file)
+      @touched_models << model
+
+      data_file.data_hash.map do |entry_hash|
+        load_entry(model, entry_hash)
+      end
+    end
+
+    def load_entry(model, entry_hash)
+      entry_hash.symbolize_keys!
+      entry_hash[:id] += @id_offsets[model.table_name.to_sym]
+      add_offset_to_foreign_keys!(model, entry_hash)
+      model.create(entry_hash)
     end
 
     def add_offset_to_foreign_keys!(model, entry_hash)

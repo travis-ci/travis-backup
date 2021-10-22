@@ -6,7 +6,6 @@ require 'models/job'
 require 'models/organization'
 require 'models/user'
 require 'support/factories'
-require 'support/expected_files_provider'
 require 'support/before_tests'
 require 'support/utils'
 require 'pry'
@@ -80,6 +79,87 @@ describe Backup::LoadFromFiles do
     end
 
     context 'when old data is present in db' do
+      context 'when it cooperates with removing method in dumping and reloading' do
+        context 'when it cooperates with remove_heavy_data_for_repo' do
+          let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
+          let(:datetime) { (Config.new.threshold + 1).months.ago.to_time.utc }
+          let!(:other_data) {
+            FactoryBot.rewind_sequences
+    
+            db_helper.do_without_triggers do
+              FactoryBot.create_list(
+                :user_with_all_dependencies, 2,
+                created_at: datetime,
+                updated_at: datetime            
+              )
+            end
+          }
+          let!(:user) {
+            db_helper.do_without_triggers do
+              FactoryBot.create(
+                :user_with_all_dependencies,
+                created_at: datetime,
+                updated_at: datetime
+              )
+            end
+          }
+    
+          it 'reloads data properly' do
+            time_for_folder = Time.now.to_s.parameterize.underscore
+            config.files_location = "dump/tests/load_files/#{time_for_folder}_1"
+            remove_specified.remove_user_with_dependencies(user.id)
+            load_from_files.run
+            loaded_user = User.last
+            expected_data = loaded_user.ids_of_all_dependencies_nested
+            config.files_location = "dump/tests/load_files/#{time_for_folder}_2"
+            remove_specified.remove_user_with_dependencies(loaded_user.id)
+            load_from_files = Backup::LoadFromFiles.new(config, DryRunReporter.new)
+            load_from_files.run
+    
+            expect(User.last.ids_of_all_dependencies_nested).to eql(expected_data)
+          end
+        end
+
+        context 'when it cooperates with repository_for_removing_heavy_data' do
+          let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
+          let(:datetime) { (Config.new.threshold + 1).months.ago.to_time.utc }
+          let!(:other_data) {
+            FactoryBot.rewind_sequences
+    
+            db_helper.do_without_triggers do
+              FactoryBot.create_list(
+                :user_with_all_dependencies, 2,
+                created_at: datetime,
+                updated_at: datetime            
+              )
+            end
+          }
+          let!(:repository) {
+            db_helper.do_without_triggers do
+              FactoryBot.create(
+                :repository_for_removing_heavy_data,
+                created_at: datetime,
+                updated_at: datetime
+              )
+            end
+          }
+    
+          it 'reloads data properly' do
+            time_for_folder = Time.now.to_s.parameterize.underscore
+            config.files_location = "dump/tests/load_files/#{time_for_folder}_1"
+            remove_specified.remove_heavy_data_for_repo(repository)
+            load_from_files.run
+            expected_data = repository.ids_of_all_dependencies_nested(6)
+            config.files_location = "dump/tests/load_files/#{time_for_folder}_2"
+            remove_specified.remove_heavy_data_for_repo(repository)
+            load_from_files = Backup::LoadFromFiles.new(config, DryRunReporter.new)
+            load_from_files.run
+    
+            expect(repository.ids_of_all_dependencies_nested(6)).to eql(expected_data)
+          end
+        end
+      end
+  
       context 'when the problem with associated data in db occurs' do
         before do
           config.files_location = "spec/support/expected_files/associated_db_data_problem"

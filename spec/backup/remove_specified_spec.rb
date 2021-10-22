@@ -6,7 +6,6 @@ require 'models/job'
 require 'models/organization'
 require 'models/user'
 require 'support/factories'
-require 'support/expected_files_provider'
 require 'support/before_tests'
 require 'support/utils'
 require 'pry'
@@ -15,7 +14,7 @@ require 'byebug'
 describe Backup::RemoveSpecified do
   def db_summary_hash
     {
-      all: Model.get_sum_of_rows_of_all_models,
+      all: Model.get_sum_of_rows_of_all_subclasses,
       logs: Log.all.size,
       jobs: Job.all.size,
       builds: Build.all.size,
@@ -164,7 +163,7 @@ describe Backup::RemoveSpecified do
       it 'does not remove entries from db' do
         expect {
           remove_specified.remove_repo_builds(repository)
-        }.not_to change { Model.get_sum_of_rows_of_all_models }
+        }.not_to change { Model.get_sum_of_rows_of_all_subclasses }
       end
     end
   end
@@ -265,7 +264,7 @@ describe Backup::RemoveSpecified do
       it 'does not remove entries from db' do
         expect {
           remove_specified.remove_repo_requests(repository)
-        }.not_to change { Model.get_sum_of_rows_of_all_models }
+        }.not_to change { Model.get_sum_of_rows_of_all_subclasses }
       end
     end
   end
@@ -355,7 +354,7 @@ describe Backup::RemoveSpecified do
       it 'does not remove entries from db' do
         expect {
           remove_specified.remove_user_with_dependencies(user.id)
-        }.not_to change { Model.get_sum_of_rows_of_all_models }
+        }.not_to change { Model.get_sum_of_rows_of_all_subclasses }
       end
     end
   end
@@ -444,7 +443,7 @@ describe Backup::RemoveSpecified do
       it 'does not remove entries from db' do
         expect {
           remove_specified.remove_org_with_dependencies(organization.id)
-        }.not_to change { Model.get_sum_of_rows_of_all_models }
+        }.not_to change { Model.get_sum_of_rows_of_all_subclasses }
       end
     end
   end
@@ -533,7 +532,7 @@ describe Backup::RemoveSpecified do
       it 'does not remove entries from db' do
         expect {
           remove_specified.remove_repo_with_dependencies(repository.id)
-        }.not_to change { Model.get_sum_of_rows_of_all_models }
+        }.not_to change { Model.get_sum_of_rows_of_all_subclasses }
       end
     end
   end

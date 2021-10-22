@@ -80,7 +80,7 @@ module IdsOfAllDependencies
 
   def move_wrongly_assigned_to_main(to_filter, id_hash)
     id_hash[:filtered_out].each do |model_symbol, array|
-      array.each do |id|
+      array.clone.each do |id|
         object = Model.get_model(model_symbol).find(id)
         move_object_to_main_if_necessary(to_filter[model_symbol], id_hash, object)
       end
