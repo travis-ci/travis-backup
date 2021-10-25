@@ -31,11 +31,11 @@ describe Model do
             annotation: [1, 2, 3, 4],
             branch: [73, 74],
             build: [1, 3, 6, 8],
-            job: [2, 4, 5, 9, 10, 7],
+            job: [2, 4, 5, 7, 9, 10],
             log: [1, 2, 3, 4],
             message: [1, 2],
             queueable_job: [1, 2, 3, 4],
-            repository: [2, 1, 4, 3],
+            repository: [1, 2, 3, 4],
             request: [1, 2],
             stage: [20, 21],
             tag: [1, 2]
@@ -57,7 +57,7 @@ describe Model do
             job: [2, 4, 5],
             log: [1, 2],
             queueable_job: [1, 2],
-            repository: [2, 1],
+            repository: [1, 2],
             request: [2],
             stage: [20],
             tag: [1]

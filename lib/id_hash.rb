@@ -43,6 +43,12 @@ class HashOfArrays < Hash
     end
     self
   end
+
+  def sort_arrays!
+    self.each do |key, array|
+      array.sort!
+    end
+  end
 end
 
 class IdHash < HashOfArrays
