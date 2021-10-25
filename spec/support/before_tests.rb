@@ -1,12 +1,16 @@
 class BeforeTests
   def run
     config = Config.new
-    puts '-------------------'
-    system("psql '#{config.database_url}' -f db/schema.sql")
-    puts '-------------------'
-    if config.destination_db_url
-      system("psql '#{config.destination_db_url}' -f db/schema.sql > /dev/null 2> /dev/null")
+    helper = DbHelper.new(config)
+    truncate_all_tables
+    helper.do_in_other_db(config.destination_db_url) do
+      truncate_all_tables
     end
+  end
+
+  def truncate_all_tables
+    sql = File.read('db/schema.sql')
+    ActiveRecord::Base.connection.execute(sql)
   end
 end
 
