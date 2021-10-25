@@ -34,7 +34,7 @@ module IdsOfAllDependenciesNested
       next if association.macro == :belongs_to
 
       symbol = association.klass.name.underscore.to_sym
-      self.send(association.name).map do |associated_object|
+      self.send(association.name).sort_by(&:id).map do |associated_object|
         result[symbol] = [] if result[symbol].nil?
         result[symbol] << associated_object.ids_of_all_dependencies_nested(depth - 1)
       end
