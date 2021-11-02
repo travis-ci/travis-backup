@@ -12,30 +12,6 @@ require 'pry'
 require 'byebug'
 
 describe Backup::RemoveSpecified do
-  def db_summary_hash
-    {
-      all: Model.get_sum_of_rows_of_all_subclasses,
-      logs: Log.all.size,
-      jobs: Job.all.size,
-      builds: Build.all.size,
-      requests: Request.all.size,
-      repositories: Repository.all.size,
-      branches: Branch.all.size,
-      tags: Tag.all.size,
-      commits: Commit.all.size,
-      crons: Cron.all.size,
-      pull_requests: PullRequest.all.size,
-      ssl_keys: SslKey.all.size,
-      stages: Stage.all.size,
-      stars: Star.all.size,
-      permissions: Permission.all.size,
-      messages: Message.all.size,
-      abuses: Abuse.all.size,
-      annotations: Annotation.all.size,
-      queueable_jobs: QueueableJob.all.size
-    }    
-  end
-
   def get_expected_files(directory, datetime)
     Dir["spec/support/expected_files/#{directory}/*.json"].map do |file_path|
       content = File.read(file_path)
@@ -86,29 +62,39 @@ describe Backup::RemoveSpecified do
 
     shared_context 'removing builds with dependencies' do
       it 'removes builds with all its dependencies' do
-        remove_specified.remove_repo_builds(repository)
-
-        expect(db_summary_hash).to eql(
-          all: 672,
-          logs: 60,
-          jobs: 108,
-          builds: 65,
-          requests: 34,
-          repositories: 65,
-          branches: 38,
-          tags: 38,
-          commits: 18,
-          crons: 6,
-          pull_requests: 6,
-          ssl_keys: 6,
-          stages: 36,
-          stars: 6,
-          permissions: 6,
-          messages: 30,
-          abuses: 30,
-          annotations: 60,
-          queueable_jobs: 60
-        )
+        expect {
+          remove_specified.remove_repo_builds(repository)
+        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-16)
+        .and change { Log.all.size }.by(-2)
+        .and change { Job.all.size }.by(-6)
+        .and change { Build.all.size }.by(-2)
+        .and change { Request.all.size }.by(0)
+        .and change { Repository.all.size }.by(0)
+        .and change { Branch.all.size }.by(0)
+        .and change { Tag.all.size }.by(0)
+        .and change { Commit.all.size }.by(0)
+        .and change { Cron.all.size }.by(0)
+        .and change { PullRequest.all.size }.by(0)
+        .and change { SslKey.all.size }.by(0)
+        .and change { Stage.all.size }.by(-2)
+        .and change { Star.all.size }.by(0)
+        .and change { Permission.all.size }.by(0)
+        .and change { Message.all.size }.by(0)
+        .and change { Abuse.all.size }.by(0)
+        .and change { Annotation.all.size }.by(-2)
+        .and change { QueueableJob.all.size }.by(-2)
+        .and change { Email.all.size }.by(0)
+        .and change { Invoice.all.size }.by(0)
+        .and change { Membership.all.size }.by(0)
+        .and change { Organization.all.size }.by(0)
+        .and change { OwnerGroup.all.size }.by(0)
+        .and change { Broadcast.all.size }.by(0)
+        .and change { Subscription.all.size }.by(0)
+        .and change { Token.all.size }.by(0)
+        .and change { TrialAllowance.all.size }.by(0)
+        .and change { Trial.all.size }.by(0)
+        .and change { UserBetaFeature.all.size }.by(0)
+        .and change { User.all.size }.by(0)
       end
     end
 
@@ -187,29 +173,39 @@ describe Backup::RemoveSpecified do
 
     shared_context 'removing requests with dependencies' do
       it 'removes requests with all its dependencies' do
-        remove_specified.remove_repo_requests(repository)
-
-        expect(db_summary_hash).to eql(
-          all: 628,
-          logs: 54,
-          jobs: 94,
-          builds: 63,
-          requests: 32,
-          repositories: 65,
-          branches: 38,
-          tags: 38,
-          commits: 18,
-          crons: 6,
-          pull_requests: 6,
-          ssl_keys: 6,
-          stages: 32,
-          stars: 6,
-          permissions: 6,
-          messages: 28,
-          abuses: 28,
-          annotations: 54,
-          queueable_jobs: 54
-        )
+        expect {
+          remove_specified.remove_repo_requests(repository)
+        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-15)
+        .and change { Log.all.size }.by(-2)
+        .and change { Job.all.size }.by(-2)
+        .and change { Build.all.size }.by(-1)
+        .and change { Request.all.size }.by(-2)
+        .and change { Repository.all.size }.by(0)
+        .and change { Branch.all.size }.by(0)
+        .and change { Tag.all.size }.by(0)
+        .and change { Commit.all.size }.by(0)
+        .and change { Cron.all.size }.by(0)
+        .and change { PullRequest.all.size }.by(0)
+        .and change { SslKey.all.size }.by(0)
+        .and change { Stage.all.size }.by(0)
+        .and change { Star.all.size }.by(0)
+        .and change { Permission.all.size }.by(0)
+        .and change { Message.all.size }.by(-2)
+        .and change { Abuse.all.size }.by(-2)
+        .and change { Annotation.all.size }.by(-2)
+        .and change { QueueableJob.all.size }.by(-2)
+        .and change { Email.all.size }.by(0)
+        .and change { Invoice.all.size }.by(0)
+        .and change { Membership.all.size }.by(0)
+        .and change { Organization.all.size }.by(0)
+        .and change { OwnerGroup.all.size }.by(0)
+        .and change { Broadcast.all.size }.by(0)
+        .and change { Subscription.all.size }.by(0)
+        .and change { Token.all.size }.by(0)
+        .and change { TrialAllowance.all.size }.by(0)
+        .and change { Trial.all.size }.by(0)
+        .and change { UserBetaFeature.all.size }.by(0)
+        .and change { User.all.size }.by(0)
       end
     end
 
@@ -295,29 +291,39 @@ describe Backup::RemoveSpecified do
 
     shared_context 'removing user with dependencies' do
       it 'removes user with all his dependencies with proper exceptions' do
-        remove_specified.remove_user_with_dependencies(user.id)
-
-        expect(db_summary_hash).to eql(
-          all: 870,
-          logs: 64,
-          jobs: 134,
-          builds: 90,
-          requests: 40,
-          repositories: 108,
-          branches: 62,
-          tags: 62,
-          commits: 24,
-          crons: 8,
-          pull_requests: 8,
-          ssl_keys: 8,
-          stages: 54,
-          stars: 8,
-          permissions: 8,
-          messages: 32,
-          abuses: 32,
-          annotations: 64,
-          queueable_jobs: 64
-        )
+        expect {
+          remove_specified.remove_user_with_dependencies(user.id)
+        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-247)
+        .and change { Log.all.size }.by(-30)
+        .and change { Job.all.size }.by(-30)
+        .and change { Build.all.size }.by(-18)
+        .and change { Request.all.size }.by(-18)
+        .and change { Repository.all.size }.by(-2)
+        .and change { Branch.all.size }.by(-2)
+        .and change { Tag.all.size }.by(-2)
+        .and change { Commit.all.size }.by(-6)
+        .and change { Cron.all.size }.by(-2)
+        .and change { PullRequest.all.size }.by(-2)
+        .and change { SslKey.all.size }.by(-2)
+        .and change { Stage.all.size }.by(0)
+        .and change { Star.all.size }.by(-4)
+        .and change { Permission.all.size }.by(-4)
+        .and change { Message.all.size }.by(-18)
+        .and change { Abuse.all.size }.by(-20)
+        .and change { Annotation.all.size }.by(-30)
+        .and change { QueueableJob.all.size }.by(-30)
+        .and change { Email.all.size }.by(-2)
+        .and change { Invoice.all.size }.by(-4)
+        .and change { Membership.all.size }.by(-2)
+        .and change { Organization.all.size }.by(0)
+        .and change { OwnerGroup.all.size }.by(-2)
+        .and change { Broadcast.all.size }.by(-2)
+        .and change { Subscription.all.size }.by(-2)
+        .and change { Token.all.size }.by(-2)
+        .and change { TrialAllowance.all.size }.by(-6)
+        .and change { Trial.all.size }.by(-2)
+        .and change { UserBetaFeature.all.size }.by(-2)
+        .and change { User.all.size }.by(-1)
       end
     end
 
@@ -385,29 +391,39 @@ describe Backup::RemoveSpecified do
 
     shared_context 'removing organization with dependencies' do
       it 'removes organization with all its dependencies with proper exceptions' do
-        remove_specified.remove_org_with_dependencies(organization.id)
-
-        expect(db_summary_hash).to eql(
-          all: 870,
-          logs: 64,
-          jobs: 134,
-          builds: 90,
-          requests: 40,
-          repositories: 108,
-          branches: 62,
-          tags: 62,
-          commits: 24,
-          crons: 8,
-          pull_requests: 8,
-          ssl_keys: 8,
-          stages: 54,
-          stars: 8,
-          permissions: 8,
-          messages: 32,
-          abuses: 32,
-          annotations: 64,
-          queueable_jobs: 64
-        )
+        expect {
+          remove_specified.remove_org_with_dependencies(organization.id)
+        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-237)
+        .and change { Log.all.size }.by(-30)
+        .and change { Job.all.size }.by(-30)
+        .and change { Build.all.size }.by(-18)
+        .and change { Request.all.size }.by(-18)
+        .and change { Repository.all.size }.by(-2)
+        .and change { Branch.all.size }.by(-2)
+        .and change { Tag.all.size }.by(-2)
+        .and change { Commit.all.size }.by(-6)
+        .and change { Cron.all.size }.by(-2)
+        .and change { PullRequest.all.size }.by(-2)
+        .and change { SslKey.all.size }.by(-2)
+        .and change { Stage.all.size }.by(0)
+        .and change { Star.all.size }.by(-2)
+        .and change { Permission.all.size }.by(-2)
+        .and change { Message.all.size }.by(-18)
+        .and change { Abuse.all.size }.by(-20)
+        .and change { Annotation.all.size }.by(-30)
+        .and change { QueueableJob.all.size }.by(-30)
+        .and change { Email.all.size }.by(0)
+        .and change { Invoice.all.size }.by(-4)
+        .and change { Membership.all.size }.by(-2)
+        .and change { Organization.all.size }.by(-1)
+        .and change { OwnerGroup.all.size }.by(-2)
+        .and change { Broadcast.all.size }.by(-2)
+        .and change { Subscription.all.size }.by(-2)
+        .and change { Token.all.size }.by(0)
+        .and change { TrialAllowance.all.size }.by(-6)
+        .and change { Trial.all.size }.by(-2)
+        .and change { UserBetaFeature.all.size }.by(0)
+        .and change { User.all.size }.by(0)
       end
     end
 
@@ -474,29 +490,39 @@ describe Backup::RemoveSpecified do
 
     shared_context 'removing repository with dependencies' do
       it 'removes repository with all its dependencies with proper exceptions' do
-        remove_specified.remove_repo_with_dependencies(repository.id)
-
-        expect(db_summary_hash).to eql(
-          all: 470,
-          logs: 32,
-          jobs: 72,
-          builds: 50,
-          requests: 20,
-          repositories: 64,
-          branches: 36,
-          tags: 36,
-          commits: 12,
-          crons: 4,
-          pull_requests: 4,
-          ssl_keys: 4,
-          stages: 32,
-          stars: 4,
-          permissions: 4,
-          messages: 16,
-          abuses: 16,
-          annotations: 32,
-          queueable_jobs: 32
-        )
+        expect {
+          remove_specified.remove_repo_with_dependencies(repository.id)
+        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-173)
+        .and change { Log.all.size }.by(-24)
+        .and change { Job.all.size }.by(-24)
+        .and change { Build.all.size }.by(-14)
+        .and change { Request.all.size }.by(-14)
+        .and change { Repository.all.size }.by(-1)
+        .and change { Branch.all.size }.by(-2)
+        .and change { Tag.all.size }.by(-2)
+        .and change { Commit.all.size }.by(-6)
+        .and change { Cron.all.size }.by(-2)
+        .and change { PullRequest.all.size }.by(-2)
+        .and change { SslKey.all.size }.by(-2)
+        .and change { Stage.all.size }.by(0)
+        .and change { Star.all.size }.by(-2)
+        .and change { Permission.all.size }.by(-2)
+        .and change { Message.all.size }.by(-14)
+        .and change { Abuse.all.size }.by(-14)
+        .and change { Annotation.all.size }.by(-24)
+        .and change { QueueableJob.all.size }.by(-24)
+        .and change { Email.all.size }.by(0)
+        .and change { Invoice.all.size }.by(0)
+        .and change { Membership.all.size }.by(0)
+        .and change { Organization.all.size }.by(0)
+        .and change { OwnerGroup.all.size }.by(0)
+        .and change { Broadcast.all.size }.by(0)
+        .and change { Subscription.all.size }.by(0)
+        .and change { Token.all.size }.by(0)
+        .and change { TrialAllowance.all.size }.by(0)
+        .and change { Trial.all.size }.by(0)
+        .and change { UserBetaFeature.all.size }.by(0)
+        .and change { User.all.size }.by(0)
       end
     end
 
