@@ -69,6 +69,17 @@ class IdHash < HashOfArrays
     remove_from_exceptional(as_last)
   end
 
+  def with_table_symbols
+    result = HashOfArrays.new
+
+    self.each do |name, ids|
+      symbol = Model.get_model(name).table_name.to_sym
+      result[symbol] = ids
+    end
+
+    result
+  end
+
   private
 
   def remove_from_exceptional(array)

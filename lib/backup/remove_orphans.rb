@@ -7,6 +7,7 @@ class Backup
     def initialize(config, dry_run_reporter=nil)
       @config = config
       @dry_run_reporter = dry_run_reporter
+      @ids_to_remove = IdHash.new
     end
 
     def dry_run_report
@@ -14,14 +15,59 @@ class Backup
     end
 
     def run
+      find_orphans
+
+      if @config.dry_run
+        @dry_run_reporter.add_to_report(@ids_to_remove.with_table_symbols)
+      else
+        nullify_builds_dependencies
+        @ids_to_remove.remove_entries_from_db
+      end
+    end
+
+    def nullify_builds_dependencies
+      @ids_to_remove[:build].each do |build_id|
+        build = Build.find(build_id)
+
+        dependencies_to_nullify.each do |symbol_set|
+          dependencies = build.send(symbol_set[:reverted_symbol]) # e.g. build.tags_for_that_this_build_is_last
+
+          dependencies.each do |entry|
+            fk = symbol_set[:foreign_key]
+            entry.update(fk => nil) # e.g. tag.update(last_build_id: nil)
+          end
+        end
+      end
+    end
+
+    def dependencies_to_nullify
+      [
+        {
+          reverted_symbol: :repos_for_that_this_build_is_current,
+          foreign_key: :current_build_id
+        },
+        {
+          reverted_symbol: :repos_for_that_this_build_is_last,
+          foreign_key: :last_build_id
+        },
+        {
+          reverted_symbol: :tags_for_that_this_build_is_last,
+          foreign_key: :last_build_id
+        },
+        {
+          reverted_symbol: :branches_for_that_this_build_is_last,
+          foreign_key: :last_build_id
+        }
+      ]
+    end
+
+    def find_orphans
       cases.each do |model_block|
         model_block[:relations].each do |relation|
-          process_table(
+          check_model(
             main_model: model_block[:main_model],
             related_model: relation[:related_model],
             fk_name: relation[:fk_name],
-            method: model_block[:method],
-            dry_run_complement: model_block[:dry_run_complement]
           )
         end
       end
@@ -44,9 +90,7 @@ class Backup
             {related_model: PullRequest, fk_name: 'pull_request_id'},
             {related_model: Branch, fk_name: 'branch_id'},
             {related_model: Tag, fk_name: 'tag_id'}
-          ],
-          method: :destroy_all,
-          dry_run_complement: -> (ids) { add_builds_dependencies_to_dry_run_report(ids) }
+          ]
         }, {
           main_model: Job,
           relations: [
@@ -104,20 +148,11 @@ class Backup
         }
       ]
     end
-  
-    def add_builds_dependencies_to_dry_run_report(ids_for_delete)
-      repos_for_delete = Repository.where(current_build_id: ids_for_delete)
-      jobs_for_delete = Job.where(source_id: ids_for_delete)
-      @dry_run_reporter.add_to_report(:repositories, *repos_for_delete.map(&:id))
-      @dry_run_reporter.add_to_report(:jobs, *jobs_for_delete.map(&:id))
-    end
-  
-    def process_table(args)
+
+    def check_model(args)
       main_model = args[:main_model]
       related_model = args[:related_model]
       fk_name = args[:fk_name]
-      method = args[:method] || :delete_all
-      dry_run_complement = args[:dry_run_complement]
   
       main_table = main_model.table_name
       related_table = related_model.table_name
@@ -132,15 +167,9 @@ class Backup
           and b.id is null;
       })
   
-      ids_for_delete = for_delete.map(&:id)
-  
-      if config.dry_run
-        key = main_table.to_sym
-        @dry_run_reporter.add_to_report(key, *ids_for_delete)
-        dry_run_complement.call(ids_for_delete) if dry_run_complement
-      else
-        main_model.where(id: ids_for_delete).send(method)
-      end
+      key = main_model.name.underscore.to_sym
+      ids = for_delete.map(&:id)
+      @ids_to_remove.add(key, *ids)
     end  
   end
 end

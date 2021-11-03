@@ -186,10 +186,10 @@ describe Backup do
 
       it 'prepares proper dry run report' do
         backup.run
-        expect(backup.dry_run_report[:build].size).to eql 24
-        expect(backup.dry_run_report[:job].size).to eql 48
-        expect(backup.dry_run_report[:log].size).to eql 96
-        expect(backup.dry_run_report[:request].size).to eql 6
+        expect(backup.dry_run_report[:builds].size).to eql 24
+        expect(backup.dry_run_report[:jobs].size).to eql 48
+        expect(backup.dry_run_report[:logs].size).to eql 96
+        expect(backup.dry_run_report[:requests].size).to eql 6
       end
 
       it 'prints dry run report' do

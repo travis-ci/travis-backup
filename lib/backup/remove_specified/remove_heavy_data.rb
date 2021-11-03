@@ -48,7 +48,7 @@ module RemoveHeavyData
 
   def process_ids_to_remove(ids_to_remove)
     if @config.dry_run
-      @dry_run_reporter.add_to_report(ids_to_remove)
+      @dry_run_reporter.add_to_report(ids_to_remove.with_table_symbols)
     else
       save_id_hash_to_file(ids_to_remove) if @config.if_backup
       ids_to_remove.remove_entries_from_db

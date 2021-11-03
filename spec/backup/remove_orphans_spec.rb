@@ -9,6 +9,7 @@ require 'support/factories'
 require 'support/before_tests'
 require 'pry'
 require 'database_cleaner/active_record'
+require 'byebug'
 
 describe Backup::RemoveOrphans do
   before(:all) do
@@ -89,8 +90,8 @@ describe Backup::RemoveOrphans do
         FactoryBot.create_list(:stage_with_build_id, 2)
       end
     }
-    it 'removes orphaned repositories (with these dependent on orphaned builds)' do
-      expect { remove_orphans.run }.to change { Repository.all.size }.by -16
+    it 'removes orphaned repositories' do
+      expect { remove_orphans.run }.to change { Repository.all.size }.by -4
     end
 
     it 'removes orphaned builds' do
@@ -133,14 +134,10 @@ describe Backup::RemoveOrphans do
       let!(:config) { Config.new(files_location: files_location, limit: 5, dry_run: true) }
       let!(:remove_orphans) { Backup::RemoveOrphans.new(config, DryRunReporter.new) }
 
-      before do
-        allow_any_instance_of(IO).to receive(:puts)
-      end
-
       it 'prepares proper dry run report' do
         remove_orphans.run
         report = remove_orphans.dry_run_report
-        expect(report[:repositories].size).to eql 16
+        expect(report[:repositories].size).to eql 4
         expect(report[:builds].size).to eql 12
         expect(report[:jobs].size).to eql 6
         expect(report[:branches].size).to eql 4
