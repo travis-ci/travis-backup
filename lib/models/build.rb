@@ -22,4 +22,13 @@ class Build < Model
   has_many   :stages
 
   self.table_name = 'builds'
+
+  def default_dependencies_to_nullify
+    [
+      :repos_for_that_this_build_is_current,
+      :repos_for_that_this_build_is_last,
+      :tags_for_that_this_build_is_last,
+      :branches_for_that_this_build_is_last
+    ]
+  end
 end

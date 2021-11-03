@@ -28,37 +28,8 @@ class Backup
     def nullify_builds_dependencies
       @ids_to_remove[:build].each do |build_id|
         build = Build.find(build_id)
-
-        dependencies_to_nullify.each do |symbol_set|
-          dependencies = build.send(symbol_set[:reverted_symbol]) # e.g. build.tags_for_that_this_build_is_last
-
-          dependencies.each do |entry|
-            fk = symbol_set[:foreign_key]
-            entry.update(fk => nil) # e.g. tag.update(last_build_id: nil)
-          end
-        end
+        build.nullify_default_dependencies
       end
-    end
-
-    def dependencies_to_nullify
-      [
-        {
-          reverted_symbol: :repos_for_that_this_build_is_current,
-          foreign_key: :current_build_id
-        },
-        {
-          reverted_symbol: :repos_for_that_this_build_is_last,
-          foreign_key: :last_build_id
-        },
-        {
-          reverted_symbol: :tags_for_that_this_build_is_last,
-          foreign_key: :last_build_id
-        },
-        {
-          reverted_symbol: :branches_for_that_this_build_is_last,
-          foreign_key: :last_build_id
-        }
-      ]
     end
 
     def find_orphans

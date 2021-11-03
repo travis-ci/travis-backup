@@ -2,10 +2,11 @@
 
 require 'active_record'
 require 'ids_of_all_dependencies'
+require 'nullify_dependencies'
 
-# Model class
 class Model < ActiveRecord::Base
   include IdsOfAllDependencies
+  include NullifyDependencies
 
   self.abstract_class = true
 
