@@ -21,14 +21,16 @@ class Model < ActiveRecord::Base
     self.subclasses.find{ |m| m.table_name == name.to_s }
   end
 
-  def self.get_ids_of_entries_of_all_subclasses
+  def self.ids_of_subclasses_entries
     self.subclasses.map do |subclass|
       [subclass.name, subclass.all.map(&:id)] if subclass.any?
     end.compact.to_h
   end
 
-  def self.get_sum_of_rows_of_all_subclasses
+  def self.sum_of_subclasses_rows(except: [])
     self.subclasses.map do |subclass|
+      next 0 if except.include?(subclass.table_name) || except.include?(subclass.name)
+
       subclass.all.size
     end.reduce(:+)
   end

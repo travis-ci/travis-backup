@@ -64,7 +64,7 @@ describe Backup::RemoveSpecified do
       it 'removes builds with all its dependencies' do
         expect {
           remove_specified.remove_repo_builds(repository)
-        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-16)
+        }.to change { Model.sum_of_subclasses_rows }.by(-16)
         .and change { Log.all.size }.by(-2)
         .and change { Job.all.size }.by(-6)
         .and change { Build.all.size }.by(-2)
@@ -149,7 +149,7 @@ describe Backup::RemoveSpecified do
       it 'does not remove entries from db' do
         expect {
           remove_specified.remove_repo_builds(repository)
-        }.not_to change { Model.get_sum_of_rows_of_all_subclasses }
+        }.not_to change { Model.sum_of_subclasses_rows }
       end
     end
   end
@@ -175,7 +175,7 @@ describe Backup::RemoveSpecified do
       it 'removes requests with all its dependencies' do
         expect {
           remove_specified.remove_repo_requests(repository)
-        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-15)
+        }.to change { Model.sum_of_subclasses_rows }.by(-15)
         .and change { Log.all.size }.by(-2)
         .and change { Job.all.size }.by(-2)
         .and change { Build.all.size }.by(-1)
@@ -260,7 +260,7 @@ describe Backup::RemoveSpecified do
       it 'does not remove entries from db' do
         expect {
           remove_specified.remove_repo_requests(repository)
-        }.not_to change { Model.get_sum_of_rows_of_all_subclasses }
+        }.not_to change { Model.sum_of_subclasses_rows }
       end
     end
   end
@@ -293,7 +293,7 @@ describe Backup::RemoveSpecified do
       it 'removes user with all his dependencies with proper exceptions' do
         expect {
           remove_specified.remove_user_with_dependencies(user.id)
-        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-247)
+        }.to change { Model.sum_of_subclasses_rows }.by(-247)
         .and change { Log.all.size }.by(-30)
         .and change { Job.all.size }.by(-30)
         .and change { Build.all.size }.by(-18)
@@ -360,7 +360,7 @@ describe Backup::RemoveSpecified do
       it 'does not remove entries from db' do
         expect {
           remove_specified.remove_user_with_dependencies(user.id)
-        }.not_to change { Model.get_sum_of_rows_of_all_subclasses }
+        }.not_to change { Model.sum_of_subclasses_rows }
       end
     end
   end
@@ -393,7 +393,7 @@ describe Backup::RemoveSpecified do
       it 'removes organization with all its dependencies with proper exceptions' do
         expect {
           remove_specified.remove_org_with_dependencies(organization.id)
-        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-237)
+        }.to change { Model.sum_of_subclasses_rows }.by(-237)
         .and change { Log.all.size }.by(-30)
         .and change { Job.all.size }.by(-30)
         .and change { Build.all.size }.by(-18)
@@ -459,7 +459,7 @@ describe Backup::RemoveSpecified do
       it 'does not remove entries from db' do
         expect {
           remove_specified.remove_org_with_dependencies(organization.id)
-        }.not_to change { Model.get_sum_of_rows_of_all_subclasses }
+        }.not_to change { Model.sum_of_subclasses_rows }
       end
     end
   end
@@ -492,7 +492,7 @@ describe Backup::RemoveSpecified do
       it 'removes repository with all its dependencies with proper exceptions' do
         expect {
           remove_specified.remove_repo_with_dependencies(repository.id)
-        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-173)
+        }.to change { Model.sum_of_subclasses_rows }.by(-173)
         .and change { Log.all.size }.by(-24)
         .and change { Job.all.size }.by(-24)
         .and change { Build.all.size }.by(-14)
@@ -558,7 +558,7 @@ describe Backup::RemoveSpecified do
       it 'does not remove entries from db' do
         expect {
           remove_specified.remove_repo_with_dependencies(repository.id)
-        }.not_to change { Model.get_sum_of_rows_of_all_subclasses }
+        }.not_to change { Model.sum_of_subclasses_rows }
       end
     end
   end
