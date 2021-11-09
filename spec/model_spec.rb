@@ -68,9 +68,9 @@ describe Model do
         })
       end
 
-      context 'when filtered_children_only filtering strategy is set' do
+      context 'when without_parents filtering strategy is set' do
         it 'returns all dependencies ids in hash' do
-          expect(commit.ids_of_all_dependencies_with_filtered(to_filter, :filtered_children_only)).to eql({
+          expect(commit.ids_of_all_dependencies_with_filtered(to_filter, :without_parents)).to eql({
             main: {
               abuse: [1, 2],
               annotation: [1, 2],
