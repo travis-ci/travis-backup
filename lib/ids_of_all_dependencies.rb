@@ -52,7 +52,7 @@ module IdsOfAllDependencies
     ids_of_all_dependencies_with_filtered(to_filter)[:main]
   end
 
-  def ids_of_all_dependencies_with_filtered(to_filter=nil)
+  def ids_of_all_dependencies_with_filtered(to_filter=nil, filtering_strategy=:with_parents)
     id_hash = ids_of_all_dependencies_without_reflection(to_filter || {})
     move_wrongly_assigned_to_main(to_filter, id_hash) if to_filter
     id_hash[:main].sort_arrays!

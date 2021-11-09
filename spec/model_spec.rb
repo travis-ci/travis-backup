@@ -22,7 +22,7 @@ describe Model do
         updated_at: datetime
       )
     }
-    context 'when no filters are given' do
+    context 'when the filter is not given' do
       it 'returns all dependencies ids in hash' do
         expect(commit.ids_of_all_dependencies_with_filtered).to eql({
           filtered_out: {},
@@ -44,12 +44,12 @@ describe Model do
       end
     end
 
-    context 'when the except filter is given' do
+    context 'when the filter is given' do
+      let!(:to_filter) {
+        { request: [ :jobs, :builds ] }
+      }
       it 'returns all dependencies ids in hash' do
-        filter = {
-          request: [ :jobs, :builds ]
-        }
-        expect(commit.ids_of_all_dependencies_with_filtered(filter)).to eql({
+        expect(commit.ids_of_all_dependencies_with_filtered(to_filter)).to eql({
           main: {
             annotation: [1, 2],
             branch: [73],
@@ -66,6 +66,31 @@ describe Model do
             request: [1]
           }
         })
+      end
+
+      context 'when filtered_children_only filtering strategy is set' do
+        it 'returns all dependencies ids in hash' do
+          expect(commit.ids_of_all_dependencies_with_filtered(to_filter, :filtered_children_only)).to eql({
+            main: {
+              abuse: [1, 2],
+              annotation: [1, 2],
+              branch: [73],
+              build: [1, 3],
+              job: [2, 4, 5],
+              log: [1, 2],
+              message: [1, 2],
+              queueable_job: [1, 2],
+              repository: [2, 1],
+              request: [1, 2],
+              stage: [20],
+              tag: [1]
+            },
+            filtered_out: {
+              build: [6, 8],
+              job: [9, 10]
+            }
+          })
+        end
       end
     end
   end
