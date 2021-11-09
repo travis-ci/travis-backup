@@ -53,16 +53,23 @@ module IdsOfAllDependencies
   end
 
   def ids_of_all_dependencies_with_filtered(to_filter=nil, filtering_strategy=:with_parents)
-    return ids_of_all_dependencies_filtered_without_parents(to_filter) if filtering_strategy == :without_parents
-
-    id_hash = ids_of_all_dependencies_without_reflection(to_filter || {})
-    move_wrongly_assigned_to_main(to_filter, id_hash) if to_filter
+    id_hash = ids_of_all_dependencies_without_reflection(to_filter || {}, filtering_strategy)
+    move_wrongly_assigned_to_main(to_filter, id_hash) if to_filter && filtering_strategy == :with_parents
     id_hash[:main].sort_arrays!
     id_hash[:filtered_out].sort_arrays!
     id_hash
   end
 
-  def ids_of_all_dependencies_without_reflection(to_filter)
+  def ids_of_all_dependencies_without_reflection(to_filter, filtering_strategy=:with_parents)
+    case filtering_strategy
+    when :without_parents
+      ids_of_all_dependencies_filtered_without_parents(to_filter)
+    when :with_parents
+      ids_of_all_dependencies_filtered_with_parents(to_filter)
+    end
+  end
+
+  def ids_of_all_dependencies_filtered_with_parents(to_filter={})
     result = { main: IdHash.new, filtered_out: IdHash.new }
 
     self.class.reflect_on_all_associations.map do |association|
@@ -118,12 +125,7 @@ module IdsOfAllDependencies
 
     self.send(association.name).map do |associated_object|
       next if should_be_filtered?(**context, object: associated_object)
-      case context[:strategy]
-      when :with_parents
-        associated_object.ids_of_all_dependencies_without_reflection(to_filter)
-      when :without_parents
-        associated_object.ids_of_all_dependencies_filtered_without_parents(to_filter)
-      end
+      associated_object.ids_of_all_dependencies_without_reflection(to_filter, context[:strategy])
     end.compact
   end
 

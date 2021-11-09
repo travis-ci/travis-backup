@@ -80,7 +80,7 @@ describe Model do
               log: [1, 2],
               message: [1, 2],
               queueable_job: [1, 2],
-              repository: [2, 1],
+              repository: [1, 2],
               request: [1, 2],
               stage: [20],
               tag: [1]
