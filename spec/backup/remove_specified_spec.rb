@@ -175,10 +175,10 @@ describe Backup::RemoveSpecified do
       it 'removes requests with all its dependencies' do
         expect {
           remove_specified.remove_repo_requests(repository)
-        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-15)
+        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-16)
         .and change { Log.all.size }.by(-2)
         .and change { Job.all.size }.by(-2)
-        .and change { Build.all.size }.by(-1)
+        .and change { Build.all.size }.by(-2)
         .and change { Request.all.size }.by(-2)
         .and change { Repository.all.size }.by(0)
         .and change { Branch.all.size }.by(0)

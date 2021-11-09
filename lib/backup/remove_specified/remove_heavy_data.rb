@@ -33,13 +33,20 @@ module RemoveHeavyData
 
   def remove_repo_requests(repository)
     threshold = @config.threshold.to_i.months.ago.to_datetime
+
     requests_dependencies = repository.requests.where('created_at < ?', threshold).map do |request|
-      result = request.ids_of_all_dependencies(dependencies_to_filter)
-      result.add(:request, request.id)
-      result
+      hash_with_filtered = request.ids_of_all_dependencies_with_filtered(dependencies_to_filter)
+      hash_with_filtered[:main].add(:request, request.id)
+      hash_with_filtered[:main].join(hash_with_filtered[:filtered_out])
+      hash_with_filtered
     end
 
-    ids_to_remove = IdHash.join(*requests_dependencies)
+    requests_dependencies.each do |hash|
+      filtered_builds = hash[:filtered_out]&.[](:build)&.map { |id| Build.find(id) }
+      filtered_builds&.each(&:nullify_default_dependencies) unless @config.dry_run
+    end
+
+    ids_to_remove = IdHash.join(*(requests_dependencies.map { |h| h[:main] }))
     @subfolder = "repository_#{repository.id}_old_requests_#{time_for_subfolder}"
     process_ids_to_remove(ids_to_remove)
   end
@@ -74,10 +81,6 @@ module RemoveHeavyData
         :branches_for_that_this_build_is_last
       ]
     }
-  end
-
-  def has_filtered_dependencies(build)
-    build.ids_of_all_dependencies_with_filtered(dependencies_to_filter)[:filtered_out].any?
   end
 
   def save_and_destroy_requests_batch(requests_batch, repository)
