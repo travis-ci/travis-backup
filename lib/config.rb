@@ -13,6 +13,7 @@ class Config
     :org_id,
     :move_logs,
     :remove_orphans,
+    :orphans_table,
     :destination_db_url,
     :load_from_files,
     :id_gap
@@ -98,6 +99,13 @@ class Config
       config.dig('backup', 'remove_orphans'),
       false
     )
+    @orphans_table = first_not_nil(
+      args[:orphans_table],
+      argv_opts[:orphans_table],
+      ENV['BACKUP_ORPHANS_TABLE'],
+      config.dig('backup', 'orphans_table'),
+      false
+    )
     @destination_db_url = first_not_nil(
       args[:destination_db_url],
       argv_opts[:destination_db_url],
@@ -166,6 +174,7 @@ class Config
       opt.on('-o', '--org_id X') { |o| options[:org_id] = o.to_i }
       opt.on('--move_logs') { |o| options[:move_logs] = o }
       opt.on('--remove_orphans') { |o| options[:remove_orphans] = o }
+      opt.on('--orphans_table X') { |o| options[:orphans_table] = o }
       opt.on('--destination_db_url X') { |o| options[:destination_db_url] = o }
       opt.on('--load_from_files') { |o| options[:load_from_files] = o }
       opt.on('--id_gap X') { |o| options[:id_gap] = o.to_i }
