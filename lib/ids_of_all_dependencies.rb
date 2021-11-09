@@ -68,7 +68,7 @@ module IdsOfAllDependencies
     self.class.reflect_on_all_associations.map do |association|
       next if association.macro == :belongs_to
       symbol = association.klass.name.underscore.to_sym
-      context = { to_filter: to_filter, association: association }
+      context = { to_filter: to_filter, association: association, strategy: :with_parents }
 
       self.send(association.name).map do |associated_object|
         hash_to_use = get_hash_to_use(result, **context, object: associated_object)
@@ -87,50 +87,20 @@ module IdsOfAllDependencies
     self.class.reflect_on_all_associations.map do |association|
       next if association.macro == :belongs_to
       symbol = association.klass.name.underscore.to_sym
-      context = { to_filter: to_filter, self_symbol: self_symbol, association: association }
+      context = { to_filter: to_filter, self_symbol: self_symbol, association: association, strategy: :without_parents }
 
       self.send(association.name).map(&:id).map do |id|
-        hash_to_use = get_hash_to_use_old(result, context)
+        hash_to_use = get_hash_to_use(result, context)
         hash_to_use[symbol] = [] if hash_to_use[symbol].nil?
         hash_to_use[symbol] << id
       end
-      result = get_result_with_grandchildren_hashes_old(result, context)
+      result = get_result_with_grandchildren_hashes(result, context)
     end
 
     result
   end
 
   private
-
-  def get_result_with_grandchildren_hashes_old(result, context)
-    hashes = get_grandchildren_hashes_old(context)
-    main = hashes.map { |hash| hash[:main] }
-    filtered_out = hashes.map { |hash| hash[:filtered_out] }
-
-    result[:main] = result[:main].join(*main)
-    result[:filtered_out] = result[:filtered_out].join(*filtered_out)
-    result
-  end
-
-  def get_grandchildren_hashes_old(context)
-    association = context[:association]
-    to_filter = context[:to_filter]
-
-    self.send(association.name).map do |model|
-      next if should_be_filtered_old?(**context)
-      model.ids_of_all_dependencies_filtered_without_parents(to_filter)
-    end.compact
-  end
-
-  def get_hash_to_use_old(result, context)
-    symbol = should_be_filtered_old?(**context) ? :filtered_out : :main
-    result[symbol]
-  end
-
-  def should_be_filtered_old?(to_filter:, self_symbol:, association:)
-    arr = to_filter[self_symbol]
-    arr.present? && arr.any? { |a| a == association.name }
-  end
 
   def get_result_with_grandchildren_hashes(result, context)
     hashes = get_grandchildren_hashes(context)
@@ -148,7 +118,12 @@ module IdsOfAllDependencies
 
     self.send(association.name).map do |associated_object|
       next if should_be_filtered?(**context, object: associated_object)
-      associated_object.ids_of_all_dependencies_without_reflection(to_filter)
+      case context[:strategy]
+      when :with_parents
+        associated_object.ids_of_all_dependencies_without_reflection(to_filter)
+      when :without_parents
+        associated_object.ids_of_all_dependencies_filtered_without_parents(to_filter)
+      end
     end.compact
   end
 
@@ -157,7 +132,19 @@ module IdsOfAllDependencies
     result[symbol]
   end
 
-  def should_be_filtered?(to_filter:, association:, object:)
+  def should_be_filtered?(context)
+    case context[:strategy]
+    when :with_parents
+      should_be_filtered_according_to_with_parents_strategy?(context)
+    when :without_parents
+      should_be_filtered_according_to_without_parents_strategy?(context)
+    end
+  end
+
+  def should_be_filtered_according_to_with_parents_strategy?(context)
+    to_filter = context[:to_filter]
+    object = context[:object]
+    association = context[:association]
     symbol = association.klass.name.underscore.to_sym
 
     association.klass.reflect_on_all_associations.each do |association2|
@@ -173,6 +160,13 @@ module IdsOfAllDependencies
   def is_this_association_filtered(to_filter:, symbol:, association:)
     arr = to_filter[symbol]
     arr.present? && arr.any? { |a| a == association.name }
+  end
+
+  def should_be_filtered_according_to_without_parents_strategy?(context)
+    to_filter = context[:to_filter]
+    self_symbol = context[:self_symbol]
+    association = context[:association]
+    is_this_association_filtered(to_filter: to_filter, symbol: self_symbol, association: association)
   end
 
   def move_wrongly_assigned_to_main(to_filter, id_hash)
