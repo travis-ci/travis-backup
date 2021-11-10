@@ -73,6 +73,7 @@ module IdsOfAllDependencies
         hash_to_use = get_hash_to_use(result, **context, object: associated_object)
         hash_to_use.add(symbol, associated_object.id)
       end
+
       result = get_result_with_grandchildren_hashes(result, context)
     end
 
@@ -125,22 +126,23 @@ module IdsOfAllDependencies
       next if association2.macro == :belongs_to
 
       context = { to_filter: to_filter, symbol: symbol, association: association2 }
-      return true if object.send(association2.name).any? && is_this_association_filtered(**context)
+      return true if object.send(association2.name).any? && is_this_association_filtered?(**context)
     end
 
     false
   end
 
-  def is_this_association_filtered(to_filter:, symbol:, association:)
+  def is_this_association_filtered?(to_filter:, symbol:, association:)
     arr = to_filter[symbol]
     arr.present? && arr.any? { |a| a == association.name }
   end
 
   def should_be_filtered_according_to_without_parents_strategy?(context)
-    to_filter = context[:to_filter]
-    self_symbol = context[:self_symbol]
-    association = context[:association]
-    is_this_association_filtered(to_filter: to_filter, symbol: self_symbol, association: association)
+    is_this_association_filtered?(
+      to_filter: context[:to_filter],
+      symbol: context[:self_symbol],
+      association: context[:association]
+    )
   end
 
   def move_wrongly_assigned_to_main(to_filter, id_hash)
