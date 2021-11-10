@@ -44,9 +44,109 @@ module IdsOfAllDependenciesNested
   end
 end
 
+module DependencyTree
+  class Tree < Hash
+    def initialize(hash={})
+      hash.each do |key, value|
+        self[key] = value
+      end
+    end
+
+    def ids_tree
+      self_cloned = self.deep_tree_clone
+      self_cloned.delete_key_recursive(:instance)
+    end
+
+    def status_tree
+      self_cloned = self.deep_tree_clone
+
+      self_cloned.do_recursive do |tree|
+        begin
+          tree[:instance].reload
+          tree[:status] = 'present'
+        rescue ActiveRecord::RecordNotFound => e
+          tree[:status] = 'removed'
+        end
+
+        tree.delete(:instance)
+      end
+    end
+
+    def deep_tree_clone
+      result = self.clone
+
+      hash = result.map do |key, array|
+        next [key, array] unless array.class == Array
+
+        new_array = array.map do |subtree|
+          if subtree.class == Tree
+            subtree.deep_tree_clone
+          else
+            subtree
+          end
+        end
+
+        [key, new_array]
+      end
+
+      Tree.new(hash)
+    end
+
+    def delete_key_recursive(key)
+      call_method_recursive(:delete, key)
+    end
+
+    def call_method_recursive(method, *args, &block)
+      do_recursive do |tree|
+        tree.send(method, *args, &block)
+      end
+    end
+
+    def do_recursive(&block)
+      block.call(self)
+
+      self.each do |key, array|
+        next unless array.is_a? Array
+
+        array.each do |subtree|
+          subtree.do_recursive(&block) if subtree.is_a? Tree
+        end
+      end
+
+      self
+    end
+  end
+
+  def dependency_tree(depth = Float::INFINITY)
+    result = depth > 0 ? get_associations_for_tree(depth) : Tree.new
+    result[:id] = id
+    result[:instance] = self
+    result
+  end
+
+  private
+
+  def get_associations_for_tree(depth)
+    result = Tree.new
+
+    self.class.reflect_on_all_associations.map do |association|
+      next if association.macro == :belongs_to
+
+      symbol = association.klass.name.underscore.to_sym
+      self.send(association.name).sort_by(&:id).map do |associated_object|
+        result[symbol] = [] if result[symbol].nil?
+        result[symbol] << associated_object.dependency_tree(depth - 1)
+      end
+    end
+
+    result
+  end
+end
+
 module IdsOfAllDependencies
   include IdsOfAllDependenciesNested
   include IdsOfAllDirectDependencies
+  include DependencyTree
 
   def ids_of_all_dependencies(to_filter=nil)
     ids_of_all_dependencies_with_filtered(to_filter)[:main]
