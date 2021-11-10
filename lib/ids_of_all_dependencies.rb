@@ -61,45 +61,17 @@ module IdsOfAllDependencies
   end
 
   def ids_of_all_dependencies_without_reflection(to_filter, filtering_strategy=:with_parents)
-    case filtering_strategy
-    when :without_parents
-      ids_of_all_dependencies_filtered_without_parents(to_filter)
-    when :with_parents
-      ids_of_all_dependencies_filtered_with_parents(to_filter)
-    end
-  end
-
-  def ids_of_all_dependencies_filtered_with_parents(to_filter={})
-    result = { main: IdHash.new, filtered_out: IdHash.new }
-
-    self.class.reflect_on_all_associations.map do |association|
-      next if association.macro == :belongs_to
-      symbol = association.klass.name.underscore.to_sym
-      context = { to_filter: to_filter, association: association, strategy: :with_parents }
-
-      self.send(association.name).map do |associated_object|
-        hash_to_use = get_hash_to_use(result, **context, object: associated_object)
-        hash_to_use.add(symbol, associated_object.id)
-      end
-      result = get_result_with_grandchildren_hashes(result, context)
-    end
-
-    result
-  end
-
-  def ids_of_all_dependencies_filtered_without_parents(to_filter={})
     result = { main: IdHash.new, filtered_out: IdHash.new }
     self_symbol = self.class.name.underscore.to_sym
 
     self.class.reflect_on_all_associations.map do |association|
       next if association.macro == :belongs_to
       symbol = association.klass.name.underscore.to_sym
-      context = { to_filter: to_filter, self_symbol: self_symbol, association: association, strategy: :without_parents }
+      context = { to_filter: to_filter, self_symbol: self_symbol, association: association, strategy: filtering_strategy }
 
-      self.send(association.name).map(&:id).map do |id|
-        hash_to_use = get_hash_to_use(result, context)
-        hash_to_use[symbol] = [] if hash_to_use[symbol].nil?
-        hash_to_use[symbol] << id
+      self.send(association.name).map do |associated_object|
+        hash_to_use = get_hash_to_use(result, **context, object: associated_object)
+        hash_to_use.add(symbol, associated_object.id)
       end
       result = get_result_with_grandchildren_hashes(result, context)
     end
