@@ -73,11 +73,13 @@ module DependencyTree
     end
 
     def status_tree_condensed
+      @hash_for_duplication_check = IdHash.new
       result = status_tree.do_recursive do |tree|
-        tree.each do |key, array|
+        tree.each do |name, array|
           next unless array.class == Array
 
           new_array = array.map do |subtree|
+            next subtree.root_duplicate_summary if is_duplicate?(name, subtree)
             next subtree if subtree.class != Tree || subtree.size > 2
 
             subtree.root_summary
@@ -92,11 +94,32 @@ module DependencyTree
         tree[:_] = tree.root_summary
         tree.delete(:id)
         tree.delete(:status)
+        tree.last_to_beginning!
       end
+    end
+
+    def is_duplicate?(name, tree)
+      if @hash_for_duplication_check[name]&.include?(tree[:id])
+        true
+      else
+        @hash_for_duplication_check.add(name, tree[:id])
+        false
+      end
+    end
+
+    def last_to_beginning!
+      arr = self.to_a
+      arr.unshift(arr.pop)
+      self.clear
+      self.merge!(arr.to_h)
     end
 
     def root_summary
       "id #{self[:id]}, #{self[:status]}"
+    end
+
+    def root_duplicate_summary
+      root_summary + ", duplicate"
     end
 
     def deep_tree_clone
