@@ -13,10 +13,20 @@ module NullifyDependencies
   end
 
   def nullify_default_dependencies
-    nullify_dependencies(default_dependencies_to_nullify)
+    nullify_dependencies(default_dependencies_symbols_to_nullify)
+  end
+
+  def default_dependencies_symbols_to_nullify
+    self.class.default_dependencies_symbols_to_nullify
+  end
+
+  def self.default_dependencies_symbols_to_nullify
+    raise "self.default_dependencies_symbols_to_nullify not implemented in the #{self.class} class"
   end
 
   def default_dependencies_to_nullify
-    raise "default_dependencies_to_nullify not implemented in the #{self.class} class"
+    default_dependencies_symbols_to_nullify.map do |symbol|
+      self.send(symbol).to_a
+    end.flatten(1)
   end
 end

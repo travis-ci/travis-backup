@@ -23,16 +23,12 @@ class Build < Model
 
   self.table_name = 'builds'
 
-  def self.default_dependencies_to_nullify
+  def self.default_dependencies_symbols_to_nullify
     [
       :repos_for_that_this_build_is_current,
       :repos_for_that_this_build_is_last,
       :tags_for_that_this_build_is_last,
       :branches_for_that_this_build_is_last
     ]
-  end
-
-  def default_dependencies_to_nullify
-    self.class.default_dependencies_to_nullify
   end
 end

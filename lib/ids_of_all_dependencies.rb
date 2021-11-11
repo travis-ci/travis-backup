@@ -72,10 +72,35 @@ module DependencyTree
       end
     end
 
-    def deep_tree_clone
-      result = self.clone
+    def status_tree_condensed
+      result = status_tree.do_recursive do |tree|
+        tree.each do |key, array|
+          next unless array.class == Array
 
-      hash = result.map do |key, array|
+          new_array = array.map do |subtree|
+            next subtree if subtree.class != Tree || subtree.size > 2
+
+            subtree.root_summary
+          end
+
+          array.clear
+          array.concat(new_array)
+        end
+      end
+
+      result.do_recursive do |tree|
+        tree[:_] = tree.root_summary
+        tree.delete(:id)
+        tree.delete(:status)
+      end
+    end
+
+    def root_summary
+      "id #{self[:id]}, #{self[:status]}"
+    end
+
+    def deep_tree_clone
+      hash = self.clone.map do |key, array|
         next [key, array] unless array.class == Array
 
         new_array = array.map do |subtree|

@@ -27,3 +27,21 @@ def expect_method_calls_on(cl, method, call_with, options)
     expect(call_with).to match_array(calls_args)
   end
 end
+
+def nullifies_all_orphaned_builds_dependencies?
+  dependencies_to_check = Build.all.map do |build|
+    build.default_dependencies_to_nullify
+  end.flatten(1)
+
+  yield
+
+  dependencies_to_check.reject! { |d| d.removed? }
+
+  build_ids_to_check = dependencies_to_check.map do |d|
+    [d.try(:current_build_id), d.try(:last_build_id)]
+  end.flatten(1)
+
+  build_ids_to_check.compact!
+  referenced_builds = build_ids_to_check.map { |id| Build.find_by(id: id) }
+  !referenced_builds.include?(nil)
+end

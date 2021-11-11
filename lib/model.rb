@@ -59,6 +59,15 @@ class Model < ActiveRecord::Base
       subclass.all.size
     end.reduce(:+)
   end
+
+  def removed?
+    begin
+      reload
+      false
+    rescue ActiveRecord::RecordNotFound => e
+      true
+    end
+  end
 end
 
 ActiveSupport::Inflector.inflections(:en) do |inflect|

@@ -50,7 +50,7 @@ module RemoveWithAllDependencies
 
   def dependencies_to_filter
     {
-      build: Build.default_dependencies_to_nullify
+      build: Build.default_dependencies_symbols_to_nullify
     }
   end
 end
