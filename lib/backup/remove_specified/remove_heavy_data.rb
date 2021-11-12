@@ -18,14 +18,17 @@ module RemoveHeavyData
 
   def remove_repo_builds(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     threshold = @config.threshold.to_i.months.ago.to_datetime
-    builds_dependencies = repository.builds.where('created_at < ?', threshold).map do |build|
-      next if should_build_be_filtered?(build)
+    builds_to_remove = repository.builds.where('created_at < ?', threshold)
 
-      result = build.ids_of_all_dependencies
+    builds_dependencies = builds_to_remove.map do |build|
+      # next if should_build_be_filtered?(build)
+
+      result = build.ids_of_all_dependencies(dependencies_to_filter, :without_parents)
       result.add(:build, build.id)
       result
     end.compact
 
+    builds_to_remove&.each(&:nullify_default_dependencies) unless @config.dry_run 
     ids_to_remove = IdHash.join(*builds_dependencies)
     @subfolder = "repository_#{repository.id}_old_builds_#{time_for_subfolder}"
     process_ids_to_remove(ids_to_remove)
@@ -33,20 +36,22 @@ module RemoveHeavyData
 
   def remove_repo_requests(repository)
     threshold = @config.threshold.to_i.months.ago.to_datetime
+    requests_to_remove = repository.requests.where('created_at < ?', threshold)
 
-    requests_dependencies = repository.requests.where('created_at < ?', threshold).map do |request|
-      hash_with_filtered = request.ids_of_all_dependencies_with_filtered(dependencies_to_filter)
-      hash_with_filtered[:main].add(:request, request.id)
-      hash_with_filtered[:main].join(hash_with_filtered[:filtered_out])
-      hash_with_filtered
+    requests_dependencies = requests_to_remove.map do |request|
+      hash_with_filtered = request.ids_of_all_dependencies(dependencies_to_filter, :without_parents)
+      hash_with_filtered.add(:request, request.id)
     end
 
-    requests_dependencies.each do |hash|
-      filtered_builds = hash[:filtered_out]&.[](:build)&.map { |id| Build.find(id) }
-      filtered_builds&.each(&:nullify_default_dependencies) unless @config.dry_run
+    unless @config.dry_run
+      requests_to_remove.each do |request|
+        hash_with_filtered = request.ids_of_all_dependencies_with_filtered(dependencies_to_filter)
+        filtered_builds = hash_with_filtered[:filtered_out]&.[](:build)&.map { |id| Build.find(id) }
+        filtered_builds&.each(&:nullify_default_dependencies)
+      end
     end
 
-    ids_to_remove = IdHash.join(*(requests_dependencies.map { |h| h[:main] }))
+    ids_to_remove = IdHash.join(*(requests_dependencies))
     @subfolder = "repository_#{repository.id}_old_requests_#{time_for_subfolder}"
     process_ids_to_remove(ids_to_remove)
   end
@@ -62,15 +67,21 @@ module RemoveHeavyData
     end
   end
 
+  def nullify_filtered_dependencies(entry)
+    hash_with_filtered = entry.ids_of_all_dependencies_with_filtered(dependencies_to_filter)
+    filtered_builds = hash_with_filtered[:filtered_out]&.[](:build)&.map { |id| Build.find(id) }
+    filtered_builds&.each(&:nullify_default_dependencies)
+  end
+
   def time_for_subfolder
     Time.now.to_s.parameterize.underscore
   end
 
-  def should_build_be_filtered?(build)
-    dependencies_to_filter[:build].map do |association|
-      build.send(association).to_a
-    end.flatten.any?
-  end
+  # def should_build_be_filtered?(build)
+  #   dependencies_to_filter[:build].map do |association|
+  #     build.send(association).to_a
+  #   end.flatten.any?
+  # end
 
   def dependencies_to_filter
     {

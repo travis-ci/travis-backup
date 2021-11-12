@@ -55,6 +55,7 @@ class IdHash < HashOfArrays
   def add(key, *values)
     super(key, *values)
     self[key].uniq!
+    self
   end
 
   def remove_entries_from_db(as_first: [], as_last: [])

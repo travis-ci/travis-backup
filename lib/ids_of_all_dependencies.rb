@@ -73,13 +73,12 @@ module DependencyTree
     end
 
     def status_tree_condensed
-      @hash_for_duplication_check = IdHash.new
       result = status_tree.do_recursive do |tree|
         tree.each do |name, array|
           next unless array.class == Array
 
           new_array = array.map do |subtree|
-            next subtree.root_duplicate_summary if is_duplicate?(name, subtree)
+            next subtree.root_duplicate_summary if subtree[:duplicate]
             next subtree if subtree.class != Tree || subtree.size > 2
 
             subtree.root_summary
@@ -95,15 +94,6 @@ module DependencyTree
         tree.delete(:id)
         tree.delete(:status)
         tree.last_to_beginning!
-      end
-    end
-
-    def is_duplicate?(name, tree)
-      if @hash_for_duplication_check[name]&.include?(tree[:id])
-        true
-      else
-        @hash_for_duplication_check.add(name, tree[:id])
-        false
       end
     end
 
@@ -165,16 +155,20 @@ module DependencyTree
     end
   end
 
-  def dependency_tree(depth = Float::INFINITY)
-    result = depth > 0 ? get_associations_for_tree(depth) : Tree.new
+  def dependency_tree(depth = Float::INFINITY, hash_for_duplication_check = IdHash.new)
+    is_duplicate = hash_for_duplication_check[self.class]&.include?(id)
+    hash_for_duplication_check.add(self.class, id)
+    shoud_go_deeper = depth > 0 && !is_duplicate
+    result = shoud_go_deeper ? get_associations_for_tree(depth, hash_for_duplication_check) : Tree.new
     result[:id] = id
     result[:instance] = self
+    result[:duplicate] = true if is_duplicate
     result
   end
 
   private
 
-  def get_associations_for_tree(depth)
+  def get_associations_for_tree(depth, hash_for_duplication_check)
     result = Tree.new
 
     self.class.reflect_on_all_associations.map do |association|
@@ -183,7 +177,7 @@ module DependencyTree
       symbol = association.klass.name.underscore.to_sym
       self.send(association.name).sort_by(&:id).map do |associated_object|
         result[symbol] = [] if result[symbol].nil?
-        result[symbol] << associated_object.dependency_tree(depth - 1)
+        result[symbol] << associated_object.dependency_tree(depth - 1, hash_for_duplication_check)
       end
     end
 
@@ -196,8 +190,8 @@ module IdsOfAllDependencies
   include IdsOfAllDirectDependencies
   include DependencyTree
 
-  def ids_of_all_dependencies(to_filter=nil)
-    ids_of_all_dependencies_with_filtered(to_filter)[:main]
+  def ids_of_all_dependencies(to_filter=nil, filtering_strategy=:with_parents)
+    ids_of_all_dependencies_with_filtered(to_filter, filtering_strategy)[:main]
   end
 
   def ids_of_all_dependencies_with_filtered(to_filter=nil, filtering_strategy=:with_parents)

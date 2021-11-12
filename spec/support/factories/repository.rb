@@ -152,6 +152,16 @@ FactoryBot.define do
             created_at: repository.created_at,
             updated_at: repository.updated_at
           )
+          create(
+            :request,
+            repository_id: repository.id,
+            created_at: repository.created_at,
+            updated_at: repository.updated_at
+          )
+          create(
+            :request,
+            repository_id: repository.id
+          )
           repository.update(last_build_id: last_build.id)
         end
       end

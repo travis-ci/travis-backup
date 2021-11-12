@@ -1,0 +1,15 @@
+{
+  "table_name": "annotations",
+  "data": [
+    {
+      "id": 62,
+      "job_id": 180,
+      "url": null,
+      "description": "some text",
+      "created_at": "2021-04-12 09:15:56 UTC",
+      "updated_at": "2021-04-12 09:15:56 UTC",
+      "annotation_provider_id": 0,
+      "status": null
+    }
+  ]
+}

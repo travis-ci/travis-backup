@@ -9,6 +9,8 @@ require 'support/factories'
 require 'support/before_tests'
 require 'support/utils'
 require 'support/expected_dependency_trees/remove_repo_with_dependencies'
+require 'support/expected_dependency_trees/remove_repo_builds'
+require 'support/expected_dependency_trees/remove_repo_requests'
 require 'support/expected_dependency_trees/remove_org_with_dependencies'
 require 'support/expected_dependency_trees/remove_user_with_dependencies'
 require 'pry'
@@ -65,39 +67,23 @@ describe Backup::RemoveSpecified do
 
     shared_context 'removing builds with dependencies' do
       it 'removes builds with all its dependencies' do
+        dependency_tree = repository.dependency_tree
+        remove_specified.remove_repo_builds(repository)
+        expect(dependency_tree.status_tree_condensed).to eql(ExpectedDependencyTrees.remove_repo_builds)
+      end
+
+      it 'removes intended number of rows from the database' do
         expect {
           remove_specified.remove_repo_builds(repository)
-        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-16)
-        .and change { Log.all.size }.by(-2)
-        .and change { Job.all.size }.by(-6)
-        .and change { Build.all.size }.by(-2)
-        .and change { Request.all.size }.by(0)
-        .and change { Repository.all.size }.by(0)
-        .and change { Branch.all.size }.by(0)
-        .and change { Tag.all.size }.by(0)
-        .and change { Commit.all.size }.by(0)
-        .and change { Cron.all.size }.by(0)
-        .and change { PullRequest.all.size }.by(0)
-        .and change { SslKey.all.size }.by(0)
-        .and change { Stage.all.size }.by(-2)
-        .and change { Star.all.size }.by(0)
-        .and change { Permission.all.size }.by(0)
-        .and change { Message.all.size }.by(0)
-        .and change { Abuse.all.size }.by(0)
-        .and change { Annotation.all.size }.by(-2)
-        .and change { QueueableJob.all.size }.by(-2)
-        .and change { Email.all.size }.by(0)
-        .and change { Invoice.all.size }.by(0)
-        .and change { Membership.all.size }.by(0)
-        .and change { Organization.all.size }.by(0)
-        .and change { OwnerGroup.all.size }.by(0)
-        .and change { Broadcast.all.size }.by(0)
-        .and change { Subscription.all.size }.by(0)
-        .and change { Token.all.size }.by(0)
-        .and change { TrialAllowance.all.size }.by(0)
-        .and change { Trial.all.size }.by(0)
-        .and change { UserBetaFeature.all.size }.by(0)
-        .and change { User.all.size }.by(0)
+        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-46)
+      end
+
+      it 'nullifies orphaned builds dependencies' do
+        expect(
+          nullifies_all_orphaned_builds_dependencies? do
+            remove_specified.remove_repo_builds(repository)
+          end
+        ).to eql(true)
       end
     end
 
@@ -167,7 +153,7 @@ describe Backup::RemoveSpecified do
 
       db_helper.do_without_triggers do
         FactoryBot.create(
-          :repository_with_all_dependencies,
+          :repository_for_removing_heavy_data,
           created_at: datetime,
           updated_at: datetime
         )
@@ -176,39 +162,23 @@ describe Backup::RemoveSpecified do
 
     shared_context 'removing requests with dependencies' do
       it 'removes requests with all its dependencies' do
+        dependency_tree = repository.dependency_tree
+        remove_specified.remove_repo_requests(repository)
+        expect(dependency_tree.status_tree_condensed).to eql(ExpectedDependencyTrees.remove_repo_requests)
+      end
+
+      it 'removes intended number of rows from the database' do
         expect {
           remove_specified.remove_repo_requests(repository)
-        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-16)
-        .and change { Log.all.size }.by(-2)
-        .and change { Job.all.size }.by(-2)
-        .and change { Build.all.size }.by(-2)
-        .and change { Request.all.size }.by(-2)
-        .and change { Repository.all.size }.by(0)
-        .and change { Branch.all.size }.by(0)
-        .and change { Tag.all.size }.by(0)
-        .and change { Commit.all.size }.by(0)
-        .and change { Cron.all.size }.by(0)
-        .and change { PullRequest.all.size }.by(0)
-        .and change { SslKey.all.size }.by(0)
-        .and change { Stage.all.size }.by(0)
-        .and change { Star.all.size }.by(0)
-        .and change { Permission.all.size }.by(0)
-        .and change { Message.all.size }.by(-2)
-        .and change { Abuse.all.size }.by(-2)
-        .and change { Annotation.all.size }.by(-2)
-        .and change { QueueableJob.all.size }.by(-2)
-        .and change { Email.all.size }.by(0)
-        .and change { Invoice.all.size }.by(0)
-        .and change { Membership.all.size }.by(0)
-        .and change { Organization.all.size }.by(0)
-        .and change { OwnerGroup.all.size }.by(0)
-        .and change { Broadcast.all.size }.by(0)
-        .and change { Subscription.all.size }.by(0)
-        .and change { Token.all.size }.by(0)
-        .and change { TrialAllowance.all.size }.by(0)
-        .and change { Trial.all.size }.by(0)
-        .and change { UserBetaFeature.all.size }.by(0)
-        .and change { User.all.size }.by(0)
+        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-19)
+      end
+
+      it 'nullifies orphaned builds dependencies' do
+        expect(
+          nullifies_all_orphaned_builds_dependencies? do
+            remove_specified.remove_repo_requests(repository)
+          end
+        ).to eql(true)
       end
     end
 

@@ -8,6 +8,7 @@ require 'models/user'
 require 'support/factories'
 require 'support/before_tests'
 require 'support/utils'
+require 'support/expected_id_trees/load_from_files'
 require 'pry'
 require 'byebug'
 
@@ -24,31 +25,7 @@ describe Backup::LoadFromFiles do
   describe 'run' do
     context 'when it has remove_repo_builds resulting files to load' do
       let!(:expected_structure) {
-        [
-          100,
-          {
-            job: [
-              {
-                log: [100, 101],
-                annotation: [100, 101],
-                queueable_job: [100, 101],
-                id: 216
-              },
-              217
-            ],
-            stage: [
-              {
-                job: [212, 213],
-                id: 100
-              },
-              {
-                job: [214, 215],
-                id: 101
-              }
-            ],
-            id: 211
-          }
-        ]
+        ExpectedIdTrees.load_from_files
       }
 
       it 'loads data properly' do
