@@ -149,5 +149,18 @@ describe Backup::RemoveOrphans do
         expect(report[:stages].size).to eql 2
       end
     end
+
+    context 'when orphans table is defined' do
+      let!(:config) { Config.new(files_location: files_location, limit: 5, orphans_table: 'jobs') }
+      let!(:remove_orphans) { Backup::RemoveOrphans.new(config, DryRunReporter.new) }
+
+      it 'removes orphans from that defined table' do
+        expect { remove_orphans.run }.to change { Job.all.size }.by -6
+      end
+
+      it 'does not remove orphans from other tables' do
+        expect { remove_orphans.run }.to change { Model.sum_of_subclasses_rows(except: 'jobs') }.by 0
+      end
+    end
   end
 end

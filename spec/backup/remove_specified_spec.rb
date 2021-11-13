@@ -138,7 +138,7 @@ describe Backup::RemoveSpecified do
       it 'does not remove entries from db' do
         expect {
           remove_specified.remove_repo_builds(repository)
-        }.not_to change { Model.get_sum_of_rows_of_all_subclasses }
+        }.not_to change { Model.sum_of_subclasses_rows }
       end
     end
   end
@@ -233,7 +233,7 @@ describe Backup::RemoveSpecified do
       it 'does not remove entries from db' do
         expect {
           remove_specified.remove_repo_requests(repository)
-        }.not_to change { Model.get_sum_of_rows_of_all_subclasses }
+        }.not_to change { Model.sum_of_subclasses_rows }
       end
     end
   end
@@ -317,7 +317,7 @@ describe Backup::RemoveSpecified do
       it 'does not remove entries from db' do
         expect {
           remove_specified.remove_user_with_dependencies(user.id)
-        }.not_to change { Model.get_sum_of_rows_of_all_subclasses }
+        }.not_to change { Model.sum_of_subclasses_rows }
       end
     end
   end
@@ -400,7 +400,7 @@ describe Backup::RemoveSpecified do
       it 'does not remove entries from db' do
         expect {
           remove_specified.remove_org_with_dependencies(organization.id)
-        }.not_to change { Model.get_sum_of_rows_of_all_subclasses }
+        }.not_to change { Model.sum_of_subclasses_rows }
       end
     end
   end
@@ -483,7 +483,7 @@ describe Backup::RemoveSpecified do
       it 'does not remove entries from db' do
         expect {
           remove_specified.remove_repo_with_dependencies(repository.id)
-        }.not_to change { Model.get_sum_of_rows_of_all_subclasses }
+        }.not_to change { Model.sum_of_subclasses_rows }
       end
     end
   end
