@@ -18,48 +18,39 @@ class Backup
 
     def run
       if @config.orphans_table
-        run_for_specified(@config.orphans_table)
+        check_specified(@config.orphans_table)
       else
-        run_for_all
+        check_all
       end
+
+      process_ids_to_remove
     end
 
-    def run_for_all
+    def check_all
       cases.each do |model_block|
-        process_model_block(model_block)
+        check_model_block(model_block)
       end
     end
 
-    def run_for_specified(table_name)
+    def check_specified(table_name)
       model_block = cases.find { |c| c[:main_model] == Model.get_model_by_table_name(table_name) }
-      process_model_block(model_block)
+      check_model_block(model_block)
     end
 
-    def add_builds_dependencies_to_dry_run_report(ids_for_delete)
-      repos_for_delete = Repository.where(current_build_id: ids_for_delete)
-      jobs_for_delete = Job.where(source_id: ids_for_delete)
-      @dry_run_reporter.add_to_report(:repositories, *repos_for_delete.map(&:id))
-      @dry_run_reporter.add_to_report(:jobs, *jobs_for_delete.map(&:id))
-    end
-
-    def process_model_block(model_block)
+    def check_model_block(model_block)
       model_block[:relations].each do |relation|
-        process_relationship(
+        check_relationship(
           main_model: model_block[:main_model],
           related_model: relation[:related_model],
           fk_name: relation[:fk_name],
-          method: model_block[:method],
-          dry_run_complement: model_block[:dry_run_complement]
         )
       end
     end
 
-    def process_relationship(args)
+    def check_relationship(args)
       main_model = args[:main_model]
       related_model = args[:related_model]
       fk_name = args[:fk_name]
-      method = args[:method] || :delete_all
-      dry_run_complement = args[:dry_run_complement]
 
       main_table = main_model.table_name
       related_table = related_model.table_name
@@ -74,14 +65,24 @@ class Backup
           and b.id is null;
       })
 
-      ids_for_delete = for_delete.map(&:id)
+      key = main_model.name.underscore.to_sym
+      ids = for_delete.map(&:id)
+      @ids_to_remove.add(key, *ids)
+    end
 
-      if config.dry_run
-        key = main_table.to_sym
-        @dry_run_reporter.add_to_report(key, *ids_for_delete)
-        dry_run_complement.call(ids_for_delete) if dry_run_complement
+    def process_ids_to_remove
+      if @config.dry_run
+        @dry_run_reporter.add_to_report(@ids_to_remove.with_table_symbols)
       else
-        main_model.where(id: ids_for_delete).send(method)
+        nullify_builds_dependencies
+        @ids_to_remove.remove_entries_from_db
+      end
+    end
+
+    def nullify_builds_dependencies
+      @ids_to_remove[:build]&.each do |build_id|
+        build = Build.find_by(id: build_id)
+        build&.nullify_default_dependencies
       end
     end
 
