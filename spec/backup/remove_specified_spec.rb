@@ -75,7 +75,7 @@ describe Backup::RemoveSpecified do
       it 'removes intended number of rows from the database' do
         expect {
           remove_specified.remove_repo_builds(repository)
-        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-46)
+        }.to change { Model.sum_of_subclasses_rows }.by(-46)
       end
 
       it 'nullifies orphaned builds dependencies' do
@@ -170,7 +170,7 @@ describe Backup::RemoveSpecified do
       it 'removes intended number of rows from the database' do
         expect {
           remove_specified.remove_repo_requests(repository)
-        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-19)
+        }.to change { Model.sum_of_subclasses_rows }.by(-19)
       end
 
       it 'nullifies orphaned builds dependencies' do
@@ -272,7 +272,7 @@ describe Backup::RemoveSpecified do
       it 'removes intended number of rows from the database' do
         expect {
           remove_specified.remove_user_with_dependencies(user.id)
-        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-349)
+        }.to change { Model.sum_of_subclasses_rows }.by(-349)
       end
 
       it 'nullifies orphaned builds dependencies' do
@@ -356,7 +356,7 @@ describe Backup::RemoveSpecified do
       it 'removes intended number of rows from the database' do
         expect {
           remove_specified.remove_org_with_dependencies(organization.id)
-        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-339)
+        }.to change { Model.sum_of_subclasses_rows }.by(-339)
       end
 
       it 'nullifies orphaned builds dependencies' do
@@ -439,7 +439,7 @@ describe Backup::RemoveSpecified do
       it 'removes intended number of rows from the database' do
         expect {
           remove_specified.remove_repo_with_dependencies(repository.id)
-        }.to change { Model.get_sum_of_rows_of_all_subclasses }.by(-239)
+        }.to change { Model.sum_of_subclasses_rows }.by(-239)
       end
 
       it 'nullifies orphaned builds dependencies' do

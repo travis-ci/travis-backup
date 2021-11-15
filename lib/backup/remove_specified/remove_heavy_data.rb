@@ -45,9 +45,7 @@ module RemoveHeavyData
 
     unless @config.dry_run
       requests_to_remove.each do |request|
-        hash_with_filtered = request.ids_of_all_dependencies_with_filtered(dependencies_to_filter)
-        filtered_builds = hash_with_filtered[:filtered_out]&.[](:build)&.map { |id| Build.find(id) }
-        filtered_builds&.each(&:nullify_default_dependencies)
+        nullify_filtered_dependencies(request)
       end
     end
 
