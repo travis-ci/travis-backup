@@ -21,8 +21,6 @@ module RemoveHeavyData
     builds_to_remove = repository.builds.where('created_at < ?', threshold)
 
     builds_dependencies = builds_to_remove.map do |build|
-      # next if should_build_be_filtered?(build)
-
       result = build.ids_of_all_dependencies(dependencies_to_filter, :without_parents)
       result.add(:build, build.id)
       result
@@ -74,12 +72,6 @@ module RemoveHeavyData
   def time_for_subfolder
     Time.now.to_s.parameterize.underscore
   end
-
-  # def should_build_be_filtered?(build)
-  #   dependencies_to_filter[:build].map do |association|
-  #     build.send(association).to_a
-  #   end.flatten.any?
-  # end
 
   def dependencies_to_filter
     {
