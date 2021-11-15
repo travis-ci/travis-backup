@@ -63,7 +63,7 @@ backup.run(repo_id: 1)
 
 Using `--move_logs` flag you can move all logs to database at `destination_db_url` URL (which is required in this case). When you run gem in this mode no files are created and no other tables are being touched.
 
-Using `--remove_orphans` flag you can remove all orphaned data from the tables. You can pick a specific table using `--orphans_table` flag or, by leaving it undefined, let all tables to be processed in the removing orphans procedure. When you run gem in this mode no files are created.
+Using `--remove_orphans` flag you can remove all orphaned data from the tables. You can pick a specific table using `--orphans_table` flag or, by leaving it undefined, let all tables to be processed in the removing orphans procedure. It can be combined with `--backup` flag in order to save removed data in files.
 
 Using `--user_id`, `--org_id` or `--repo_id` flag without setting `--threshold` results in removing the specified user/organization/repository with all its dependencies. It can be combined with `--backup` flag in order to save removed data in files.
 

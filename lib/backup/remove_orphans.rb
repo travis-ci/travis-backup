@@ -81,8 +81,8 @@ class Backup
 
     def nullify_builds_dependencies
       @ids_to_remove[:build]&.each do |build_id|
-        build = Build.find_by(id: build_id)
-        build&.nullify_default_dependencies
+        build = Build.find(build_id)
+        build.nullify_default_dependencies
       end
     end
 
