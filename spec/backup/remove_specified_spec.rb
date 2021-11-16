@@ -18,7 +18,7 @@ require 'byebug'
 
 describe Backup::RemoveSpecified do
   def get_expected_files(directory, datetime)
-    Dir["spec/support/expected_files/#{directory}/*.json"].map do |file_path|
+    Dir["spec/support/expected_files/#{directory}/**/*.json"].map do |file_path|
       content = File.read(file_path)
       content.gsub(/"[^"]+ UTC"/, "\"#{datetime.to_s}\"")
     end
@@ -210,7 +210,7 @@ describe Backup::RemoveSpecified do
 
         it 'creates needed folders' do
           path_regexp = Regexp.new("#{random_files_location}/.+")
-          expect(FileUtils).to receive(:mkdir_p).once.with(path_regexp).and_call_original
+          expect(FileUtils).to receive(:mkdir_p).with(path_regexp).and_call_original
           remove_specified.remove_repo_requests(repository)
         end
       end

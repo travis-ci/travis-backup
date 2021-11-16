@@ -1,15 +1,21 @@
 # frozen_string_literal: true
 
 module NullifyDependencies
-  def nullify_dependencies(dependencies_to_nullify)
-    dependencies_to_nullify.each do |symbol|
+  def nullify_dependencies(dependencies_symbols_to_nullify)
+    dependencies_symbols_to_nullify.map do |symbol|
       dependencies = self.send(symbol) # e.g. build.tags_for_that_this_build_is_last
 
-      dependencies.each do |entry|
+      dependencies.map do |entry|
         foreign_key = self.class.reflect_on_association(symbol).foreign_key.to_sym
         entry.update(foreign_key => nil) # e.g. tag.update(last_build_id: nil)
+        {
+          related_table: entry.class.table_name,
+          foreign_key: foreign_key,
+          parent_id: self.id,
+          related_id: entry.id
+        }
       end
-    end
+    end.flatten
   end
 
   def nullify_default_dependencies
