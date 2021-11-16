@@ -49,8 +49,11 @@ FactoryBot.define do
           created_at: build.created_at,
           updated_at: build.updated_at
         )
+        Build.record_timestamps = false
         build.repository_id = repo.id
         build.save!
+        Build.record_timestamps = true
+        build
       end
 
       factory :build_orphaned_on_commit_id_with_mutually_related_repo do
