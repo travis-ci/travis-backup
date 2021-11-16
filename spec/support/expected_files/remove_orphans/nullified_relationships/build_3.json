@@ -4,13 +4,13 @@
     {
       "related_table": "repositories",
       "foreign_key": "current_build_id",
-      "parent_id": 825,
+      "parent_id": 25,
       "related_id": 21
     },
     {
       "related_table": "repositories",
       "foreign_key": "current_build_id",
-      "parent_id": 826,
+      "parent_id": 26,
       "related_id": 22
     }
   ]

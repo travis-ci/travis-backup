@@ -1,39 +1,39 @@
 {
-  "table_name": "tags",
+  "table_name": "branches",
   "data": [
     {
-      "id": 3,
+      "id": 75,
       "repository_id": 2000000000,
-      "name": null,
       "last_build_id": null,
-      "exists_on_github": null,
+      "name": "branch_3",
+      "exists_on_github": true,
       "created_at": "2021-04-16 12:58:17 UTC",
       "updated_at": "2021-04-16 12:58:17 UTC"
     },
     {
-      "id": 4,
+      "id": 76,
       "repository_id": 2000000000,
-      "name": null,
       "last_build_id": null,
-      "exists_on_github": null,
+      "name": "branch_4",
+      "exists_on_github": true,
       "created_at": "2021-04-16 12:58:17 UTC",
       "updated_at": "2021-04-16 12:58:17 UTC"
     },
     {
-      "id": 7,
-      "repository_id": null,
-      "name": null,
+      "id": 77,
+      "repository_id": 1,
       "last_build_id": 2000000000,
-      "exists_on_github": null,
+      "name": "branch_5",
+      "exists_on_github": true,
       "created_at": "2021-04-16 12:58:17 UTC",
       "updated_at": "2021-04-16 12:58:17 UTC"
     },
     {
-      "id": 8,
-      "repository_id": null,
-      "name": null,
+      "id": 78,
+      "repository_id": 1,
       "last_build_id": 2000000000,
-      "exists_on_github": null,
+      "name": "branch_6",
+      "exists_on_github": true,
       "created_at": "2021-04-16 12:58:17 UTC",
       "updated_at": "2021-04-16 12:58:17 UTC"
     }

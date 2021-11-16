@@ -13,7 +13,7 @@ require 'byebug'
 require 'support/utils'
 
 describe Backup::RemoveOrphans do
-  before(:all) do
+  before(:each) do
     BeforeTests.new.run
   end
 
@@ -24,13 +24,15 @@ describe Backup::RemoveOrphans do
   let(:datetime) { (Config.new.threshold + 1).months.ago.to_time.utc }
 
   describe 'run' do
-    before(:each) do
-      DatabaseCleaner.strategy = :truncation
-      DatabaseCleaner.clean
-    end
+    # before(:each) do
+    #   DatabaseCleaner.strategy = :truncation
+    #   DatabaseCleaner.clean
+    # end
 
     let!(:data) {
       db_helper.do_without_triggers do
+        FactoryBot.rewind_sequences
+
         FactoryBot.create_list(
           :repository, 2,
           created_at: datetime,
