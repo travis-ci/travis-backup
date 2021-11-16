@@ -1,0 +1,41 @@
+{
+  "table_name": "branches",
+  "data": [
+    {
+      "id": 3,
+      "repository_id": 2000000000,
+      "last_build_id": null,
+      "name": "branch_163",
+      "exists_on_github": true,
+      "created_at": "2021-04-16 12:16:53 UTC",
+      "updated_at": "2021-04-16 12:16:53 UTC"
+    },
+    {
+      "id": 4,
+      "repository_id": 2000000000,
+      "last_build_id": null,
+      "name": "branch_164",
+      "exists_on_github": true,
+      "created_at": "2021-04-16 12:16:53 UTC",
+      "updated_at": "2021-04-16 12:16:53 UTC"
+    },
+    {
+      "id": 5,
+      "repository_id": 1,
+      "last_build_id": 2000000000,
+      "name": "branch_165",
+      "exists_on_github": true,
+      "created_at": "2021-04-16 12:16:53 UTC",
+      "updated_at": "2021-04-16 12:16:53 UTC"
+    },
+    {
+      "id": 6,
+      "repository_id": 1,
+      "last_build_id": 2000000000,
+      "name": "branch_166",
+      "exists_on_github": true,
+      "created_at": "2021-04-16 12:16:53 UTC",
+      "updated_at": "2021-04-16 12:16:53 UTC"
+    }
+  ]
+}

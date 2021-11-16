@@ -17,13 +17,6 @@ require 'pry'
 require 'byebug'
 
 describe Backup::RemoveSpecified do
-  def get_expected_files(directory, datetime)
-    Dir["spec/support/expected_files/#{directory}/**/*.json"].map do |file_path|
-      content = File.read(file_path)
-      content.gsub(/"[^"]+ UTC"/, "\"#{datetime.to_s}\"")
-    end
-  end
-
   before(:all) do
     BeforeTests.new.run
   end

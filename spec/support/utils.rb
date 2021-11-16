@@ -45,3 +45,10 @@ def nullifies_all_orphaned_builds_dependencies?
   referenced_builds = build_ids_to_check.map { |id| Build.find_by(id: id) }
   !referenced_builds.include?(nil)
 end
+
+def get_expected_files(directory, datetime)
+  Dir["spec/support/expected_files/#{directory}/**/*.json"].map do |file_path|
+    content = File.read(file_path)
+    content.gsub(/"[^"]+ UTC"/, "\"#{datetime.to_s}\"")
+  end
+end
