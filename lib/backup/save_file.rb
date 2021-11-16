@@ -19,6 +19,10 @@ module SaveFile
     saved
   end
 
+  def current_time_for_subfolder
+    Time.now.to_s.parameterize.underscore
+  end
+
   def ensure_path(file_path)
     path = folder_path(file_path)
       

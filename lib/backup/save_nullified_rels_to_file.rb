@@ -7,7 +7,7 @@ module SaveNullifiedRelsToFile
     @file_index = 1
 
     rels_hash.each do |name, rels|
-      rels.compact.each_slice(@config.limit.to_i) do |rels_batch|
+      rels&.compact&.each_slice(@config.limit.to_i) do |rels_batch|
         save_rels_batch_to_file(name, rels_batch)
       end
     end

@@ -9,10 +9,6 @@ class Backup
         filtered_builds&.map(&:nullify_default_dependencies)&.flatten
       end
 
-      def time_for_subfolder
-        Time.now.to_s.parameterize.underscore
-      end
-
       def dependencies_to_filter
         {
           build: Build.default_dependencies_symbols_to_nullify

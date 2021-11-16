@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
 require 'byebug'
+require 'backup/save_id_hash_to_file'
+require 'backup/save_nullified_rels_to_file'
 
 class Backup
   class RemoveOrphans
+    include SaveIdHashToFile
+    include SaveNullifiedRelsToFile
+
     attr_reader :config
 
     def initialize(config, dry_run_reporter=nil)
@@ -71,19 +76,26 @@ class Backup
     end
 
     def process_ids_to_remove
-      if @config.dry_run
-        @dry_run_reporter.add_to_report(@ids_to_remove.with_table_symbols)
-      else
-        nullify_builds_dependencies
-        @ids_to_remove.remove_entries_from_db
+      return @dry_run_reporter.add_to_report(@ids_to_remove.with_table_symbols) if @config.dry_run
+
+      nullified_rels = nullify_builds_dependencies
+
+      if @config.if_backup
+        @subfolder = "remove_orphans_#{current_time_for_subfolder}"
+        save_nullified_rels_to_file(build: nullified_rels)
+        save_id_hash_to_file(@ids_to_remove)
       end
+
+      @ids_to_remove.remove_entries_from_db
     end
 
     def nullify_builds_dependencies
-      @ids_to_remove[:build]&.each do |build_id|
+      nullified = @ids_to_remove[:build]&.map do |build_id|
         build = Build.find(build_id)
         build.nullify_default_dependencies
       end
+
+      nullified&.flatten || []
     end
 
     def cases

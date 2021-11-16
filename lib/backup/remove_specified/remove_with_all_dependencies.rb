@@ -28,7 +28,7 @@ class Backup
       private
 
       def remove_entry_with_dependencies(model_name, id)
-        @subfolder = "#{model_name}_#{id}_#{time_for_subfolder}"
+        @subfolder = "#{model_name}_#{id}_#{current_time_for_subfolder}"
         entry = Model.get_model(model_name).find(id)
         hash_with_filtered = entry.ids_of_all_dependencies_with_filtered(dependencies_to_filter, :without_parents)
         ids_to_remove = hash_with_filtered[:main]

@@ -32,7 +32,7 @@ class Backup
         end.compact
 
         ids_to_remove = IdHash.join(*builds_dependencies)
-        @subfolder = "repository_#{repository.id}_old_builds_#{time_for_subfolder}"
+        @subfolder = "repository_#{repository.id}_old_builds_#{current_time_for_subfolder}"
 
         unless @config.dry_run
           nullified_rels = builds_to_remove&.map(&:nullify_default_dependencies)&.flatten
@@ -51,7 +51,7 @@ class Backup
           hash_with_filtered.add(:request, request.id)
         end
 
-        @subfolder = "repository_#{repository.id}_old_requests_#{time_for_subfolder}"
+        @subfolder = "repository_#{repository.id}_old_requests_#{current_time_for_subfolder}"
 
         unless @config.dry_run
           nullified_rels = requests_to_remove.map do |request|

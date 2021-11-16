@@ -106,7 +106,7 @@ class Backup
 
       repository_entries = @repository_files.map do |data_file|
         load_file(Repository, data_file)
-      end.flatten
+      end.flatten.compact
 
       @loaded_entries.concat(repository_entries)
     end
@@ -114,7 +114,7 @@ class Backup
     def load_file(model, data_file)
       @touched_models << model
 
-      data_file.data_hash.map do |entry_hash|
+      data_file.data_hash&.map do |entry_hash|
         load_entry(model, entry_hash)
       end
     end
@@ -160,7 +160,7 @@ class Backup
       files.each do |data_file|
         table_name = data_file.table_name_sym
         min_id = data_file.lowest_id
-        @lowest_ids_from_files.add(table_name, min_id)
+        @lowest_ids_from_files.add(table_name, min_id) if min_id
       end
 
       @lowest_ids_from_files = @lowest_ids_from_files.map { |k, arr| [k, arr.min] }.to_h
