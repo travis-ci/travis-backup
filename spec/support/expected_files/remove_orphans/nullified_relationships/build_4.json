@@ -2,34 +2,34 @@
   "table_name": "builds",
   "nullified_relationships": [
     {
-      "related_table": "repositories",
-      "foreign_key": "current_build_id",
-      "parent_id": 17,
-      "related_id": 15
-    },
-    {
-      "related_table": "jobs",
-      "foreign_key": "source_id",
-      "parent_id": 20,
-      "related_id": 21
-    },
-    {
-      "related_table": "jobs",
-      "foreign_key": "source_id",
-      "parent_id": 20,
-      "related_id": 22
-    },
-    {
-      "related_table": "repositories",
-      "foreign_key": "current_build_id",
-      "parent_id": 20,
-      "related_id": 16
-    },
-    {
       "related_table": "jobs",
       "foreign_key": "source_id",
       "parent_id": 25,
-      "related_id": 26
+      "related_id": 27
+    },
+    {
+      "related_table": "repositories",
+      "foreign_key": "current_build_id",
+      "parent_id": 25,
+      "related_id": 17
+    },
+    {
+      "related_table": "jobs",
+      "foreign_key": "source_id",
+      "parent_id": 28,
+      "related_id": 29
+    },
+    {
+      "related_table": "jobs",
+      "foreign_key": "source_id",
+      "parent_id": 28,
+      "related_id": 30
+    },
+    {
+      "related_table": "repositories",
+      "foreign_key": "current_build_id",
+      "parent_id": 28,
+      "related_id": 18
     }
   ]
 }

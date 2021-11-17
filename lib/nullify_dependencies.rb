@@ -17,6 +17,10 @@ module NullifyDependencies
       end
     end.flatten
   end
+  
+  def nullify_all_dependencies
+    nullify_dependencies(symbols_of_all_direct_dependencies)
+  end
 
   def nullify_default_dependencies
     nullify_dependencies(default_dependencies_symbols_to_nullify)

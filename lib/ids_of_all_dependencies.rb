@@ -1,6 +1,18 @@
 require 'id_hash'
 
+module SymbolsOfAllDirectDependencies
+  def symbols_of_all_direct_dependencies
+    self.class.reflect_on_all_associations.map do |association|
+      next if association.macro == :belongs_to
+
+      association.name
+    end.compact
+  end
+end
+
 module IdsOfAllDirectDependencies
+  include SymbolsOfAllDirectDependencies
+
   def ids_of_all_direct_dependencies
     result = IdHash.new
 

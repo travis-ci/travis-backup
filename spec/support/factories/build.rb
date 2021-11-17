@@ -49,6 +49,14 @@ FactoryBot.define do
           created_at: build.created_at,
           updated_at: build.updated_at
         )
+        create_list(
+          :job, 2,
+          repository: build.repository,
+          source_type: 'Build',
+          source_id: build.id,
+          created_at: build.created_at,
+          updated_at: build.updated_at
+        )
         Build.record_timestamps = false
         build.repository_id = repo.id
         build.save!

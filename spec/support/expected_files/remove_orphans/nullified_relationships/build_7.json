@@ -1,0 +1,17 @@
+{
+  "table_name": "builds",
+  "nullified_relationships": [
+    {
+      "related_table": "jobs",
+      "foreign_key": "source_id",
+      "parent_id": 44,
+      "related_id": 46
+    },
+    {
+      "related_table": "repositories",
+      "foreign_key": "current_build_id",
+      "parent_id": 44,
+      "related_id": 22
+    }
+  ]
+}
