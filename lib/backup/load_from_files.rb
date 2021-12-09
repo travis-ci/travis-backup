@@ -4,11 +4,17 @@ require 'id_hash'
 
 class Backup
   class LoadFromFiles
+    class JsonContent < String
+      def hash
+        @hash ||= JSON.parse(self).symbolize_keys
+      end
+    end
+
     class DataFile
       attr_accessor :content
 
-      def initialize(content)
-        @content = content
+      def initialize(json_content)
+        @content = json_content
       end
 
       def table_name
@@ -19,6 +25,12 @@ class Backup
         table_name.to_sym
       end
 
+      def full_hash
+        @content.hash
+      end
+    end
+
+    class EntryFile < DataFile
       def ids
         @content.scan(/"id":\s?(\d+)/).flatten.map(&:to_i)
       end
@@ -27,12 +39,14 @@ class Backup
         ids.min
       end
 
-      def full_hash
-        @full_hash ||= JSON.parse(@content).symbolize_keys
-      end
-
-      def data_hash
+      def entries
         full_hash[:data]
+      end
+    end
+
+    class RelationshipFile < DataFile
+      def relationships
+        full_hash[:nullified_relationships]
       end
     end
 
@@ -47,9 +61,24 @@ class Backup
       load_data_with_offsets
       cancel_offset_for_foreign_data
       set_id_sequences
+      load_nullified_relationships
     end
 
     private
+
+    def load_nullified_relationships
+      relationship_files.each do |file|
+        file.relationships.each do |rel|
+          offset = @id_offsets[file.table_name.to_sym]
+
+          ActiveRecord::Base.connection.execute(%{
+            update #{rel.related_table}
+            set #{foreign_key}" = #{parent_id.to_i + offset}
+            where id = #{related_id.to_i};
+          })
+        end
+      end
+    end
 
     def set_id_sequences
       @touched_models.each do |model|
@@ -93,7 +122,7 @@ class Backup
     def load_data_with_offsets
       @repository_files = []
 
-      @loaded_entries = files.map do |data_file|
+      @loaded_entries = entry_files.map do |data_file|
         model = Model.get_model_by_table_name(data_file.table_name)
 
         if model == Repository
@@ -114,7 +143,7 @@ class Backup
     def load_file(model, data_file)
       @touched_models << model
 
-      data_file.data_hash&.map do |entry_hash|
+      data_file.entries&.map do |entry_hash|
         load_entry(model, entry_hash)
       end
     end
@@ -147,17 +176,32 @@ class Backup
       Model.get_model(class_name).table_name
     end
 
-    def files
-      @files ||= Dir["#{@config.files_location}/**/*.json"].map do |file_path|
-        content = File.read(file_path)
-        DataFile.new(content)
+    def file_contents
+      @file_contents ||= Dir["#{@config.files_location}/**/*.json"].map do |file_path|
+        JsonContent.new(File.read(file_path))
       end
+    end
+
+    def entry_files
+      @entry_files ||= file_contents.map do |content|
+        next unless content.hash[:data]
+
+        EntryFile.new(content)
+      end.compact
+    end
+
+    def relationship_files
+      @relationship_files ||= file_contents.map do |content|
+        next if content.hash[:data]
+
+        RelationshipFile.new(content)
+      end.compact
     end
 
     def find_lowest_ids_from_files
       @lowest_ids_from_files = HashOfArrays.new
 
-      files.each do |data_file|
+      entry_files.each do |data_file|
         table_name = data_file.table_name_sym
         min_id = data_file.lowest_id
         @lowest_ids_from_files.add(table_name, min_id) if min_id
