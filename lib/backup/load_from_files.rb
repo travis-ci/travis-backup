@@ -46,7 +46,9 @@ class Backup
 
     class RelationshipFile < DataFile
       def relationships
-        full_hash[:nullified_relationships]
+        @relationships ||= full_hash[:nullified_relationships].map do |rel|
+          rel.symbolize_keys
+        end
       end
     end
 
@@ -72,9 +74,9 @@ class Backup
           offset = @id_offsets[file.table_name.to_sym]
 
           ActiveRecord::Base.connection.execute(%{
-            update #{rel.related_table}
-            set #{foreign_key}" = #{parent_id.to_i + offset}
-            where id = #{related_id.to_i};
+            update #{rel[:related_table]}
+            set #{rel[:foreign_key]} = #{rel[:parent_id].to_i + offset}
+            where id = #{rel[:related_id].to_i};
           })
         end
       end
