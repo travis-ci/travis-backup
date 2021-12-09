@@ -1,0 +1,21 @@
+{
+  "table_name": "permissions",
+  "data": [
+    {
+      "id": 3,
+      "user_id": null,
+      "repository_id": 1,
+      "admin": false,
+      "push": false,
+      "pull": false
+    },
+    {
+      "id": 4,
+      "user_id": null,
+      "repository_id": 1,
+      "admin": false,
+      "push": false,
+      "pull": false
+    }
+  ]
+}

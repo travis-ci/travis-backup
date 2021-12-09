@@ -1,0 +1,35 @@
+{
+  "table_name": "builds",
+  "nullified_relationships": [
+    {
+      "related_table": "repositories",
+      "foreign_key": "current_build_id",
+      "parent_id": 36,
+      "related_id": 20
+    },
+    {
+      "related_table": "jobs",
+      "foreign_key": "source_id",
+      "parent_id": 41,
+      "related_id": 42
+    },
+    {
+      "related_table": "jobs",
+      "foreign_key": "source_id",
+      "parent_id": 41,
+      "related_id": 43
+    },
+    {
+      "related_table": "repositories",
+      "foreign_key": "current_build_id",
+      "parent_id": 41,
+      "related_id": 21
+    },
+    {
+      "related_table": "jobs",
+      "foreign_key": "source_id",
+      "parent_id": 44,
+      "related_id": 45
+    }
+  ]
+}

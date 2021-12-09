@@ -1,0 +1,27 @@
+{
+  "table_name": "broadcasts",
+  "data": [
+    {
+      "id": 1,
+      "recipient_id": 1,
+      "recipient_type": "Organization",
+      "kind": null,
+      "message": null,
+      "expired": null,
+      "created_at": "2021-04-11 21:59:33 UTC",
+      "updated_at": "2021-04-11 21:59:33 UTC",
+      "category": null
+    },
+    {
+      "id": 2,
+      "recipient_id": 1,
+      "recipient_type": "Organization",
+      "kind": null,
+      "message": null,
+      "expired": null,
+      "created_at": "2021-04-11 21:59:33 UTC",
+      "updated_at": "2021-04-11 21:59:33 UTC",
+      "category": null
+    }
+  ]
+}

@@ -1,15 +1,23 @@
 # frozen_string_literal: true
 
-require 'models/model'
+require 'model'
 require 'models/repository'
 require 'models/log'
+require 'models/annotation'
+require 'models/queueable_job'
 
 # Job model
 class Job < Model
   self.inheritance_column = :_type_disabled
 
+  belongs_to :source, polymorphic: true
+  belongs_to :owner, polymorphic: true
   belongs_to :repository
-  has_many   :logs, -> { order('id') }, foreign_key: :job_id, dependent: :destroy, class_name: 'Log'
+  belongs_to :commit
+  belongs_to :stage
+  has_many   :logs, -> { order('id') }, dependent: :destroy
+  has_many   :annotations
+  has_many   :queueable_jobs
 
   self.table_name = 'jobs'
 end

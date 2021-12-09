@@ -1,12 +1,20 @@
 # frozen_string_literal: true
 
+require 'byebug'
+require 'backup/save_id_hash_to_file'
+require 'backup/save_nullified_rels_to_file'
+
 class Backup
   class RemoveOrphans
+    include SaveIdHashToFile
+    include SaveNullifiedRelsToFile
+
     attr_reader :config
 
     def initialize(config, dry_run_reporter=nil)
       @config = config
       @dry_run_reporter = dry_run_reporter
+      @ids_to_remove = IdHash.new
     end
 
     def dry_run_report
@@ -14,17 +22,80 @@ class Backup
     end
 
     def run
-      cases.each do |model_block|
-        model_block[:relations].each do |relation|
-          process_table(
-            main_model: model_block[:main_model],
-            related_model: relation[:related_model],
-            fk_name: relation[:fk_name],
-            method: model_block[:method],
-            dry_run_complement: model_block[:dry_run_complement]
-          )
-        end
+      if @config.orphans_table
+        check_specified(@config.orphans_table)
+      else
+        check_all
       end
+
+      process_ids_to_remove
+    end
+
+    def check_all
+      cases.each do |model_block|
+        check_model_block(model_block)
+      end
+    end
+
+    def check_specified(table_name)
+      model_block = cases.find { |c| c[:main_model] == Model.get_model_by_table_name(table_name) }
+      check_model_block(model_block)
+    end
+
+    def check_model_block(model_block)
+      model_block[:relations].each do |relation|
+        check_relationship(
+          main_model: model_block[:main_model],
+          related_model: relation[:related_model],
+          fk_name: relation[:fk_name],
+        )
+      end
+    end
+
+    def check_relationship(args)
+      main_model = args[:main_model]
+      related_model = args[:related_model]
+      fk_name = args[:fk_name]
+
+      main_table = main_model.table_name
+      related_table = related_model.table_name
+
+      for_delete = main_model.find_by_sql(%{
+        select a.*
+        from #{main_table} a
+        left join #{related_table} b
+        on a.#{fk_name} = b.id
+        where
+          a.#{fk_name} is not null
+          and b.id is null;
+      })
+
+      key = main_model.name.underscore.to_sym
+      ids = for_delete.map(&:id)
+      @ids_to_remove.add(key, *ids)
+    end
+
+    def process_ids_to_remove
+      return @dry_run_reporter.add_to_report(@ids_to_remove.with_table_symbols) if @config.dry_run
+
+      nullified_rels = nullify_builds_dependencies
+
+      if @config.if_backup
+        @subfolder = "remove_orphans_#{current_time_for_subfolder}"
+        save_nullified_rels_to_file(build: nullified_rels)
+        save_id_hash_to_file(@ids_to_remove)
+      end
+
+      @ids_to_remove.remove_entries_from_db
+    end
+
+    def nullify_builds_dependencies
+      nullified = @ids_to_remove[:build]&.map do |build_id|
+        build = Build.find(build_id)
+        build.nullify_all_dependencies
+      end
+
+      nullified&.flatten || []
     end
 
     def cases
@@ -44,9 +115,7 @@ class Backup
             {related_model: PullRequest, fk_name: 'pull_request_id'},
             {related_model: Branch, fk_name: 'branch_id'},
             {related_model: Tag, fk_name: 'tag_id'}
-          ],
-          method: :destroy_all,
-          dry_run_complement: -> (ids) { add_builds_dependencies_to_dry_run_report(ids) }
+          ]
         }, {
           main_model: Job,
           relations: [
@@ -104,43 +173,5 @@ class Backup
         }
       ]
     end
-  
-    def add_builds_dependencies_to_dry_run_report(ids_for_delete)
-      repos_for_delete = Repository.where(current_build_id: ids_for_delete)
-      jobs_for_delete = Job.where(source_id: ids_for_delete)
-      @dry_run_reporter.add_to_report(:repositories, *repos_for_delete.map(&:id))
-      @dry_run_reporter.add_to_report(:jobs, *jobs_for_delete.map(&:id))
-    end
-  
-    def process_table(args)
-      main_model = args[:main_model]
-      related_model = args[:related_model]
-      fk_name = args[:fk_name]
-      method = args[:method] || :delete_all
-      dry_run_complement = args[:dry_run_complement]
-  
-      main_table = main_model.table_name
-      related_table = related_model.table_name
-  
-      for_delete = main_model.find_by_sql(%{
-        select a.*
-        from #{main_table} a
-        left join #{related_table} b
-        on a.#{fk_name} = b.id
-        where
-          a.#{fk_name} is not null
-          and b.id is null;
-      })
-  
-      ids_for_delete = for_delete.map(&:id)
-  
-      if config.dry_run
-        key = main_table.to_sym
-        @dry_run_reporter.add_to_report(key, *ids_for_delete)
-        dry_run_complement.call(ids_for_delete) if dry_run_complement
-      else
-        main_model.where(id: ids_for_delete).send(method)
-      end
-    end  
   end
 end

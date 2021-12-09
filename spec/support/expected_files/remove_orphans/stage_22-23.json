@@ -1,0 +1,23 @@
+{
+  "table_name": "stages",
+  "data": [
+    {
+      "id": 22,
+      "build_id": 2000000000,
+      "number": null,
+      "name": null,
+      "state": null,
+      "started_at": null,
+      "finished_at": null
+    },
+    {
+      "id": 23,
+      "build_id": 2000000000,
+      "number": null,
+      "name": null,
+      "state": null,
+      "started_at": null,
+      "finished_at": null
+    }
+  ]
+}

@@ -6,10 +6,8 @@ require 'models/job'
 require 'models/organization'
 require 'models/user'
 require 'support/factories'
-require 'support/expected_files'
 require 'support/before_tests'
 require 'pry'
-
 
 describe Backup::MoveLogs do
   before(:all) do

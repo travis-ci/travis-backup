@@ -7,10 +7,12 @@ class DryRunReporter
     @report = {}
   end
 
-  def add_to_report(key, *values)
-    report[key] = [] if report[key].nil?
-    report[key].concat(values)
-    report[key].uniq!
+  def add_to_report(*args)
+    if args.first.is_a?(Hash)
+      add_to_report_as_hash(args.first)
+    else
+      add_to_report_as_key_and_values(*args)
+    end
   end
 
   def print_report
@@ -26,6 +28,18 @@ class DryRunReporter
   end
 
   private
+
+  def add_to_report_as_key_and_values(key, *values)
+    report[key] = [] if report[key].nil?
+    report[key].concat(values)
+    report[key].uniq!
+  end
+
+  def add_to_report_as_hash(hash)
+    hash.each do |key, array|
+      add_to_report_as_key_and_values(key, *array)
+    end
+  end
 
   def print_report_line(symbol)
     puts " - #{symbol}: #{@report[symbol].to_json}" if @report[symbol].any?

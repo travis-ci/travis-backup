@@ -1,0 +1,55 @@
+{
+  "table_name": "annotations",
+  "data": [
+    {
+      "id": 73,
+      "job_id": 216,
+      "url": null,
+      "description": "some text",
+      "created_at": "2021-04-11 21:55:03 UTC",
+      "updated_at": "2021-04-11 21:55:03 UTC",
+      "annotation_provider_id": 0,
+      "status": null
+    },
+    {
+      "id": 74,
+      "job_id": 216,
+      "url": null,
+      "description": "some text",
+      "created_at": "2021-04-11 21:55:03 UTC",
+      "updated_at": "2021-04-11 21:55:03 UTC",
+      "annotation_provider_id": 0,
+      "status": null
+    },
+    {
+      "id": 89,
+      "job_id": 264,
+      "url": null,
+      "description": "some text",
+      "created_at": "2021-04-11 21:55:03 UTC",
+      "updated_at": "2021-04-11 21:55:03 UTC",
+      "annotation_provider_id": 0,
+      "status": null
+    },
+    {
+      "id": 90,
+      "job_id": 264,
+      "url": null,
+      "description": "some text",
+      "created_at": "2021-04-11 21:55:03 UTC",
+      "updated_at": "2021-04-11 21:55:03 UTC",
+      "annotation_provider_id": 0,
+      "status": null
+    },
+    {
+      "id": 91,
+      "job_id": 269,
+      "url": null,
+      "description": "some text",
+      "created_at": "2021-04-11 21:55:03 UTC",
+      "updated_at": "2021-04-11 21:55:03 UTC",
+      "annotation_provider_id": 0,
+      "status": null
+    }
+  ]
+}

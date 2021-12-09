@@ -1,0 +1,26 @@
+{
+  "table_name": "users",
+  "data": [
+    {
+      "id": 9,
+      "name": null,
+      "login": null,
+      "email": null,
+      "created_at": "2021-04-11 21:55:03 UTC",
+      "updated_at": "2021-04-11 21:55:03 UTC",
+      "is_admin": false,
+      "github_id": null,
+      "github_oauth_token": null,
+      "gravatar_id": null,
+      "locale": null,
+      "is_syncing": null,
+      "synced_at": null,
+      "github_scopes": null,
+      "education": null,
+      "first_logged_in_at": null,
+      "avatar_url": null,
+      "suspended": false,
+      "suspended_at": null
+    }
+  ]
+}

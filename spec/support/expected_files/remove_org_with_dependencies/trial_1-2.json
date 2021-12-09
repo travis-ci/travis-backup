@@ -1,0 +1,27 @@
+{
+  "table_name": "trials",
+  "data": [
+    {
+      "id": 1,
+      "owner_id": 1,
+      "owner_type": "Organization",
+      "chartmogul_customer_uuids": [
+
+      ],
+      "status": "new",
+      "created_at": "2021-04-11 21:59:33 UTC",
+      "updated_at": "2021-04-11 21:59:33 UTC"
+    },
+    {
+      "id": 2,
+      "owner_id": 1,
+      "owner_type": "Organization",
+      "chartmogul_customer_uuids": [
+
+      ],
+      "status": "new",
+      "created_at": "2021-04-11 21:59:33 UTC",
+      "updated_at": "2021-04-11 21:59:33 UTC"
+    }
+  ]
+}

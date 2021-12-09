@@ -5,3 +5,4 @@ dump/*
 !log/.keep
 !dump/.keep
 *.gem
+.byebug_history

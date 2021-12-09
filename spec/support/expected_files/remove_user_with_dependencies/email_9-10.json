@@ -1,0 +1,19 @@
+{
+  "table_name": "emails",
+  "data": [
+    {
+      "id": 9,
+      "user_id": 9,
+      "email": null,
+      "created_at": "2021-04-11 21:55:03 UTC",
+      "updated_at": "2021-04-11 21:55:03 UTC"
+    },
+    {
+      "id": 10,
+      "user_id": 9,
+      "email": null,
+      "created_at": "2021-04-11 21:55:03 UTC",
+      "updated_at": "2021-04-11 21:55:03 UTC"
+    }
+  ]
+}

@@ -6,10 +6,10 @@ require 'models/job'
 require 'models/organization'
 require 'models/user'
 require 'support/factories'
-require 'support/expected_files'
 require 'support/before_tests'
 require 'support/utils'
 require 'pry'
+require 'byebug'
 
 describe Backup do
   before(:all) do
@@ -46,10 +46,10 @@ describe Backup do
       FactoryBot.create(:organization_with_repos)
     }
 
-    context 'when no arguments are given' do
+    context 'when no id arguments are given' do
       it 'processes every repository' do
         Repository.all.each do |repository|
-          expect_any_instance_of(Backup::RemoveOld).to receive(:process_repo_builds).once.with(repository)
+          expect_any_instance_of(Backup::RemoveSpecified).to receive(:remove_repo_builds).once.with(repository)
         end
         backup.run
       end
@@ -60,8 +60,8 @@ describe Backup do
         user_repos = Repository.where('owner_id = ? and owner_type = ?', user1.id, 'User')
 
         expect_method_calls_on(
-          Backup::RemoveOld,
-          :process_repo_builds,
+          Backup::RemoveSpecified,
+          :remove_repo_builds,
           user_repos,
           allow_instances: true,
           arguments_to_check: :first
@@ -76,8 +76,8 @@ describe Backup do
         org_repos = Repository.where('owner_id = ? and owner_type = ?', organization1.id, 'Organization')
 
         expect_method_calls_on(
-          Backup::RemoveOld,
-          :process_repo_builds,
+          Backup::RemoveSpecified,
+          :remove_repo_builds,
           org_repos,
           allow_instances: true,
           arguments_to_check: :first
@@ -90,8 +90,53 @@ describe Backup do
     context 'when repo_id is given' do
       it 'processes only the repository with the given id' do
         repo = Repository.first
-        expect_any_instance_of(Backup::RemoveOld).to receive(:process_repo_builds).once.with(repo)
+        expect_any_instance_of(Backup::RemoveSpecified).to receive(:remove_repo_builds).once.with(repo)
         backup.run(repo_id: repo.id)
+      end
+    end
+
+    context 'when threshold is not given' do
+      context 'when user_id is given' do
+        let!(:backup) { Backup.new(
+          files_location: files_location,
+          limit: 5,
+          threshold: false,
+          user_id: user1.id
+        ) }
+        it 'removes the user with all dependencies' do  
+          expect_any_instance_of(Backup::RemoveSpecified)
+            .to receive(:remove_user_with_dependencies).once.with(user1.id)
+          backup.run(user_id: user1.id)
+        end
+      end
+  
+      context 'when org_id is given' do
+        let!(:backup) { Backup.new(
+          files_location: files_location,
+          limit: 5,
+          threshold: false,
+          org_id: user1.id
+        ) }
+        it 'removes the organisation with all dependencies' do
+          expect_any_instance_of(Backup::RemoveSpecified)
+            .to receive(:remove_org_with_dependencies).once.with(organization1.id)
+          backup.run(org_id: organization1.id)
+        end
+      end
+  
+      context 'when repo_id is given' do
+        let!(:backup) { Backup.new(
+          files_location: files_location,
+          limit: 5,
+          threshold: false,
+          repo_id: user1.id
+        ) }
+        it 'removes the repo with all dependencies' do
+          repo = Repository.first
+          expect_any_instance_of(Backup::RemoveSpecified)
+            .to receive(:remove_repo_with_dependencies).once.with(repo.id)
+          backup.run(repo_id: repo.id)
+        end
       end
     end
 
@@ -99,7 +144,7 @@ describe Backup do
       let!(:backup) { Backup.new(files_location: files_location, limit: 5, move_logs: true) }
 
       it 'does not process repositories' do
-        expect(backup).not_to receive(:process_repo)
+        expect(backup).not_to receive(:remove_heavy_data_for_repo)
         backup.run
       end
 
@@ -113,12 +158,21 @@ describe Backup do
       let!(:backup) { Backup.new(files_location: files_location, limit: 5, remove_orphans: true) }
 
       it 'does not process repositories' do
-        expect(backup).not_to receive(:process_repo)
+        expect(backup).not_to receive(:remove_heavy_data_for_repo)
         backup.run
       end
 
       it 'removes orphans' do
         expect_any_instance_of(Backup::RemoveOrphans).to receive(:run).once
+        backup.run
+      end
+    end
+
+    context 'when load from files mode is on' do
+      let!(:backup) { Backup.new(files_location: files_location, limit: 5, load_from_files: true) }
+
+      it 'loads data from files to the database' do
+        expect_any_instance_of(Backup::LoadFromFiles).to receive(:run).once
         backup.run
       end
     end
