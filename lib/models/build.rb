@@ -9,7 +9,7 @@ class Build < Model
   belongs_to :repository
   belongs_to :owner, polymorphic: true
   belongs_to :sender, polymorphic: true
-  belongs_to :branch
+  belongs_to :related_branch, foreign_key: :branch_id, class_name: 'Branch'
   belongs_to :commit
   belongs_to :pull_request
   belongs_to :tag
