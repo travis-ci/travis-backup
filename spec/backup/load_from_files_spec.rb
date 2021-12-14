@@ -57,7 +57,7 @@ describe Backup::LoadFromFiles do
 
     context 'when old data is present in db' do
       context 'when it cooperates with removing method in dumping and reloading' do
-        context 'when it cooperates with remove_heavy_data_for_repo' do
+        context 'when it cooperates with remove_user_with_dependencies' do
           let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
           let(:datetime) { (Config.new.threshold + 1).months.ago.to_time.utc }
           let!(:other_data) {
@@ -97,7 +97,7 @@ describe Backup::LoadFromFiles do
           end
         end
 
-        context 'when it cooperates with repository_for_removing_heavy_data' do
+        context 'when it cooperates with remove_heavy_data_for_repo' do
           let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
           let(:datetime) { (Config.new.threshold + 1).months.ago.to_time.utc }
           let!(:other_data) {
