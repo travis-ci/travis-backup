@@ -28,9 +28,35 @@ describe Backup::LoadFromFiles do
         ExpectedIdTrees.load_from_files
       }
 
-      it 'loads data properly' do
+      let!(:related_nullified_entries) {
+        FactoryBot.create(:repository, id: 1)
+        FactoryBot.create(:repository, id: 18)
+        FactoryBot.create(:repository, id: 19)
+        FactoryBot.create(:repository, id: 20)
+        FactoryBot.create(:repository, id: 21)
+        FactoryBot.create(:tag, id: 1)
+        FactoryBot.create(:tag, id: 6)
+        FactoryBot.create(:branch, id: 77, repository_id: 1)
+        FactoryBot.create(:branch, id: 82, repository_id: 1)
+      }
+
+      it 'loads entries properly' do
         load_from_files.run
-        expect(Build.all.map(&:ids_of_all_dependencies_nested)).to eql(expected_structure)
+        # puts JSON.pretty_generate(Build.all.map { |b| b.ids_of_all_dependencies_nested(4) })
+        expect(Build.all.map { |b| b.ids_of_all_dependencies_nested(4) }).to eql(expected_structure)
+      end
+
+      it 'loads relationships properly' do
+        load_from_files.run
+        expect(Repository.find(1).last_build_id).to eql(274)
+        expect(Repository.find(20).current_build_id).to eql(100)
+        expect(Repository.find(21).current_build_id).to eql(100)
+        expect(Repository.find(18).last_build_id).to eql(100)
+        expect(Repository.find(19).last_build_id).to eql(100)
+        expect(Tag.find(1).last_build_id).to eql(100)
+        expect(Tag.find(6).last_build_id).to eql(100)
+        expect(Branch.find(77).last_build_id).to eql(100)
+        expect(Branch.find(82).last_build_id).to eql(100)
       end
 
       it 'sets id sequences properly' do
