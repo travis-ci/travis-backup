@@ -42,8 +42,7 @@ describe Backup::LoadFromFiles do
 
       it 'loads entries properly' do
         load_from_files.run
-        # puts JSON.pretty_generate(Build.all.map { |b| b.ids_of_all_dependencies_nested(4) })
-        expect(Build.all.map { |b| b.ids_of_all_dependencies_nested(4) }).to eql(expected_structure)
+        expect(Build.all.map { |b| b.ids_of_all_dependencies_nested(2) }).to eql(expected_structure)
       end
 
       it 'loads relationships properly' do
