@@ -2,6 +2,6 @@
 
 require 'model'
 
-class Token < Model
-  belongs_to :user
+class RepoCount < Model
+  belongs_to :repository
 end

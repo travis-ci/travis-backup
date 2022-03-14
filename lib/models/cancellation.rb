@@ -2,6 +2,7 @@
 
 require 'model'
 
-class Token < Model
+class Cancellation < Model
+  belongs_to :subscription
   belongs_to :user
 end

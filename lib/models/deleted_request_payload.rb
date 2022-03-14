@@ -2,7 +2,6 @@
 
 require 'model'
 
-class Abuse < Model
-  belongs_to :owner, polymorphic: true
+class DeletedRequestPayload < Model
   belongs_to :request
 end

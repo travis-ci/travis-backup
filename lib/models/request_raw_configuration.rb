@@ -2,10 +2,8 @@
 
 require 'model'
 
-class PullRequest < Model
-  belongs_to :repository
+class RequestRawConfiguration < Model
+  belongs_to :request_raw_configs
   has_many :requests
-  has_many :builds
   has_many :deleted_requests
-  has_many :deleted_builds
 end

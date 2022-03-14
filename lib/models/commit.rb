@@ -10,5 +10,7 @@ class Commit < Model
   has_many :jobs
   has_many :requests
 
-  self.table_name = 'commits'
+  has_many :deleted_builds
+  has_many :deleted_jobs
+  has_many :deleted_requests
 end

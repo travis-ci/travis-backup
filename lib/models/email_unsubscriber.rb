@@ -2,6 +2,7 @@
 
 require 'model'
 
-class Token < Model
+class EmailUnsubscriber < Model
+  belongs_to :repository
   belongs_to :user
 end

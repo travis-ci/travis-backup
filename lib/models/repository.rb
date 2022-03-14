@@ -1,12 +1,7 @@
 # frozen_string_literal: true
 
 require 'model'
-require 'models/build'
-require 'models/request'
-require 'models/permission'
-require 'models/star'
 
-# Repository model
 class Repository < Model
   belongs_to :owner, polymorphic: true
   belongs_to :current_build, foreign_key: :current_build_id, class_name: 'Build'
@@ -21,6 +16,24 @@ class Repository < Model
   has_many :stars
   has_many :pull_requests
   has_many :tags
+  has_many :build_configs
+  has_many :email_unsubscribers
+  has_many :request_configs
+  has_many :job_configs
+  has_many :request_raw_configs
+  has_many :repo_counts
+  has_many :request_yaml_configs
 
-  self.table_name = 'repositories'
+  has_many :deleted_builds
+  has_many :deleted_requests
+  has_many :deleted_jobs
+  has_many :deleted_ssl_keys
+  has_many :deleted_commits
+  has_many :deleted_pull_requests
+  has_many :deleted_tags
+  has_many :deleted_build_configs
+  has_many :deleted_request_configs
+  has_many :deleted_job_configs
+  has_many :deleted_request_raw_configs
+  has_many :deleted_request_yaml_configs
 end

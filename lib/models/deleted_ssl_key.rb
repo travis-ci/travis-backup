@@ -2,7 +2,6 @@
 
 require 'model'
 
-class Permission < Model
+class DeletedSslKey < Model
   belongs_to :repository
-  belongs_to :user
 end

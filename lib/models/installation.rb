@@ -2,8 +2,6 @@
 
 require 'model'
 
-class Subscription < Model
+class Installation < Model
   belongs_to :owner, polymorphic: true
-  has_many :invoices
-  has_many :cancellations
 end

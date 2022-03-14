@@ -2,6 +2,6 @@
 
 require 'model'
 
-class Token < Model
-  belongs_to :user
+class RequestPayload < Model
+  belongs_to :request
 end

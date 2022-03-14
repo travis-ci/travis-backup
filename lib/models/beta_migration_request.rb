@@ -2,8 +2,7 @@
 
 require 'model'
 
-class Subscription < Model
+class BetaMigrationRequest < Model
   belongs_to :owner, polymorphic: true
-  has_many :invoices
-  has_many :cancellations
+  has_many :organizations
 end

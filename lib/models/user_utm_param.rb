@@ -2,6 +2,6 @@
 
 require 'model'
 
-class Token < Model
+class UserUtmParam < Model
   belongs_to :user
 end

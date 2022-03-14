@@ -2,7 +2,6 @@
 
 require 'model'
 
-class Annotation < Model
+class JobVersion < Model
   belongs_to :job
-  self.table_name = 'annotations'
 end
