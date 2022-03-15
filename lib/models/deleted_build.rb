@@ -22,7 +22,6 @@ class DeletedBuild < Model
 
   # has_many   :deleted_jobs, -> { order('id') }, as: :source, dependent: :destroy
   # has_many   :deleted_tags_for_that_this_build_is_last, foreign_key: :last_build_id, class_name: 'DeletedTag'
-  # has_many   :deleted_branches_for_that_this_build_is_last, foreign_key: :last_build_id, class_name: 'DeletedBranch'
   # has_many   :deleted_stages
 
   # def self.default_dependencies_symbols_to_nullify
@@ -32,7 +31,6 @@ class DeletedBuild < Model
   #     :tags_for_that_this_build_is_last,
   #     :deleted_tags_for_that_this_build_is_last,
   #     :branches_for_that_this_build_is_last,
-  #     :deleted_branches_for_that_this_build_is_last
   #   ]
   # end
 end

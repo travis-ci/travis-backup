@@ -30,8 +30,8 @@ FactoryBot.define do
           created_at: branch.created_at,
           updated_at: branch.updated_at
         )
-        create_list(
-          :cron, 2,
+        create(
+          :cron,
           branch_id: branch.id,
           created_at: branch.created_at,
           updated_at: branch.updated_at
