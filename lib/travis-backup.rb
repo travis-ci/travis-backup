@@ -5,8 +5,6 @@ require 'active_support/time'
 require 'config'
 require 'db_helper'
 require 'dry_run_reporter'
-require 'backup/remove_orphans'
-require 'backup/load_from_files'
 require 'backup/remove_specified'
 
 # main travis-backup class
@@ -27,13 +25,7 @@ class Backup
   end
 
   def run(args={})
-    if @config.load_from_files
-      Backup::LoadFromFiles.new(@config, @dry_run_reporter).run
-    elsif @config.remove_orphans
-      Backup::RemoveOrphans.new(@config, @dry_run_reporter).run
-    else
-      Backup::RemoveSpecified.new(@config, @dry_run_reporter).run(args)
-    end
+    Backup::RemoveSpecified.new(@config, @dry_run_reporter).run(args)
 
     @dry_run_reporter.print_report if @config.dry_run
   end

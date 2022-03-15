@@ -1,10 +1,7 @@
 $: << 'lib'
 require 'uri'
 require 'travis-backup'
-require 'models/build'
-require 'models/job'
-require 'models/organization'
-require 'models/user'
+require 'models'
 require 'support/factories'
 require 'support/before_tests'
 require 'support/utils'
@@ -137,43 +134,6 @@ describe Backup do
             .to receive(:remove_repo_with_dependencies).once.with(repo.id)
           backup.run(repo_id: repo.id)
         end
-      end
-    end
-
-    context 'when move logs mode is on' do
-      let!(:backup) { Backup.new(files_location: files_location, limit: 5, move_logs: true) }
-
-      it 'does not process repositories' do
-        expect(backup).not_to receive(:remove_heavy_data_for_repo)
-        backup.run
-      end
-
-      it 'moves logs' do
-        expect_any_instance_of(Backup::MoveLogs).to receive(:run).once
-        backup.run
-      end
-    end
-
-    context 'when remove orphans mode is on' do
-      let!(:backup) { Backup.new(files_location: files_location, limit: 5, remove_orphans: true) }
-
-      it 'does not process repositories' do
-        expect(backup).not_to receive(:remove_heavy_data_for_repo)
-        backup.run
-      end
-
-      it 'removes orphans' do
-        expect_any_instance_of(Backup::RemoveOrphans).to receive(:run).once
-        backup.run
-      end
-    end
-
-    context 'when load from files mode is on' do
-      let!(:backup) { Backup.new(files_location: files_location, limit: 5, load_from_files: true) }
-
-      it 'loads data from files to the database' do
-        expect_any_instance_of(Backup::LoadFromFiles).to receive(:run).once
-        backup.run
       end
     end
 

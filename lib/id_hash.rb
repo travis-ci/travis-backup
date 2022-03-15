@@ -1,4 +1,4 @@
-require 'models'
+require 'model'
 
 class HashOfArrays < Hash
   def initialize(hash = {})

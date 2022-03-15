@@ -5,13 +5,13 @@ require 'factory_bot'
 
 FactoryBot.define do
   factory :build do
-    factory :build_with_jobs_and_logs do
+    factory :build_with_jobs do
       transient do
         jobs_count { 2 }
       end
       after(:create) do |build, evaluator|
         create_list(
-          :job_with_logs,
+          :job,
           evaluator.jobs_count,
           repository: build.repository,
           source_type: 'Build',

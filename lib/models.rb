@@ -1,3 +1,4 @@
+require 'model'
 require 'models/abuse'
 require 'models/beta_migration_request'
 require 'models/branch'

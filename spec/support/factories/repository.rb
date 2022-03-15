@@ -11,7 +11,7 @@ FactoryBot.define do
       end
       after(:create) do |repository, evaluator|
         create_list(
-          :build_with_jobs_and_logs,
+          :build_with_jobs,
           evaluator.builds_count,
           repository: repository,
           created_at: repository.created_at,
