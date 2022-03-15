@@ -1,5 +1,5 @@
 $: << 'lib'
-require 'models'
+require 'model'
 require 'travis-backup'
 require 'support/factories'
 require 'support/before_tests'

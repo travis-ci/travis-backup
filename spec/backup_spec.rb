@@ -23,7 +23,6 @@ describe Backup do
       Repository.destroy_all
       Build.destroy_all
       Job.destroy_all
-      Log.destroy_all
       Request.destroy_all
     end
 
@@ -148,7 +147,6 @@ describe Backup do
         backup.run
         expect(backup.dry_run_report[:builds].size).to eql 24
         expect(backup.dry_run_report[:jobs].size).to eql 48
-        expect(backup.dry_run_report[:logs].size).to eql 96
         expect(backup.dry_run_report[:requests].size).to eql 6
       end
 
