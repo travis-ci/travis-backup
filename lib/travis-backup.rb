@@ -5,7 +5,6 @@ require 'active_support/time'
 require 'config'
 require 'db_helper'
 require 'dry_run_reporter'
-require 'backup/move_logs'
 require 'backup/remove_orphans'
 require 'backup/load_from_files'
 require 'backup/remove_specified'
@@ -28,9 +27,7 @@ class Backup
   end
 
   def run(args={})
-    if @config.move_logs
-      Backup::MoveLogs.new(@config, @db_helper, @dry_run_reporter).run
-    elsif @config.load_from_files
+    if @config.load_from_files
       Backup::LoadFromFiles.new(@config, @dry_run_reporter).run
     elsif @config.remove_orphans
       Backup::RemoveOrphans.new(@config, @dry_run_reporter).run
