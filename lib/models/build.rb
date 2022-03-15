@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'models/job'
 require 'model'
-require 'models/repository'
 
 class Build < Model
   belongs_to :repository
