@@ -32,16 +32,14 @@ describe Model do
           filtered_out: {},
           main: {
             abuse: [1, 2],
-            annotation: [1, 2, 3, 4],
-            branch: [73, 74],
+            branch: [1, 2],
             build: [1, 3, 6, 8],
             job: [2, 4, 5, 7, 9, 10],
-            log: [1, 2, 3, 4],
             message: [1, 2],
             queueable_job: [1, 2, 3, 4],
             repository: [1, 2, 3, 4],
             request: [1, 2],
-            stage: [20, 21],
+            stage: [1, 2],
             tag: [1, 2]
           }
         })
@@ -55,15 +53,13 @@ describe Model do
       it 'returns all dependencies ids in hash' do
         expect(commit.ids_of_all_dependencies_with_filtered(to_filter)).to eql({
           main: {
-            annotation: [1, 2],
-            branch: [73],
+            branch: [1],
             build: [1, 3],
             job: [2, 4, 5],
-            log: [1, 2],
             queueable_job: [1, 2],
             repository: [1, 2],
             request: [2],
-            stage: [20],
+            stage: [1],
             tag: [1]
           },
           filtered_out: {
@@ -77,16 +73,14 @@ describe Model do
           expect(commit.ids_of_all_dependencies_with_filtered(to_filter, :without_parents)).to eql({
             main: {
               abuse: [1, 2],
-              annotation: [1, 2],
-              branch: [73],
+              branch: [1],
               build: [1, 3],
               job: [2, 4, 5],
-              log: [1, 2],
               message: [1, 2],
               queueable_job: [1, 2],
               repository: [1, 2],
               request: [1, 2],
-              stage: [20],
+              stage: [1],
               tag: [1]
             },
             filtered_out: {
