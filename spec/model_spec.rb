@@ -1,5 +1,6 @@
 $: << 'lib'
-require 'model'
+require 'uri'
+require 'models'
 require 'travis-backup'
 require 'support/factories'
 require 'support/before_tests'
@@ -16,12 +17,15 @@ describe Model do
     let(:datetime) { (Config.new.threshold + 1).months.ago.to_time.utc }
 
     let!(:commit) {
-      FactoryBot.create(
-        :commit_with_all_dependencies,
-        created_at: datetime,
-        updated_at: datetime
-      )
-    }
+      db_helper.do_without_triggers do
+        FactoryBot.create(
+          :commit_with_all_dependencies,
+          created_at: datetime,
+          updated_at: datetime
+        )
+      end  
+    }  
+
     context 'when the filter is not given' do
       it 'returns all dependencies ids in hash' do
         expect(commit.ids_of_all_dependencies_with_filtered).to eql({

@@ -2,7 +2,7 @@
 
 require 'model'
 
-class EmailUnsubscriber < Model
+class EmailUnsubscribe < Model
   belongs_to :repository
   belongs_to :user
 end

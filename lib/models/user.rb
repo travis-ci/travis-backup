@@ -23,7 +23,7 @@ class User < Model
   has_many :memberships
   has_many :user_beta_features
   has_many :user_utm_params
-  has_many :email_unsubscribers
+  has_many :email_unsubscribes
   has_many :cancellations
 
   has_many :deleted_builds_for_that_this_user_is_owner, as: :owner, class_name: 'DeletedBuild'

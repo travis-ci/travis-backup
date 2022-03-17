@@ -17,7 +17,7 @@ class Repository < Model
   has_many :pull_requests
   has_many :tags
   has_many :build_configs
-  has_many :email_unsubscribers
+  has_many :email_unsubscribes
   has_many :request_configs
   has_many :job_configs
   has_many :request_raw_configs
