@@ -45,7 +45,7 @@ describe Backup do
     context 'when no id arguments are given' do
       it 'processes every repository' do
         Repository.all.each do |repository|
-          expect_any_instance_of(Backup::RemoveSpecified).to receive(:remove_repo_builds).once.with(repository)
+          expect_any_instance_of(Backup::RemoveSpecified).to receive(:remove_heavy_data_for_repo).once.with(repository)
         end
         backup.run
       end
@@ -57,7 +57,7 @@ describe Backup do
 
         expect_method_calls_on(
           Backup::RemoveSpecified,
-          :remove_repo_builds,
+          :remove_heavy_data_for_repo,
           user_repos,
           allow_instances: true,
           arguments_to_check: :first
@@ -73,7 +73,7 @@ describe Backup do
 
         expect_method_calls_on(
           Backup::RemoveSpecified,
-          :remove_repo_builds,
+          :remove_heavy_data_for_repo,
           org_repos,
           allow_instances: true,
           arguments_to_check: :first
@@ -86,7 +86,7 @@ describe Backup do
     context 'when repo_id is given' do
       it 'processes only the repository with the given id' do
         repo = Repository.first
-        expect_any_instance_of(Backup::RemoveSpecified).to receive(:remove_repo_builds).once.with(repo)
+        expect_any_instance_of(Backup::RemoveSpecified).to receive(:remove_heavy_data_for_repo).once.with(repo)
         backup.run(repo_id: repo.id)
       end
     end
