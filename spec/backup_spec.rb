@@ -42,52 +42,54 @@ describe Backup do
       FactoryBot.create(:organization_with_repos)
     }
 
-    context 'when no id arguments are given' do
-      it 'processes every repository' do
-        Repository.all.each do |repository|
-          expect_any_instance_of(Backup::RemoveSpecified).to receive(:remove_heavy_data_for_repo).once.with(repository)
-        end
-        backup.run
-      end
-    end
-
-    context 'when user_id is given' do
-      it 'processes only the repositories of the given user' do
-        user_repos = Repository.where('owner_id = ? and owner_type = ?', user1.id, 'User')
-
-        expect_method_calls_on(
-          Backup::RemoveSpecified,
-          :remove_heavy_data_for_repo,
-          user_repos,
-          allow_instances: true,
-          arguments_to_check: :first
-        ) do
-          backup.run(user_id: user1.id)
+    context 'when threshold is given' do
+      context 'when no id arguments are given' do
+        it 'processes every repository' do
+          Repository.all.each do |repository|
+            expect_any_instance_of(Backup::RemoveSpecified).to receive(:remove_heavy_data_for_repo).once.with(repository)
+          end
+          backup.run
         end
       end
-    end
 
-    context 'when org_id is given' do
-      it 'processes only the repositories of the given organization' do
-        org_repos = Repository.where('owner_id = ? and owner_type = ?', organization1.id, 'Organization')
+      context 'when user_id is given' do
+        it 'processes only the repositories of the given user' do
+          user_repos = Repository.where('owner_id = ? and owner_type = ?', user1.id, 'User')
 
-        expect_method_calls_on(
-          Backup::RemoveSpecified,
-          :remove_heavy_data_for_repo,
-          org_repos,
-          allow_instances: true,
-          arguments_to_check: :first
-        ) do
-          backup.run(org_id: organization1.id)
+          expect_method_calls_on(
+            Backup::RemoveSpecified,
+            :remove_heavy_data_for_repo,
+            user_repos,
+            allow_instances: true,
+            arguments_to_check: :first
+          ) do
+            backup.run(user_id: user1.id)
+          end
         end
       end
-    end
 
-    context 'when repo_id is given' do
-      it 'processes only the repository with the given id' do
-        repo = Repository.first
-        expect_any_instance_of(Backup::RemoveSpecified).to receive(:remove_heavy_data_for_repo).once.with(repo)
-        backup.run(repo_id: repo.id)
+      context 'when org_id is given' do
+        it 'processes only the repositories of the given organization' do
+          org_repos = Repository.where('owner_id = ? and owner_type = ?', organization1.id, 'Organization')
+
+          expect_method_calls_on(
+            Backup::RemoveSpecified,
+            :remove_heavy_data_for_repo,
+            org_repos,
+            allow_instances: true,
+            arguments_to_check: :first
+          ) do
+            backup.run(org_id: organization1.id)
+          end
+        end
+      end
+
+      context 'when repo_id is given' do
+        it 'processes only the repository with the given id' do
+          repo = Repository.first
+          expect_any_instance_of(Backup::RemoveSpecified).to receive(:remove_heavy_data_for_repo).once.with(repo)
+          backup.run(repo_id: repo.id)
+        end
       end
     end
 
