@@ -42,9 +42,9 @@ describe Backup do
       FactoryBot.create(:organization_with_repos)
     }
 
-    context 'when threshold is given' do
+    context 'when threshold for heavy data is given' do
       context 'when no id arguments are given' do
-        it 'processes every repository' do
+        it 'removes heavy data from every repository' do
           Repository.all.each do |repository|
             expect_any_instance_of(Backup::RemoveSpecified).to receive(:remove_heavy_data_for_repo).once.with(repository)
           end
@@ -53,7 +53,7 @@ describe Backup do
       end
 
       context 'when user_id is given' do
-        it 'processes only the repositories of the given user' do
+        it 'removes heavy data from the repositories of the given user only' do
           user_repos = Repository.where('owner_id = ? and owner_type = ?', user1.id, 'User')
 
           expect_method_calls_on(
@@ -69,7 +69,7 @@ describe Backup do
       end
 
       context 'when org_id is given' do
-        it 'processes only the repositories of the given organization' do
+        it 'removes heavy data from the repositories of the given organization only' do
           org_repos = Repository.where('owner_id = ? and owner_type = ?', organization1.id, 'Organization')
 
           expect_method_calls_on(
@@ -85,7 +85,7 @@ describe Backup do
       end
 
       context 'when repo_id is given' do
-        it 'processes only the repository with the given id' do
+        it 'removes heavy data from the repository with the given id only' do
           repo = Repository.first
           expect_any_instance_of(Backup::RemoveSpecified).to receive(:remove_heavy_data_for_repo).once.with(repo)
           backup.run(repo_id: repo.id)
@@ -93,7 +93,7 @@ describe Backup do
       end
     end
 
-    context 'when threshold is not given' do
+    context 'when threshold for heavy data is not given' do
       context 'when user_id is given' do
         let!(:backup) { Backup.new(
           files_location: files_location,
