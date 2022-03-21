@@ -11,13 +11,13 @@
       "related_table": "branches",
       "foreign_key": "last_build_id",
       "parent_id": 1,
-      "related_id": 77
+      "related_id": 5
     },
     {
       "related_table": "branches",
       "foreign_key": "last_build_id",
       "parent_id": 1,
-      "related_id": 82
+      "related_id": 10
     },
     {
       "related_table": "repositories",
