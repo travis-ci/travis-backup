@@ -93,50 +93,50 @@ describe Backup do
       end
     end
 
-    context 'when threshold for heavy data is not given' do
-      context 'when user_id is given' do
-        let!(:backup) { Backup.new(
-          files_location: files_location,
-          limit: 5,
-          threshold: false,
-          user_id: user1.id
-        ) }
-        it 'removes the user with all dependencies' do  
-          expect_any_instance_of(Backup::RemoveSpecified)
-            .to receive(:remove_user_with_dependencies).once.with(user1.id)
-          backup.run(user_id: user1.id)
-        end
-      end
+    # context 'when threshold for heavy data is not given' do
+    #   context 'when user_id is given' do
+    #     let!(:backup) { Backup.new(
+    #       files_location: files_location,
+    #       limit: 5,
+    #       threshold: false,
+    #       user_id: user1.id
+    #     ) }
+    #     it 'removes the user with all dependencies' do  
+    #       expect_any_instance_of(Backup::RemoveSpecified)
+    #         .to receive(:remove_user_with_dependencies).once.with(user1.id)
+    #       backup.run(user_id: user1.id)
+    #     end
+    #   end
   
-      context 'when org_id is given' do
-        let!(:backup) { Backup.new(
-          files_location: files_location,
-          limit: 5,
-          threshold: false,
-          org_id: user1.id
-        ) }
-        it 'removes the organisation with all dependencies' do
-          expect_any_instance_of(Backup::RemoveSpecified)
-            .to receive(:remove_org_with_dependencies).once.with(organization1.id)
-          backup.run(org_id: organization1.id)
-        end
-      end
+    #   context 'when org_id is given' do
+    #     let!(:backup) { Backup.new(
+    #       files_location: files_location,
+    #       limit: 5,
+    #       threshold: false,
+    #       org_id: user1.id
+    #     ) }
+    #     it 'removes the organisation with all dependencies' do
+    #       expect_any_instance_of(Backup::RemoveSpecified)
+    #         .to receive(:remove_org_with_dependencies).once.with(organization1.id)
+    #       backup.run(org_id: organization1.id)
+    #     end
+    #   end
   
-      context 'when repo_id is given' do
-        let!(:backup) { Backup.new(
-          files_location: files_location,
-          limit: 5,
-          threshold: false,
-          repo_id: user1.id
-        ) }
-        it 'removes the repo with all dependencies' do
-          repo = Repository.first
-          expect_any_instance_of(Backup::RemoveSpecified)
-            .to receive(:remove_repo_with_dependencies).once.with(repo.id)
-          backup.run(repo_id: repo.id)
-        end
-      end
-    end
+    #   context 'when repo_id is given' do
+    #     let!(:backup) { Backup.new(
+    #       files_location: files_location,
+    #       limit: 5,
+    #       threshold: false,
+    #       repo_id: user1.id
+    #     ) }
+    #     it 'removes the repo with all dependencies' do
+    #       repo = Repository.first
+    #       expect_any_instance_of(Backup::RemoveSpecified)
+    #         .to receive(:remove_repo_with_dependencies).once.with(repo.id)
+    #       backup.run(repo_id: repo.id)
+    #     end
+    #   end
+    # end
 
     context 'when dry run mode is on' do
       let!(:backup) { Backup.new(files_location: files_location, limit: 10, dry_run: true, threshold: 0) }
