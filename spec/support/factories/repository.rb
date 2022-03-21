@@ -135,6 +135,9 @@ FactoryBot.define do
       end
 
       factory :repository_for_removing_heavy_data do
+        created_at { 12.months.ago.to_time.utc }
+        updated_at { 12.months.ago.to_time.utc }
+
         after(:create) do |repository|
           create(
             :build_for_removing_heavy_data,
@@ -166,6 +169,7 @@ FactoryBot.define do
         end
       end
     end
+
     factory :repository_with_safe_dependencies do
       after(:create) do |repository|
         create(

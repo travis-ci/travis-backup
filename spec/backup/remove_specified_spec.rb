@@ -84,6 +84,33 @@ describe Backup::RemoveSpecified do
       end
     end
 
+    context 'when if_backup config is set to true' do
+      it_behaves_like 'removing builds with dependencies'
+
+      it 'saves removed data to files in proper format' do
+        expect_method_calls_on(
+          File, :write,
+          get_expected_files('remove_repo_builds', datetime),
+          allow_instances: true,
+          arguments_to_check: :first
+        ) do
+          remove_specified.remove_repo_builds(repository)
+        end
+      end
+
+      context 'when path with nonexistent folders is given' do
+        let(:random_files_location) { "dump/tests/#{rand(100000)}" }
+        let!(:config) { Config.new(files_location: random_files_location, limit: 2) }
+        let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
+
+        it 'creates needed folders' do
+          path_regexp = Regexp.new("#{random_files_location}/.+")
+          expect(FileUtils).to receive(:mkdir_p).with(path_regexp).and_call_original
+          remove_specified.remove_repo_builds(repository)
+        end
+      end
+    end
+
     context 'when if_backup config is set to false' do
       let!(:config) { Config.new(files_location: files_location, limit: 2, if_backup: false) }
       let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
