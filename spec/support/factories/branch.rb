@@ -30,6 +30,12 @@ FactoryBot.define do
           created_at: branch.created_at,
           updated_at: branch.updated_at
         )
+        create_list(
+          :deleted_build, 2,
+          branch_id: branch.id,
+          created_at: branch.created_at,
+          updated_at: branch.updated_at
+        )
         create(
           :cron,
           branch_id: branch.id,
@@ -43,14 +49,33 @@ FactoryBot.define do
           created_at: branch.created_at,
           updated_at: branch.updated_at
         )
+        create_list(
+          :deleted_job, 2,
+          source_id: branch.id,
+          source_type: 'Branch',
+          created_at: branch.created_at,
+          updated_at: branch.updated_at
+        )
         create(
           :commit_with_all_dependencies_and_sibling,
           branch_id: branch.id,
           created_at: branch.created_at,
           updated_at: branch.updated_at
         )
+        create_list(
+          :deleted_commit, 2,
+          branch_id: branch.id,
+          created_at: branch.created_at,
+          updated_at: branch.updated_at
+        )
         create(
           :request_with_all_dependencies_and_sibling,
+          branch_id: branch.id,
+          created_at: branch.created_at,
+          updated_at: branch.updated_at
+        )
+        create_list(
+          :deleted_request, 2,
           branch_id: branch.id,
           created_at: branch.created_at,
           updated_at: branch.updated_at

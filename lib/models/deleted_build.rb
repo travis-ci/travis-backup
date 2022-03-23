@@ -12,6 +12,7 @@ class DeletedBuild < Model
   belongs_to :tag
   belongs_to :request
   belongs_to :build_config, foreign_key: :config_id, class_name: 'BuildConfig'
+  self.primary_key = 'id'
 
   # has_many   :jobs, -> { order('id') }, as: :source, dependent: :destroy
   # has_many   :repos_for_that_this_build_is_current, foreign_key: :current_build_id, dependent: :destroy, class_name: 'Repository'

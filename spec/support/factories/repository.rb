@@ -87,6 +87,27 @@ FactoryBot.define do
         create_for_repo(repository, :star, 2)
         create_for_repo(repository, :pull_request_with_all_dependencies_and_sibling)
         create_for_repo(repository, :tag_with_all_dependencies_and_sibling)
+
+        create(:build_config_with_all_dependencies_and_sibling, repository_id: repository.id)
+        create_for_repo(repository, :email_unsubscribe, 2)
+        create(:request_config_with_all_dependencies_and_sibling, repository_id: repository.id)
+        create(:job_config_with_all_dependencies_and_sibling, repository_id: repository.id)
+        create(:request_raw_config_with_all_dependencies_and_sibling, repository_id: repository.id)
+        create_list(:repo_count, 2, repository_id: repository.id)
+        create(:request_yaml_config_with_all_dependencies_and_sibling, repository_id: repository.id)
+
+        create_for_repo(repository, :deleted_build, 2)
+        create_for_repo(repository, :deleted_request, 2)
+        create_for_repo(repository, :deleted_job, 2)
+        create_for_repo(repository, :deleted_ssl_key, 2)
+        create_for_repo(repository, :deleted_commit, 2)
+        create_for_repo(repository, :deleted_pull_request, 2)
+        create_for_repo(repository, :deleted_tag, 2)
+        create_list(:deleted_build_config, 2, repository_id: repository.id)
+        create_list(:deleted_job_config, 2, repository_id: repository.id)
+        create_list(:deleted_request_config, 2, repository_id: repository.id)
+        create_list(:deleted_request_raw_config, 2, repository_id: repository.id)
+        create_list(:deleted_request_yaml_config, 2, repository_id: repository.id)
       end
 
       factory :repository_with_all_dependencies_and_sibling do

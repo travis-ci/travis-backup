@@ -12,6 +12,7 @@ class DeletedRequest < Model
   belongs_to :commit
   belongs_to :request_yaml_configs
   belongs_to :request_configs
+  self.primary_key = 'id'
   # has_many :abuses
   # has_many :messages, as: :subject
   # has_many :jobs, as: :source

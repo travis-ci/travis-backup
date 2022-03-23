@@ -125,6 +125,17 @@ FactoryBot.define do
       factory :build_with_all_dependencies do
         after(:create) do |build|
           create(
+            :stage,
+            build_id: build.id
+          )
+          create(
+            :job,
+            source_type: 'Build',
+            source_id: build.id,
+            created_at: build.created_at,
+            updated_at: build.updated_at
+          )
+          create(
             :tag_with_all_dependencies_and_sibling,
             last_build_id: build.id,
             created_at: build.created_at,
@@ -145,6 +156,23 @@ FactoryBot.define do
           create(
             :repository_with_safe_dependencies_and_sibling,
             current_build_id: build.id,
+            created_at: build.created_at,
+            updated_at: build.updated_at
+          )
+          create(
+            :deleted_stage,
+            build_id: build.id
+          )
+          create(
+            :deleted_job,
+            source_type: 'Build',
+            source_id: build.id,
+            created_at: build.created_at,
+            updated_at: build.updated_at
+          )
+          create(
+            :deleted_tag,
+            last_build_id: build.id,
             created_at: build.created_at,
             updated_at: build.updated_at
           )

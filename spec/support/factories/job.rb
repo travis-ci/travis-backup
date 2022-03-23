@@ -35,6 +35,11 @@ FactoryBot.define do
           :queueable_job, 2,
           job_id: job.id
         )
+        create_list(
+          :job_version, 2,
+          job_id: job.id,
+          created_at: job.created_at
+        )
       end
       factory :job_with_all_dependencies_and_sibling do
         after(:create) do |job|

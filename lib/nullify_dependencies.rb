@@ -5,8 +5,8 @@ module NullifyDependencies
     dependencies_symbols_to_nullify.map do |symbol|
       dependencies = self.send(symbol) # e.g. build.tags_for_that_this_build_is_last
 
-      dependencies.map do |entry|
-        foreign_key = self.class.reflect_on_association(symbol).foreign_key.to_sym
+      dependencies.map do |entry| # e.g. tags.map do |tag|
+        foreign_key = self.class.reflect_on_association(symbol).foreign_key.to_sym # e.g. last_build_id
         entry.update(foreign_key => nil) # e.g. tag.update(last_build_id: nil)
         {
           related_table: entry.class.table_name,

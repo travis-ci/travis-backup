@@ -49,6 +49,24 @@ FactoryBot.define do
           created_at: commit.created_at,
           updated_at: commit.updated_at
         )
+        create_list(
+          :deleted_build, 2,
+          commit_id: commit.id,
+          created_at: commit.created_at,
+          updated_at: commit.updated_at
+        )
+        create_list(
+          :deleted_job, 2,
+          commit_id: commit.id,
+          created_at: commit.created_at,
+          updated_at: commit.updated_at
+        )
+        create_list(
+          :deleted_request, 2,
+          commit_id: commit.id,
+          created_at: commit.created_at,
+          updated_at: commit.updated_at
+        )
       end
       factory :commit_with_all_dependencies_and_sibling do
         after(:create) do |commit|
