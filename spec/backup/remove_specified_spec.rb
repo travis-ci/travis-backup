@@ -59,13 +59,14 @@ describe Backup::RemoveSpecified do
       it 'removes builds with all its dependencies' do
         dependency_tree = repository.dependency_tree
         remove_specified.remove_repo_builds(repository)
+        puts JSON.pretty_generate dependency_tree.status_tree_condensed
         expect(dependency_tree.status_tree_condensed).to eql(ExpectedDependencyTrees.remove_repo_builds)
       end
 
       it 'removes intended number of rows from the database' do
         expect {
           remove_specified.remove_repo_builds(repository)
-        }.to change { Model.sum_of_subclasses_rows }.by(-30)
+        }.to change { Model.sum_of_subclasses_rows }.by(-40)
       end
 
       it 'nullifies orphaned builds dependencies' do
@@ -161,7 +162,7 @@ describe Backup::RemoveSpecified do
         db_helper.do_without_triggers do
           expect {
             remove_specified.remove_repo_requests(repository)
-          }.to change { Model.sum_of_subclasses_rows }.by(-15)
+          }.to change { Model.sum_of_subclasses_rows }.by(-29)
         end
       end
 

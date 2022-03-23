@@ -1,0 +1,21 @@
+{
+  "table_name": "request_raw_configurations",
+  "data": [
+    {
+      "id": 9,
+      "request_id": 11,
+      "request_raw_config_id": null,
+      "source": null,
+      "org_id": null,
+      "merge_mode": null
+    },
+    {
+      "id": 10,
+      "request_id": 11,
+      "request_raw_config_id": null,
+      "source": null,
+      "org_id": null,
+      "merge_mode": null
+    }
+  ]
+}
