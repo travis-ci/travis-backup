@@ -1,5 +1,5 @@
 Gem::Specification.new do |s|
-  s.name                  = 'travis-backup'
+  s.name                  = 'travis-backup-for-v3'
   s.version               = '0.3.0'
   s.summary               = 'Travis CI backup tool'
   s.authors               = ['Karol Selak']
