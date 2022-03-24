@@ -46,6 +46,8 @@ describe Backup::RemoveSpecified do
     end
 
     let!(:repository) {
+      FactoryBot.rewind_sequences
+
       db_helper.do_without_triggers do
         FactoryBot.create(
           :repository_for_removing_heavy_data,
@@ -59,7 +61,6 @@ describe Backup::RemoveSpecified do
       it 'removes builds with all its dependencies' do
         dependency_tree = repository.dependency_tree
         remove_specified.remove_repo_builds(repository)
-        puts JSON.pretty_generate dependency_tree.status_tree_condensed
         expect(dependency_tree.status_tree_condensed).to eql(ExpectedDependencyTrees.remove_repo_builds)
       end
 
