@@ -151,9 +151,9 @@ class Config
 
   def abort_message(intro)
     "\n#{intro}\n\nExample usage:\n"+
-    "\n  $ bin/travis_backup 'postgres://my_database_url' --threshold 6" +
+    "\n  $ bin/travis_backup 'postgres://my_database_url' --threshold 6\n" +
     "\nor using in code:\n" +
-    "\n  Backup.new(database_url: 'postgres://my_database_url', threshold: 6)" +
+    "\n  Backup.new(database_url: 'postgres://my_database_url', threshold: 6)\n" +
     "\nYou can also set it using environment variables or configuration files.\n"
   end
 
