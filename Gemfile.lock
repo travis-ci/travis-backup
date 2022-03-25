@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    travis-backup (0.3.0)
+    travis-backup-for-v3 (0.0.1)
       activerecord
       bootsnap
       pg
@@ -209,7 +209,7 @@ DEPENDENCIES
   rspec-rails
   rubocop (~> 0.75.1)
   rubocop-rspec
-  travis-backup!
+  travis-backup-for-v3!
 
 BUNDLED WITH
-   2.3.6
+   2.3.10

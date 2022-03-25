@@ -6,6 +6,7 @@ require 'config'
 require 'db_helper'
 require 'dry_run_reporter'
 require 'backup/remove_specified'
+require 'models'
 
 # main travis-backup class
 class Backup
