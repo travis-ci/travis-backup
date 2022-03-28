@@ -2,6 +2,12 @@
   "table_name": "builds",
   "nullified_relationships": [
     {
+      "related_table": "branches",
+      "foreign_key": "last_build_id",
+      "parent_id": 52,
+      "related_id": 13
+    },
+    {
       "related_table": "repositories",
       "foreign_key": "current_build_id",
       "parent_id": 52,
@@ -15,12 +21,6 @@
     },
     {
       "related_table": "tags",
-      "foreign_key": "last_build_id",
-      "parent_id": 52,
-      "related_id": 13
-    },
-    {
-      "related_table": "branches",
       "foreign_key": "last_build_id",
       "parent_id": 52,
       "related_id": 13

@@ -18,7 +18,7 @@ module SaveNullifiedRelsToFile
 
     export = {}
     export[:table_name] = model.table_name
-    export[:nullified_relationships] = rels_batch
+    export[:nullified_relationships] = rels_batch.sort{|a, b| a.to_s <=> b.to_s}
 
     content = JSON.pretty_generate(export)
     file_name = "nullified_relationships/build_#{@file_index}.json"
