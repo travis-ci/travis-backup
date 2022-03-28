@@ -41,6 +41,24 @@ FactoryBot.define do
           created_at: tag.created_at,
           updated_at: tag.updated_at
         )
+        create_list(
+          :deleted_build, 2,
+          tag_id: tag.id,
+          created_at: tag.created_at,
+          updated_at: tag.updated_at
+        )
+        create_list(
+          :deleted_commit, 2,
+          tag_id: tag.id,
+          created_at: tag.created_at,
+          updated_at: tag.updated_at
+        )
+        create_list(
+          :deleted_request, 2,
+          tag_id: tag.id,
+          created_at: tag.created_at,
+          updated_at: tag.updated_at
+        )
       end
       factory :tag_with_all_dependencies_and_sibling do
         after(:create) do |tag|

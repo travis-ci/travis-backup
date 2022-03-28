@@ -62,6 +62,15 @@ class Model < ActiveRecord::Base
     end.reduce(:+)
   end
 
+  def self.subclasses_counts(except: [])
+    self.subclasses.map do |subclass|
+      next [subclass.name, 0] if except.include?(subclass.table_name) || except.include?(subclass.name)
+
+      [subclass.name, subclass.all.size]
+    end.to_h
+  end
+
+
   def removed?
     begin
       reload

@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
-require 'models/job'
 require 'model'
-require 'models/repository'
 
-# Build model
 class Build < Model
   belongs_to :repository
   belongs_to :owner, polymorphic: true
@@ -14,6 +11,8 @@ class Build < Model
   belongs_to :pull_request
   belongs_to :tag
   belongs_to :request
+  belongs_to :build_config, foreign_key: :config_id, class_name: 'BuildConfig'
+
   has_many   :jobs, -> { order('id') }, as: :source, dependent: :destroy
   has_many   :repos_for_that_this_build_is_current, foreign_key: :current_build_id, dependent: :destroy, class_name: 'Repository'
   has_many   :repos_for_that_this_build_is_last, foreign_key: :last_build_id, class_name: 'Repository'
@@ -21,14 +20,17 @@ class Build < Model
   has_many   :branches_for_that_this_build_is_last, foreign_key: :last_build_id, class_name: 'Branch'
   has_many   :stages
 
-  self.table_name = 'builds'
+  has_many   :deleted_jobs, -> { order('id') }, as: :source, dependent: :destroy
+  has_many   :deleted_tags_for_that_this_build_is_last, foreign_key: :last_build_id, class_name: 'DeletedTag'
+  has_many   :deleted_stages
 
   def self.default_dependencies_symbols_to_nullify
     [
       :repos_for_that_this_build_is_current,
       :repos_for_that_this_build_is_last,
       :tags_for_that_this_build_is_last,
-      :branches_for_that_this_build_is_last
+      :deleted_tags_for_that_this_build_is_last,
+      :branches_for_that_this_build_is_last,
     ]
   end
 end

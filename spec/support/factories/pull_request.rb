@@ -27,6 +27,18 @@ FactoryBot.define do
           created_at: pull_request.created_at,
           updated_at: pull_request.updated_at
         )
+        create_list(
+          :deleted_build, 2,
+          pull_request_id: pull_request.id,
+          created_at: pull_request.created_at,
+          updated_at: pull_request.updated_at
+        )
+        create_list(
+          :deleted_request, 2,
+          pull_request_id: pull_request.id,
+          created_at: pull_request.created_at,
+          updated_at: pull_request.updated_at
+        )
       end
       factory :pull_request_with_all_dependencies_and_sibling do
         after(:create) do |pull_request|

@@ -3,6 +3,15 @@
 require 'models/request'
 require 'factory_bot'
 
+def create_for_request(request, what, how_many = 1)
+  create_list(
+    what, how_many,
+    request_id: request.id,
+    created_at: request.created_at,
+    updated_at: request.updated_at
+  )
+end
+
 FactoryBot.define do
   factory :request do
     factory :request_orphaned_on_commit_id do
@@ -39,12 +48,7 @@ FactoryBot.define do
 
     factory :request_with_all_dependencies do
       after(:create) do |request|
-        create_list(
-          :abuse, 2,
-          request_id: request.id,
-          created_at: request.created_at,
-          updated_at: request.updated_at
-        )
+        create_for_request(request, :abuse, 2)
         create_list(
           :message, 2,
           subject_id: request.id,
@@ -52,18 +56,39 @@ FactoryBot.define do
           created_at: request.created_at,
           updated_at: request.updated_at
         )
-        create(
-          :build_with_safe_dependencies_and_sibling,
-          request_id: request.id,
-          created_at: request.created_at,
-          updated_at: request.updated_at
-        )
+        create_for_request(request, :build_with_safe_dependencies_and_sibling)
         create(
           :job_with_all_dependencies_and_sibling,
           source_type: 'Request',
           source_id: request.id,
           created_at: request.created_at,
           updated_at: request.updated_at
+        )
+        create_list(
+          :request_payload, 2,
+          request_id: request.id,
+          created_at: request.created_at,
+        )
+        create_list(
+          :request_raw_configuration, 2,
+          request_id: request.id
+        )
+        create_list(
+          :deleted_job, 2,
+          source_type: 'Request',
+          source_id: request.id,
+          created_at: request.created_at,
+          updated_at: request.updated_at
+        )
+        create_for_request(request, :deleted_build, 2)
+        create_list(
+          :deleted_request_payload, 2,
+          request_id: request.id,
+          created_at: request.created_at,
+        )
+        create_list(
+          :deleted_request_raw_configuration, 2,
+          request_id: request.id
         )
       end
 

@@ -1,1744 +1,2469 @@
 class ExpectedDependencyTrees
   def self.remove_repo_builds
     {
-      _: "id 1, present",
-      build: [
+      "_": "id 1, present",
+      "build": [
         {
-          _: "id 1, removed",
-          job: [
+          "_": "id 1, removed",
+          "job": [
             {
-              _: "id 6, removed",
-              log: [
+              "_": "id 6, removed",
+              "queueable_job": [
                 "id 1, removed",
                 "id 2, removed"
               ],
-              annotation: [
-                "id 1, removed",
-                "id 2, removed"
-              ],
-              queueable_job: [
+              "job_version": [
                 "id 1, removed",
                 "id 2, removed"
               ]
             },
-            "id 7, removed"
+            "id 7, removed",
+            "id 8, removed"
           ],
-          repository: [
+          "repository": [
             {
-              _: "id 20, present",
-              build: [
-                "id 48, present"
-              ],
-              request: [
-                "id 10, present"
-              ],
-              job: [
+              "_": "id 20, present",
+              "build": [
                 "id 49, present"
               ],
-              branch: [
-                "id 84, present"
+              "request": [
+                "id 10, present"
               ],
-              ssl_key: [
-                "id 32, present"
+              "job": [
+                "id 50, present"
               ],
-              commit: [
-                "id 216, present"
+              "branch": [
+                "id 12, present"
               ],
-              permission: [
+              "ssl_key": [
                 "id 2, present"
               ],
-              star: [
+              "commit": [
+                "id 6, present"
+              ],
+              "permission": [
                 "id 2, present"
               ],
-              pull_request: [
+              "star": [
                 "id 2, present"
               ],
-              tag: [
+              "pull_request": [
+                "id 2, present"
+              ],
+              "tag": [
                 "id 12, present"
               ]
             },
             "id 21, present",
             {
-              _: "id 18, present",
-              build: [
-                "id 46, present"
-              ],
-              request: [
-                "id 9, present"
-              ],
-              job: [
+              "_": "id 18, present",
+              "build": [
                 "id 47, present"
               ],
-              branch: [
-                "id 83, present"
+              "request": [
+                "id 9, present"
               ],
-              ssl_key: [
-                "id 31, present"
+              "job": [
+                "id 48, present"
               ],
-              commit: [
-                "id 215, present"
+              "branch": [
+                "id 11, present"
               ],
-              permission: [
+              "ssl_key": [
                 "id 1, present"
               ],
-              star: [
+              "commit": [
+                "id 5, present"
+              ],
+              "permission": [
                 "id 1, present"
               ],
-              pull_request: [
+              "star": [
                 "id 1, present"
               ],
-              tag: [
+              "pull_request": [
+                "id 1, present"
+              ],
+              "tag": [
                 "id 11, present"
               ]
             },
             "id 19, present"
           ],
-          tag: [
+          "tag": [
             {
-              _: "id 1, present",
-              build: [
+              "_": "id 1, present",
+              "build": [
                 {
-                  _: "id 8, present",
-                  job: [
-                    "id 9, present"
+                  "_": "id 9, present",
+                  "job": [
+                    "id 10, present"
                   ],
-                  repository: [
+                  "repository": [
                     "id 3, present",
                     "id 2, present"
                   ],
-                  tag: [
+                  "tag": [
                     "id 2, present"
                   ],
-                  branch: [
-                    "id 73, present"
+                  "branch": [
+                    "id 1, present"
                   ],
-                  stage: [
-                    "id 22, present"
+                  "stage": [
+                    "id 4, present"
                   ]
                 },
-                "id 10, present"
+                "id 11, present"
               ],
-              commit: [
+              "commit": [
                 {
-                  _: "id 211, present",
-                  build: [
+                  "_": "id 1, present",
+                  "build": [
                     {
-                      _: "id 11, present",
-                      job: [
-                        "id 12, present"
+                      "_": "id 12, present",
+                      "job": [
+                        "id 13, present"
                       ],
-                      repository: [
+                      "repository": [
                         "id 5, present",
                         "id 4, present"
                       ],
-                      tag: [
+                      "tag": [
                         "id 3, present"
                       ],
-                      branch: [
-                        "id 74, present"
+                      "branch": [
+                        "id 2, present"
                       ],
-                      stage: [
-                        "id 23, present"
+                      "stage": [
+                        "id 5, present"
                       ]
                     },
-                    "id 13, present"
+                    "id 14, present"
                   ],
-                  job: [
+                  "job": [
                     {
-                      _: "id 14, present",
-                      log: [
+                      "_": "id 15, present",
+                      "queueable_job": [
                         "id 3, present",
                         "id 4, present"
                       ],
-                      annotation: [
-                        "id 3, present",
-                        "id 4, present"
-                      ],
-                      queueable_job: [
+                      "job_version": [
                         "id 3, present",
                         "id 4, present"
                       ]
                     },
-                    "id 15, present"
+                    "id 16, present"
                   ],
-                  request: [
+                  "request": [
                     {
-                      _: "id 1, present",
-                      abuse: [
+                      "_": "id 1, present",
+                      "abuse": [
                         "id 1, present",
                         "id 2, present"
                       ],
-                      message: [
+                      "message": [
                         "id 1, present",
                         "id 2, present"
                       ],
-                      job: [
+                      "job": [
                         {
-                          _: "id 19, present",
-                          log: [
+                          "_": "id 20, present",
+                          "queueable_job": [
                             "id 5, present",
                             "id 6, present"
                           ],
-                          annotation: [
-                            "id 5, present",
-                            "id 6, present"
-                          ],
-                          queueable_job: [
+                          "job_version": [
                             "id 5, present",
                             "id 6, present"
                           ]
                         },
-                        "id 20, present"
+                        "id 21, present"
                       ],
-                      build: [
+                      "build": [
                         {
-                          _: "id 16, present",
-                          job: [
-                            "id 17, present"
+                          "_": "id 17, present",
+                          "job": [
+                            "id 18, present"
                           ],
-                          repository: [
+                          "repository": [
                             "id 7, present",
                             "id 6, present"
                           ],
-                          tag: [
+                          "tag": [
                             "id 4, present"
                           ],
-                          branch: [
-                            "id 75, present"
+                          "branch": [
+                            "id 3, present"
                           ],
-                          stage: [
-                            "id 24, present"
+                          "stage": [
+                            "id 6, present"
                           ]
                         },
-                        "id 18, present"
+                        "id 19, present"
+                      ],
+                      "request_payload": [
+                        "id 1, present",
+                        "id 2, present"
+                      ],
+                      "request_raw_configuration": [
+                        "id 1, present",
+                        "id 2, present"
+                      ],
+                      "deleted_job": [
+                        "id 1, present",
+                        "id 2, present"
+                      ],
+                      "deleted_build": [
+                        "id 1, present",
+                        "id 2, present"
+                      ],
+                      "deleted_request_payload": [
+                        "id 1, present",
+                        "id 2, present"
+                      ],
+                      "deleted_request_raw_configuration": [
+                        "id 1, present",
+                        "id 2, present"
                       ]
                     },
                     "id 2, present"
+                  ],
+                  "deleted_build": [
+                    "id 3, present",
+                    "id 4, present"
+                  ],
+                  "deleted_job": [
+                    "id 3, present",
+                    "id 4, present"
+                  ],
+                  "deleted_request": [
+                    "id 1, present",
+                    "id 2, present"
                   ]
                 },
-                "id 212, present"
+                "id 2, present"
               ],
-              request: [
+              "request": [
                 {
-                  _: "id 3, present",
-                  abuse: [
+                  "_": "id 3, present",
+                  "abuse": [
                     "id 3, present",
                     "id 4, present"
                   ],
-                  message: [
+                  "message": [
                     "id 3, present",
                     "id 4, present"
                   ],
-                  job: [
+                  "job": [
                     {
-                      _: "id 24, present",
-                      log: [
+                      "_": "id 25, present",
+                      "queueable_job": [
                         "id 7, present",
                         "id 8, present"
                       ],
-                      annotation: [
-                        "id 7, present",
-                        "id 8, present"
-                      ],
-                      queueable_job: [
+                      "job_version": [
                         "id 7, present",
                         "id 8, present"
                       ]
                     },
-                    "id 25, present"
+                    "id 26, present"
                   ],
-                  build: [
+                  "build": [
                     {
-                      _: "id 21, present",
-                      job: [
-                        "id 22, present"
+                      "_": "id 22, present",
+                      "job": [
+                        "id 23, present"
                       ],
-                      repository: [
+                      "repository": [
                         "id 9, present",
                         "id 8, present"
                       ],
-                      tag: [
+                      "tag": [
                         "id 5, present"
                       ],
-                      branch: [
-                        "id 76, present"
+                      "branch": [
+                        "id 4, present"
                       ],
-                      stage: [
-                        "id 25, present"
+                      "stage": [
+                        "id 7, present"
                       ]
                     },
-                    "id 23, present"
+                    "id 24, present"
+                  ],
+                  "request_payload": [
+                    "id 3, present",
+                    "id 4, present"
+                  ],
+                  "request_raw_configuration": [
+                    "id 3, present",
+                    "id 4, present"
+                  ],
+                  "deleted_job": [
+                    "id 5, present",
+                    "id 6, present"
+                  ],
+                  "deleted_build": [
+                    "id 5, present",
+                    "id 6, present"
+                  ],
+                  "deleted_request_payload": [
+                    "id 3, present",
+                    "id 4, present"
+                  ],
+                  "deleted_request_raw_configuration": [
+                    "id 3, present",
+                    "id 4, present"
                   ]
                 },
+                "id 4, present"
+              ],
+              "deleted_build": [
+                "id 7, present",
+                "id 8, present"
+              ],
+              "deleted_commit": [
+                "id 1, present",
+                "id 2, present"
+              ],
+              "deleted_request": [
+                "id 3, present",
                 "id 4, present"
               ]
             },
             "id 6, present"
           ],
-          branch: [
+          "branch": [
             {
-              _: "id 77, present",
-              build: [
+              "_": "id 5, present",
+              "build": [
                 {
-                  _: "id 26, present",
-                  job: [
-                    "id 27, present"
+                  "_": "id 27, present",
+                  "job": [
+                    "id 28, present"
                   ],
-                  repository: [
+                  "repository": [
                     "id 11, present",
                     "id 10, present"
                   ],
-                  tag: [
+                  "tag": [
                     "id 7, present"
                   ],
-                  branch: [
-                    "id 78, present"
+                  "branch": [
+                    "id 6, present"
                   ],
-                  stage: [
-                    "id 26, present"
+                  "stage": [
+                    "id 8, present"
                   ]
                 },
-                "id 28, present"
+                "id 29, present"
               ],
-              commit: [
+              "commit": [
                 {
-                  _: "id 213, present",
-                  build: [
+                  "_": "id 3, present",
+                  "build": [
                     {
-                      _: "id 31, present",
-                      job: [
-                        "id 32, present"
+                      "_": "id 32, present",
+                      "job": [
+                        "id 33, present"
                       ],
-                      repository: [
+                      "repository": [
                         "id 13, present",
                         "id 12, present"
                       ],
-                      tag: [
+                      "tag": [
                         "id 8, present"
                       ],
-                      branch: [
-                        "id 79, present"
+                      "branch": [
+                        "id 7, present"
                       ],
-                      stage: [
-                        "id 27, present"
+                      "stage": [
+                        "id 9, present"
                       ]
                     },
-                    "id 33, present"
+                    "id 34, present"
                   ],
-                  job: [
+                  "job": [
                     {
-                      _: "id 34, present",
-                      log: [
+                      "_": "id 35, present",
+                      "queueable_job": [
                         "id 11, present",
                         "id 12, present"
                       ],
-                      annotation: [
-                        "id 11, present",
-                        "id 12, present"
-                      ],
-                      queueable_job: [
+                      "job_version": [
                         "id 11, present",
                         "id 12, present"
                       ]
                     },
-                    "id 35, present"
+                    "id 36, present"
                   ],
-                  request: [
+                  "request": [
                     {
-                      _: "id 5, present",
-                      abuse: [
+                      "_": "id 5, present",
+                      "abuse": [
                         "id 5, present",
                         "id 6, present"
                       ],
-                      message: [
+                      "message": [
                         "id 5, present",
                         "id 6, present"
                       ],
-                      job: [
+                      "job": [
                         {
-                          _: "id 39, present",
-                          log: [
+                          "_": "id 40, present",
+                          "queueable_job": [
                             "id 13, present",
                             "id 14, present"
                           ],
-                          annotation: [
-                            "id 13, present",
-                            "id 14, present"
-                          ],
-                          queueable_job: [
+                          "job_version": [
                             "id 13, present",
                             "id 14, present"
                           ]
                         },
-                        "id 40, present"
+                        "id 41, present"
                       ],
-                      build: [
+                      "build": [
                         {
-                          _: "id 36, present",
-                          job: [
-                            "id 37, present"
+                          "_": "id 37, present",
+                          "job": [
+                            "id 38, present"
                           ],
-                          repository: [
+                          "repository": [
                             "id 15, present",
                             "id 14, present"
                           ],
-                          tag: [
+                          "tag": [
                             "id 9, present"
                           ],
-                          branch: [
-                            "id 80, present"
+                          "branch": [
+                            "id 8, present"
                           ],
-                          stage: [
-                            "id 28, present"
+                          "stage": [
+                            "id 10, present"
                           ]
                         },
-                        "id 38, present"
+                        "id 39, present"
+                      ],
+                      "request_payload": [
+                        "id 5, present",
+                        "id 6, present"
+                      ],
+                      "request_raw_configuration": [
+                        "id 5, present",
+                        "id 6, present"
+                      ],
+                      "deleted_job": [
+                        "id 9, present",
+                        "id 10, present"
+                      ],
+                      "deleted_build": [
+                        "id 11, present",
+                        "id 12, present"
+                      ],
+                      "deleted_request_payload": [
+                        "id 5, present",
+                        "id 6, present"
+                      ],
+                      "deleted_request_raw_configuration": [
+                        "id 5, present",
+                        "id 6, present"
                       ]
                     },
                     "id 6, present"
+                  ],
+                  "deleted_build": [
+                    "id 13, present",
+                    "id 14, present"
+                  ],
+                  "deleted_job": [
+                    "id 11, present",
+                    "id 12, present"
+                  ],
+                  "deleted_request": [
+                    "id 5, present",
+                    "id 6, present"
                   ]
                 },
-                "id 214, present"
+                "id 4, present"
               ],
-              cron: [
-                "id 1, present",
-                "id 2, present"
+              "cron": [
+                "id 1, present"
               ],
-              job: [
+              "job": [
                 {
-                  _: "id 29, present",
-                  log: [
+                  "_": "id 30, present",
+                  "queueable_job": [
                     "id 9, present",
                     "id 10, present"
                   ],
-                  annotation: [
-                    "id 9, present",
-                    "id 10, present"
-                  ],
-                  queueable_job: [
+                  "job_version": [
                     "id 9, present",
                     "id 10, present"
                   ]
                 },
-                "id 30, present"
+                "id 31, present"
               ],
-              request: [
+              "request": [
                 {
-                  _: "id 7, present",
-                  abuse: [
+                  "_": "id 7, present",
+                  "abuse": [
                     "id 7, present",
                     "id 8, present"
                   ],
-                  message: [
+                  "message": [
                     "id 7, present",
                     "id 8, present"
                   ],
-                  job: [
+                  "job": [
                     {
-                      _: "id 44, present",
-                      log: [
+                      "_": "id 45, present",
+                      "queueable_job": [
                         "id 15, present",
                         "id 16, present"
                       ],
-                      annotation: [
-                        "id 15, present",
-                        "id 16, present"
-                      ],
-                      queueable_job: [
+                      "job_version": [
                         "id 15, present",
                         "id 16, present"
                       ]
                     },
-                    "id 45, present"
+                    "id 46, present"
                   ],
-                  build: [
+                  "build": [
                     {
-                      _: "id 41, present",
-                      job: [
-                        "id 42, present"
+                      "_": "id 42, present",
+                      "job": [
+                        "id 43, present"
                       ],
-                      repository: [
+                      "repository": [
                         "id 17, present",
                         "id 16, present"
                       ],
-                      tag: [
+                      "tag": [
                         "id 10, present"
                       ],
-                      branch: [
-                        "id 81, present"
+                      "branch": [
+                        "id 9, present"
                       ],
-                      stage: [
-                        "id 29, present"
+                      "stage": [
+                        "id 11, present"
                       ]
                     },
-                    "id 43, present"
+                    "id 44, present"
+                  ],
+                  "request_payload": [
+                    "id 7, present",
+                    "id 8, present"
+                  ],
+                  "request_raw_configuration": [
+                    "id 7, present",
+                    "id 8, present"
+                  ],
+                  "deleted_job": [
+                    "id 13, present",
+                    "id 14, present"
+                  ],
+                  "deleted_build": [
+                    "id 15, present",
+                    "id 16, present"
+                  ],
+                  "deleted_request_payload": [
+                    "id 7, present",
+                    "id 8, present"
+                  ],
+                  "deleted_request_raw_configuration": [
+                    "id 7, present",
+                    "id 8, present"
                   ]
                 },
                 "id 8, present"
+              ],
+              "deleted_build": [
+                "id 9, present",
+                "id 10, present"
+              ],
+              "deleted_commit": [
+                "id 3, present",
+                "id 4, present"
+              ],
+              "deleted_job": [
+                "id 7, present",
+                "id 8, present"
+              ],
+              "deleted_request": [
+                "id 7, present",
+                "id 8, present"
               ]
             },
-            "id 82, present"
+            "id 10, present"
           ],
-          stage: [
+          "stage": [
             {
-              _: "id 20, removed",
-              job: [
+              "_": "id 1, removed",
+              "job": [
                 "id 2, removed",
                 "id 3, removed"
               ]
             },
             {
-              _: "id 21, removed",
-              job: [
+              "_": "id 2, removed",
+              "job": [
                 "id 4, removed",
                 "id 5, removed"
               ]
-            }
+            },
+            "id 3, removed"
+          ],
+          "deleted_job": [
+            "id 15, removed"
+          ],
+          "deleted_tag": [
+            "id 1, present"
+          ],
+          "deleted_stage": [
+            "id 1, removed"
           ]
         },
-        "id 50, removed",
+        "id 51, removed",
         {
-          _: "id 161, removed",
-          job: [
+          "_": "id 178, removed",
+          "job": [
             {
-              _: "id 166, removed",
-              log: [
-                "id 57, removed",
-                "id 58, removed"
+              "_": "id 183, removed",
+              "queueable_job": [
+                "id 63, removed",
+                "id 64, removed"
               ],
-              annotation: [
-                "id 57, removed",
-                "id 58, removed"
-              ],
-              queueable_job: [
-                "id 57, removed",
-                "id 58, removed"
+              "job_version": [
+                "id 63, removed",
+                "id 64, removed"
               ]
             },
-            "id 167, removed"
+            "id 184, removed"
           ],
-          stage: [
+          "stage": [
             {
-              _: "id 52, removed",
-              job: [
-                "id 162, removed",
-                "id 163, removed"
+              "_": "id 38, removed",
+              "job": [
+                "id 179, removed",
+                "id 180, removed"
               ]
             },
             {
-              _: "id 53, removed",
-              job: [
-                "id 164, removed",
-                "id 165, removed"
-              ]
-            }
-          ]
-        },
-        {
-          _: "id 168, present",
-          job: [
-            {
-              _: "id 173, present",
-              log: [
-                "id 59, present",
-                "id 60, present"
-              ],
-              annotation: [
-                "id 59, present",
-                "id 60, present"
-              ],
-              queueable_job: [
-                "id 59, present",
-                "id 60, present"
-              ]
-            },
-            "id 174, present"
-          ],
-          stage: [
-            {
-              _: "id 54, present",
-              job: [
-                "id 169, present",
-                "id 170, present"
-              ]
-            },
-            {
-              _: "id 55, present",
-              job: [
-                "id 171, present",
-                "id 172, present"
+              "_": "id 39, removed",
+              "job": [
+                "id 181, removed",
+                "id 182, removed"
               ]
             }
           ]
         },
         {
-          _: "id 175, removed",
-          job: [
+          "_": "id 185, present",
+          "job": [
             {
-              _: "id 180, removed",
-              log: [
-                "id 61, removed",
-                "id 62, removed"
+              "_": "id 190, present",
+              "queueable_job": [
+                "id 65, present",
+                "id 66, present"
               ],
-              annotation: [
-                "id 61, removed",
-                "id 62, removed"
-              ],
-              queueable_job: [
-                "id 61, removed",
-                "id 62, removed"
+              "job_version": [
+                "id 65, present",
+                "id 66, present"
               ]
             },
-            "id 181, removed"
+            "id 191, present"
           ],
-          repository: [
+          "stage": [
+            {
+              "_": "id 40, present",
+              "job": [
+                "id 186, present",
+                "id 187, present"
+              ]
+            },
+            {
+              "_": "id 41, present",
+              "job": [
+                "id 188, present",
+                "id 189, present"
+              ]
+            }
+          ]
+        },
+        {
+          "_": "id 192, removed",
+          "job": [
+            {
+              "_": "id 197, removed",
+              "queueable_job": [
+                "id 67, removed",
+                "id 68, removed"
+              ],
+              "job_version": [
+                "id 67, removed",
+                "id 68, removed"
+              ]
+            },
+            "id 198, removed"
+          ],
+          "repository": [
             "id 1, present, duplicate"
           ],
-          stage: [
+          "stage": [
             {
-              _: "id 56, removed",
-              job: [
-                "id 176, removed",
-                "id 177, removed"
+              "_": "id 42, removed",
+              "job": [
+                "id 193, removed",
+                "id 194, removed"
               ]
             },
             {
-              _: "id 57, removed",
-              job: [
-                "id 178, removed",
-                "id 179, removed"
+              "_": "id 43, removed",
+              "job": [
+                "id 195, removed",
+                "id 196, removed"
               ]
             }
           ]
         }
       ],
-      request: [
+      "request": [
         {
-          _: "id 11, present",
-          abuse: [
+          "_": "id 11, present",
+          "abuse": [
             "id 9, present",
             "id 10, present"
           ],
-          message: [
+          "message": [
             "id 9, present",
             "id 10, present"
           ],
-          job: [
+          "job": [
             {
-              _: "id 54, present",
-              log: [
+              "_": "id 55, present",
+              "queueable_job": [
                 "id 17, present",
                 "id 18, present"
               ],
-              annotation: [
-                "id 17, present",
-                "id 18, present"
-              ],
-              queueable_job: [
+              "job_version": [
                 "id 17, present",
                 "id 18, present"
               ]
             },
-            "id 55, present"
+            "id 56, present"
           ],
-          build: [
+          "build": [
             {
-              _: "id 51, present",
-              job: [
-                "id 52, present"
+              "_": "id 52, present",
+              "job": [
+                "id 53, present"
               ],
-              repository: [
+              "repository": [
                 "id 23, present",
                 "id 22, present"
               ],
-              tag: [
+              "tag": [
                 "id 13, present"
               ],
-              branch: [
-                "id 85, present"
+              "branch": [
+                "id 13, present"
               ],
-              stage: [
-                "id 30, present"
+              "stage": [
+                "id 12, present"
               ]
             },
-            "id 53, present"
+            "id 54, present"
+          ],
+          "request_payload": [
+            "id 9, present",
+            "id 10, present"
+          ],
+          "request_raw_configuration": [
+            "id 9, present",
+            "id 10, present"
+          ],
+          "deleted_job": [
+            "id 16, present",
+            "id 17, present"
+          ],
+          "deleted_build": [
+            "id 17, present",
+            "id 18, present"
+          ],
+          "deleted_request_payload": [
+            "id 9, present",
+            "id 10, present"
+          ],
+          "deleted_request_raw_configuration": [
+            "id 9, present",
+            "id 10, present"
           ]
         },
         "id 12, present",
-        "id 35, present",
-        "id 36, present"
+        "id 39, present",
+        "id 40, present"
       ],
-      job: [
+      "job": [
         {
-          _: "id 56, present",
-          log: [
+          "_": "id 57, present",
+          "queueable_job": [
             "id 19, present",
             "id 20, present"
           ],
-          annotation: [
-            "id 19, present",
-            "id 20, present"
-          ],
-          queueable_job: [
+          "job_version": [
             "id 19, present",
             "id 20, present"
           ]
         },
-        "id 57, present"
+        "id 58, present"
       ],
-      branch: [
+      "branch": [
         {
-          _: "id 86, present",
-          build: [
+          "_": "id 14, present",
+          "build": [
             {
-              _: "id 58, present",
-              job: [
-                "id 59, present"
+              "_": "id 59, present",
+              "job": [
+                "id 60, present"
               ],
-              repository: [
+              "repository": [
                 "id 25, present",
                 "id 24, present"
               ],
-              tag: [
+              "tag": [
                 "id 14, present"
               ],
-              branch: [
-                "id 87, present"
+              "branch": [
+                "id 15, present"
               ],
-              stage: [
-                "id 31, present"
+              "stage": [
+                "id 13, present"
               ]
             },
-            "id 60, present"
+            "id 61, present"
           ],
-          commit: [
+          "commit": [
             {
-              _: "id 217, present",
-              build: [
+              "_": "id 7, present",
+              "build": [
                 {
-                  _: "id 63, present",
-                  job: [
-                    "id 64, present"
+                  "_": "id 64, present",
+                  "job": [
+                    "id 65, present"
                   ],
-                  repository: [
+                  "repository": [
                     "id 27, present",
                     "id 26, present"
                   ],
-                  tag: [
+                  "tag": [
                     "id 15, present"
                   ],
-                  branch: [
-                    "id 88, present"
+                  "branch": [
+                    "id 16, present"
                   ],
-                  stage: [
-                    "id 32, present"
+                  "stage": [
+                    "id 14, present"
                   ]
                 },
-                "id 65, present"
+                "id 66, present"
               ],
-              job: [
+              "job": [
                 {
-                  _: "id 66, present",
-                  log: [
+                  "_": "id 67, present",
+                  "queueable_job": [
                     "id 23, present",
                     "id 24, present"
                   ],
-                  annotation: [
-                    "id 23, present",
-                    "id 24, present"
-                  ],
-                  queueable_job: [
+                  "job_version": [
                     "id 23, present",
                     "id 24, present"
                   ]
                 },
-                "id 67, present"
+                "id 68, present"
               ],
-              request: [
+              "request": [
                 {
-                  _: "id 13, present",
-                  abuse: [
+                  "_": "id 13, present",
+                  "abuse": [
                     "id 11, present",
                     "id 12, present"
                   ],
-                  message: [
+                  "message": [
                     "id 11, present",
                     "id 12, present"
                   ],
-                  job: [
+                  "job": [
                     {
-                      _: "id 71, present",
-                      log: [
+                      "_": "id 72, present",
+                      "queueable_job": [
                         "id 25, present",
                         "id 26, present"
                       ],
-                      annotation: [
-                        "id 25, present",
-                        "id 26, present"
-                      ],
-                      queueable_job: [
+                      "job_version": [
                         "id 25, present",
                         "id 26, present"
                       ]
                     },
-                    "id 72, present"
+                    "id 73, present"
                   ],
-                  build: [
+                  "build": [
                     {
-                      _: "id 68, present",
-                      job: [
-                        "id 69, present"
+                      "_": "id 69, present",
+                      "job": [
+                        "id 70, present"
                       ],
-                      repository: [
+                      "repository": [
                         "id 29, present",
                         "id 28, present"
                       ],
-                      tag: [
+                      "tag": [
                         "id 16, present"
                       ],
-                      branch: [
-                        "id 89, present"
+                      "branch": [
+                        "id 17, present"
                       ],
-                      stage: [
-                        "id 33, present"
+                      "stage": [
+                        "id 15, present"
                       ]
                     },
-                    "id 70, present"
+                    "id 71, present"
+                  ],
+                  "request_payload": [
+                    "id 11, present",
+                    "id 12, present"
+                  ],
+                  "request_raw_configuration": [
+                    "id 11, present",
+                    "id 12, present"
+                  ],
+                  "deleted_job": [
+                    "id 20, present",
+                    "id 21, present"
+                  ],
+                  "deleted_build": [
+                    "id 21, present",
+                    "id 22, present"
+                  ],
+                  "deleted_request_payload": [
+                    "id 11, present",
+                    "id 12, present"
+                  ],
+                  "deleted_request_raw_configuration": [
+                    "id 11, present",
+                    "id 12, present"
                   ]
                 },
                 "id 14, present"
+              ],
+              "deleted_build": [
+                "id 23, present",
+                "id 24, present"
+              ],
+              "deleted_job": [
+                "id 22, present",
+                "id 23, present"
+              ],
+              "deleted_request": [
+                "id 9, present",
+                "id 10, present"
               ]
             },
-            "id 218, present"
+            "id 8, present"
           ],
-          cron: [
-            "id 3, present",
-            "id 4, present"
+          "cron": [
+            "id 2, present"
           ],
-          job: [
+          "job": [
             {
-              _: "id 61, present",
-              log: [
+              "_": "id 62, present",
+              "queueable_job": [
                 "id 21, present",
                 "id 22, present"
               ],
-              annotation: [
-                "id 21, present",
-                "id 22, present"
-              ],
-              queueable_job: [
+              "job_version": [
                 "id 21, present",
                 "id 22, present"
               ]
             },
-            "id 62, present"
+            "id 63, present"
           ],
-          request: [
+          "request": [
             {
-              _: "id 15, present",
-              abuse: [
+              "_": "id 15, present",
+              "abuse": [
                 "id 13, present",
                 "id 14, present"
               ],
-              message: [
+              "message": [
                 "id 13, present",
                 "id 14, present"
               ],
-              job: [
+              "job": [
                 {
-                  _: "id 76, present",
-                  log: [
+                  "_": "id 77, present",
+                  "queueable_job": [
                     "id 27, present",
                     "id 28, present"
                   ],
-                  annotation: [
-                    "id 27, present",
-                    "id 28, present"
-                  ],
-                  queueable_job: [
+                  "job_version": [
                     "id 27, present",
                     "id 28, present"
                   ]
                 },
-                "id 77, present"
+                "id 78, present"
               ],
-              build: [
+              "build": [
                 {
-                  _: "id 73, present",
-                  job: [
-                    "id 74, present"
+                  "_": "id 74, present",
+                  "job": [
+                    "id 75, present"
                   ],
-                  repository: [
+                  "repository": [
                     "id 31, present",
                     "id 30, present"
                   ],
-                  tag: [
+                  "tag": [
                     "id 17, present"
                   ],
-                  branch: [
-                    "id 90, present"
+                  "branch": [
+                    "id 18, present"
                   ],
-                  stage: [
-                    "id 34, present"
+                  "stage": [
+                    "id 16, present"
                   ]
                 },
-                "id 75, present"
+                "id 76, present"
+              ],
+              "request_payload": [
+                "id 13, present",
+                "id 14, present"
+              ],
+              "request_raw_configuration": [
+                "id 13, present",
+                "id 14, present"
+              ],
+              "deleted_job": [
+                "id 24, present",
+                "id 25, present"
+              ],
+              "deleted_build": [
+                "id 25, present",
+                "id 26, present"
+              ],
+              "deleted_request_payload": [
+                "id 13, present",
+                "id 14, present"
+              ],
+              "deleted_request_raw_configuration": [
+                "id 13, present",
+                "id 14, present"
               ]
             },
             "id 16, present"
+          ],
+          "deleted_build": [
+            "id 19, present",
+            "id 20, present"
+          ],
+          "deleted_commit": [
+            "id 5, present",
+            "id 6, present"
+          ],
+          "deleted_job": [
+            "id 18, present",
+            "id 19, present"
+          ],
+          "deleted_request": [
+            "id 11, present",
+            "id 12, present"
           ]
         },
-        "id 91, present"
+        "id 19, present"
       ],
-      ssl_key: [
-        "id 33, present",
-        "id 34, present"
+      "ssl_key": [
+        "id 3, present",
+        "id 4, present"
       ],
-      commit: [
+      "commit": [
         {
-          _: "id 219, present",
-          build: [
+          "_": "id 9, present",
+          "build": [
             {
-              _: "id 78, present",
-              job: [
-                "id 79, present"
+              "_": "id 79, present",
+              "job": [
+                "id 80, present"
               ],
-              repository: [
+              "repository": [
                 "id 33, present",
                 "id 32, present"
               ],
-              tag: [
+              "tag": [
                 "id 18, present"
               ],
-              branch: [
-                "id 92, present"
+              "branch": [
+                "id 20, present"
               ],
-              stage: [
-                "id 35, present"
+              "stage": [
+                "id 17, present"
               ]
             },
-            "id 80, present"
+            "id 81, present"
           ],
-          job: [
+          "job": [
             {
-              _: "id 81, present",
-              log: [
+              "_": "id 82, present",
+              "queueable_job": [
                 "id 29, present",
                 "id 30, present"
               ],
-              annotation: [
-                "id 29, present",
-                "id 30, present"
-              ],
-              queueable_job: [
+              "job_version": [
                 "id 29, present",
                 "id 30, present"
               ]
             },
-            "id 82, present"
+            "id 83, present"
           ],
-          request: [
+          "request": [
             {
-              _: "id 17, present",
-              abuse: [
+              "_": "id 17, present",
+              "abuse": [
                 "id 15, present",
                 "id 16, present"
               ],
-              message: [
+              "message": [
                 "id 15, present",
                 "id 16, present"
               ],
-              job: [
+              "job": [
                 {
-                  _: "id 86, present",
-                  log: [
+                  "_": "id 87, present",
+                  "queueable_job": [
                     "id 31, present",
                     "id 32, present"
                   ],
-                  annotation: [
-                    "id 31, present",
-                    "id 32, present"
-                  ],
-                  queueable_job: [
+                  "job_version": [
                     "id 31, present",
                     "id 32, present"
                   ]
                 },
-                "id 87, present"
+                "id 88, present"
               ],
-              build: [
+              "build": [
                 {
-                  _: "id 83, present",
-                  job: [
-                    "id 84, present"
+                  "_": "id 84, present",
+                  "job": [
+                    "id 85, present"
                   ],
-                  repository: [
+                  "repository": [
                     "id 35, present",
                     "id 34, present"
                   ],
-                  tag: [
+                  "tag": [
                     "id 19, present"
                   ],
-                  branch: [
-                    "id 93, present"
+                  "branch": [
+                    "id 21, present"
                   ],
-                  stage: [
-                    "id 36, present"
+                  "stage": [
+                    "id 18, present"
                   ]
                 },
-                "id 85, present"
+                "id 86, present"
+              ],
+              "request_payload": [
+                "id 15, present",
+                "id 16, present"
+              ],
+              "request_raw_configuration": [
+                "id 15, present",
+                "id 16, present"
+              ],
+              "deleted_job": [
+                "id 26, present",
+                "id 27, present"
+              ],
+              "deleted_build": [
+                "id 27, present",
+                "id 28, present"
+              ],
+              "deleted_request_payload": [
+                "id 15, present",
+                "id 16, present"
+              ],
+              "deleted_request_raw_configuration": [
+                "id 15, present",
+                "id 16, present"
               ]
             },
             "id 18, present"
+          ],
+          "deleted_build": [
+            "id 29, present",
+            "id 30, present"
+          ],
+          "deleted_job": [
+            "id 28, present",
+            "id 29, present"
+          ],
+          "deleted_request": [
+            "id 13, present",
+            "id 14, present"
           ]
         },
-        "id 220, present"
+        "id 10, present"
       ],
-      permission: [
+      "permission": [
         "id 3, present",
         "id 4, present"
       ],
-      star: [
+      "star": [
         "id 3, present",
         "id 4, present"
       ],
-      pull_request: [
+      "pull_request": [
         {
-          _: "id 3, present",
-          request: [
+          "_": "id 3, present",
+          "request": [
             {
-              _: "id 29, present",
-              abuse: [
+              "_": "id 29, present",
+              "abuse": [
                 "id 25, present",
                 "id 26, present"
               ],
-              message: [
+              "message": [
                 "id 25, present",
                 "id 26, present"
               ],
-              job: [
+              "job": [
                 {
-                  _: "id 141, present",
-                  log: [
+                  "_": "id 143, present",
+                  "queueable_job": [
                     "id 49, present",
                     "id 50, present"
                   ],
-                  annotation: [
+                  "job_version": [
                     "id 49, present",
                     "id 50, present"
+                  ]
+                },
+                "id 144, present"
+              ],
+              "build": [
+                {
+                  "_": "id 140, present",
+                  "job": [
+                    "id 141, present"
                   ],
-                  queueable_job: [
-                    "id 49, present",
-                    "id 50, present"
+                  "repository": [
+                    "id 57, present",
+                    "id 56, present"
+                  ],
+                  "tag": [
+                    "id 32, present"
+                  ],
+                  "branch": [
+                    "id 34, present"
+                  ],
+                  "stage": [
+                    "id 30, present"
                   ]
                 },
                 "id 142, present"
               ],
-              build: [
-                {
-                  _: "id 138, present",
-                  job: [
-                    "id 139, present"
-                  ],
-                  repository: [
-                    "id 57, present",
-                    "id 56, present"
-                  ],
-                  tag: [
-                    "id 32, present"
-                  ],
-                  branch: [
-                    "id 106, present"
-                  ],
-                  stage: [
-                    "id 47, present"
-                  ]
-                },
-                "id 140, present"
+              "request_payload": [
+                "id 25, present",
+                "id 26, present"
+              ],
+              "request_raw_configuration": [
+                "id 25, present",
+                "id 26, present"
+              ],
+              "deleted_job": [
+                "id 45, present",
+                "id 46, present"
+              ],
+              "deleted_build": [
+                "id 47, present",
+                "id 48, present"
+              ],
+              "deleted_request_payload": [
+                "id 25, present",
+                "id 26, present"
+              ],
+              "deleted_request_raw_configuration": [
+                "id 25, present",
+                "id 26, present"
               ]
             },
             "id 30, present"
           ],
-          build: [
+          "build": [
             {
-              _: "id 88, present",
-              job: [
+              "_": "id 89, present",
+              "job": [
                 {
-                  _: "id 93, present",
-                  log: [
+                  "_": "id 94, present",
+                  "queueable_job": [
                     "id 33, present",
                     "id 34, present"
                   ],
-                  annotation: [
-                    "id 33, present",
-                    "id 34, present"
-                  ],
-                  queueable_job: [
+                  "job_version": [
                     "id 33, present",
                     "id 34, present"
                   ]
                 },
-                "id 94, present"
+                "id 95, present",
+                "id 96, present"
               ],
-              repository: [
+              "repository": [
                 {
-                  _: "id 54, present",
-                  build: [
-                    "id 135, present"
+                  "_": "id 54, present",
+                  "build": [
+                    "id 137, present"
                   ],
-                  request: [
+                  "request": [
                     "id 28, present"
                   ],
-                  job: [
-                    "id 136, present"
+                  "job": [
+                    "id 138, present"
                   ],
-                  branch: [
-                    "id 105, present"
+                  "branch": [
+                    "id 33, present"
                   ],
-                  ssl_key: [
-                    "id 36, present"
-                  ],
-                  commit: [
-                    "id 226, present"
-                  ],
-                  permission: [
+                  "ssl_key": [
                     "id 6, present"
                   ],
-                  star: [
+                  "commit": [
+                    "id 16, present"
+                  ],
+                  "permission": [
                     "id 6, present"
                   ],
-                  pull_request: [
+                  "star": [
+                    "id 6, present"
+                  ],
+                  "pull_request": [
                     "id 5, present"
                   ],
-                  tag: [
+                  "tag": [
                     "id 31, present"
                   ]
                 },
                 "id 55, present",
                 {
-                  _: "id 52, present",
-                  build: [
-                    "id 133, present"
+                  "_": "id 52, present",
+                  "build": [
+                    "id 135, present"
                   ],
-                  request: [
+                  "request": [
                     "id 27, present"
                   ],
-                  job: [
-                    "id 134, present"
+                  "job": [
+                    "id 136, present"
                   ],
-                  branch: [
-                    "id 104, present"
+                  "branch": [
+                    "id 32, present"
                   ],
-                  ssl_key: [
-                    "id 35, present"
-                  ],
-                  commit: [
-                    "id 225, present"
-                  ],
-                  permission: [
+                  "ssl_key": [
                     "id 5, present"
                   ],
-                  star: [
+                  "commit": [
+                    "id 15, present"
+                  ],
+                  "permission": [
                     "id 5, present"
                   ],
-                  pull_request: [
+                  "star": [
+                    "id 5, present"
+                  ],
+                  "pull_request": [
                     "id 4, present"
                   ],
-                  tag: [
+                  "tag": [
                     "id 30, present"
                   ]
                 },
                 "id 53, present"
               ],
-              tag: [
+              "tag": [
                 {
-                  _: "id 20, present",
-                  build: [
+                  "_": "id 20, present",
+                  "build": [
                     {
-                      _: "id 95, present",
-                      job: [
-                        "id 96, present"
+                      "_": "id 97, present",
+                      "job": [
+                        "id 98, present"
                       ],
-                      repository: [
+                      "repository": [
                         "id 37, present",
                         "id 36, present"
                       ],
-                      tag: [
+                      "tag": [
                         "id 21, present"
                       ],
-                      branch: [
-                        "id 94, present"
+                      "branch": [
+                        "id 22, present"
                       ],
-                      stage: [
-                        "id 39, present"
+                      "stage": [
+                        "id 22, present"
                       ]
                     },
-                    "id 97, present"
+                    "id 99, present"
                   ],
-                  commit: [
+                  "commit": [
                     {
-                      _: "id 221, present",
-                      build: [
+                      "_": "id 11, present",
+                      "build": [
                         {
-                          _: "id 98, present",
-                          job: [
-                            "id 99, present"
+                          "_": "id 100, present",
+                          "job": [
+                            "id 101, present"
                           ],
-                          repository: [
+                          "repository": [
                             "id 39, present",
                             "id 38, present"
                           ],
-                          tag: [
+                          "tag": [
                             "id 22, present"
                           ],
-                          branch: [
-                            "id 95, present"
+                          "branch": [
+                            "id 23, present"
                           ],
-                          stage: [
-                            "id 40, present"
-                          ]
-                        },
-                        "id 100, present"
-                      ],
-                      job: [
-                        {
-                          _: "id 101, present",
-                          log: [
-                            "id 35, present",
-                            "id 36, present"
-                          ],
-                          annotation: [
-                            "id 35, present",
-                            "id 36, present"
-                          ],
-                          queueable_job: [
-                            "id 35, present",
-                            "id 36, present"
+                          "stage": [
+                            "id 23, present"
                           ]
                         },
                         "id 102, present"
                       ],
-                      request: [
+                      "job": [
                         {
-                          _: "id 19, present",
-                          abuse: [
+                          "_": "id 103, present",
+                          "queueable_job": [
+                            "id 35, present",
+                            "id 36, present"
+                          ],
+                          "job_version": [
+                            "id 35, present",
+                            "id 36, present"
+                          ]
+                        },
+                        "id 104, present"
+                      ],
+                      "request": [
+                        {
+                          "_": "id 19, present",
+                          "abuse": [
                             "id 17, present",
                             "id 18, present"
                           ],
-                          message: [
+                          "message": [
                             "id 17, present",
                             "id 18, present"
                           ],
-                          job: [
+                          "job": [
                             {
-                              _: "id 106, present",
-                              log: [
+                              "_": "id 108, present",
+                              "queueable_job": [
                                 "id 37, present",
                                 "id 38, present"
                               ],
-                              annotation: [
+                              "job_version": [
                                 "id 37, present",
                                 "id 38, present"
+                              ]
+                            },
+                            "id 109, present"
+                          ],
+                          "build": [
+                            {
+                              "_": "id 105, present",
+                              "job": [
+                                "id 106, present"
                               ],
-                              queueable_job: [
-                                "id 37, present",
-                                "id 38, present"
+                              "repository": [
+                                "id 41, present",
+                                "id 40, present"
+                              ],
+                              "tag": [
+                                "id 23, present"
+                              ],
+                              "branch": [
+                                "id 24, present"
+                              ],
+                              "stage": [
+                                "id 24, present"
                               ]
                             },
                             "id 107, present"
                           ],
-                          build: [
-                            {
-                              _: "id 103, present",
-                              job: [
-                                "id 104, present"
-                              ],
-                              repository: [
-                                "id 41, present",
-                                "id 40, present"
-                              ],
-                              tag: [
-                                "id 23, present"
-                              ],
-                              branch: [
-                                "id 96, present"
-                              ],
-                              stage: [
-                                "id 41, present"
-                              ]
-                            },
-                            "id 105, present"
+                          "request_payload": [
+                            "id 17, present",
+                            "id 18, present"
+                          ],
+                          "request_raw_configuration": [
+                            "id 17, present",
+                            "id 18, present"
+                          ],
+                          "deleted_job": [
+                            "id 30, present",
+                            "id 31, present"
+                          ],
+                          "deleted_build": [
+                            "id 31, present",
+                            "id 32, present"
+                          ],
+                          "deleted_request_payload": [
+                            "id 17, present",
+                            "id 18, present"
+                          ],
+                          "deleted_request_raw_configuration": [
+                            "id 17, present",
+                            "id 18, present"
                           ]
                         },
                         "id 20, present"
+                      ],
+                      "deleted_build": [
+                        "id 33, present",
+                        "id 34, present"
+                      ],
+                      "deleted_job": [
+                        "id 32, present",
+                        "id 33, present"
+                      ],
+                      "deleted_request": [
+                        "id 15, present",
+                        "id 16, present"
                       ]
                     },
-                    "id 222, present"
+                    "id 12, present"
                   ],
-                  request: [
+                  "request": [
                     {
-                      _: "id 21, present",
-                      abuse: [
+                      "_": "id 21, present",
+                      "abuse": [
                         "id 19, present",
                         "id 20, present"
                       ],
-                      message: [
+                      "message": [
                         "id 19, present",
                         "id 20, present"
                       ],
-                      job: [
+                      "job": [
                         {
-                          _: "id 111, present",
-                          log: [
+                          "_": "id 113, present",
+                          "queueable_job": [
                             "id 39, present",
                             "id 40, present"
                           ],
-                          annotation: [
+                          "job_version": [
                             "id 39, present",
                             "id 40, present"
+                          ]
+                        },
+                        "id 114, present"
+                      ],
+                      "build": [
+                        {
+                          "_": "id 110, present",
+                          "job": [
+                            "id 111, present"
                           ],
-                          queueable_job: [
-                            "id 39, present",
-                            "id 40, present"
+                          "repository": [
+                            "id 43, present",
+                            "id 42, present"
+                          ],
+                          "tag": [
+                            "id 24, present"
+                          ],
+                          "branch": [
+                            "id 25, present"
+                          ],
+                          "stage": [
+                            "id 25, present"
                           ]
                         },
                         "id 112, present"
                       ],
-                      build: [
-                        {
-                          _: "id 108, present",
-                          job: [
-                            "id 109, present"
-                          ],
-                          repository: [
-                            "id 43, present",
-                            "id 42, present"
-                          ],
-                          tag: [
-                            "id 24, present"
-                          ],
-                          branch: [
-                            "id 97, present"
-                          ],
-                          stage: [
-                            "id 42, present"
-                          ]
-                        },
-                        "id 110, present"
+                      "request_payload": [
+                        "id 19, present",
+                        "id 20, present"
+                      ],
+                      "request_raw_configuration": [
+                        "id 19, present",
+                        "id 20, present"
+                      ],
+                      "deleted_job": [
+                        "id 34, present",
+                        "id 35, present"
+                      ],
+                      "deleted_build": [
+                        "id 35, present",
+                        "id 36, present"
+                      ],
+                      "deleted_request_payload": [
+                        "id 19, present",
+                        "id 20, present"
+                      ],
+                      "deleted_request_raw_configuration": [
+                        "id 19, present",
+                        "id 20, present"
                       ]
                     },
                     "id 22, present"
+                  ],
+                  "deleted_build": [
+                    "id 37, present",
+                    "id 38, present"
+                  ],
+                  "deleted_commit": [
+                    "id 7, present",
+                    "id 8, present"
+                  ],
+                  "deleted_request": [
+                    "id 17, present",
+                    "id 18, present"
                   ]
                 },
                 "id 25, present"
               ],
-              branch: [
+              "branch": [
                 {
-                  _: "id 98, present",
-                  build: [
+                  "_": "id 26, present",
+                  "build": [
                     {
-                      _: "id 113, present",
-                      job: [
-                        "id 114, present"
+                      "_": "id 115, present",
+                      "job": [
+                        "id 116, present"
                       ],
-                      repository: [
+                      "repository": [
                         "id 45, present",
                         "id 44, present"
                       ],
-                      tag: [
+                      "tag": [
                         "id 26, present"
                       ],
-                      branch: [
-                        "id 99, present"
+                      "branch": [
+                        "id 27, present"
                       ],
-                      stage: [
-                        "id 43, present"
-                      ]
-                    },
-                    "id 115, present"
-                  ],
-                  commit: [
-                    {
-                      _: "id 223, present",
-                      build: [
-                        {
-                          _: "id 118, present",
-                          job: [
-                            "id 119, present"
-                          ],
-                          repository: [
-                            "id 47, present",
-                            "id 46, present"
-                          ],
-                          tag: [
-                            "id 27, present"
-                          ],
-                          branch: [
-                            "id 100, present"
-                          ],
-                          stage: [
-                            "id 44, present"
-                          ]
-                        },
-                        "id 120, present"
-                      ],
-                      job: [
-                        {
-                          _: "id 121, present",
-                          log: [
-                            "id 43, present",
-                            "id 44, present"
-                          ],
-                          annotation: [
-                            "id 43, present",
-                            "id 44, present"
-                          ],
-                          queueable_job: [
-                            "id 43, present",
-                            "id 44, present"
-                          ]
-                        },
-                        "id 122, present"
-                      ],
-                      request: [
-                        {
-                          _: "id 23, present",
-                          abuse: [
-                            "id 21, present",
-                            "id 22, present"
-                          ],
-                          message: [
-                            "id 21, present",
-                            "id 22, present"
-                          ],
-                          job: [
-                            {
-                              _: "id 126, present",
-                              log: [
-                                "id 45, present",
-                                "id 46, present"
-                              ],
-                              annotation: [
-                                "id 45, present",
-                                "id 46, present"
-                              ],
-                              queueable_job: [
-                                "id 45, present",
-                                "id 46, present"
-                              ]
-                            },
-                            "id 127, present"
-                          ],
-                          build: [
-                            {
-                              _: "id 123, present",
-                              job: [
-                                "id 124, present"
-                              ],
-                              repository: [
-                                "id 49, present",
-                                "id 48, present"
-                              ],
-                              tag: [
-                                "id 28, present"
-                              ],
-                              branch: [
-                                "id 101, present"
-                              ],
-                              stage: [
-                                "id 45, present"
-                              ]
-                            },
-                            "id 125, present"
-                          ]
-                        },
-                        "id 24, present"
-                      ]
-                    },
-                    "id 224, present"
-                  ],
-                  cron: [
-                    "id 5, present",
-                    "id 6, present"
-                  ],
-                  job: [
-                    {
-                      _: "id 116, present",
-                      log: [
-                        "id 41, present",
-                        "id 42, present"
-                      ],
-                      annotation: [
-                        "id 41, present",
-                        "id 42, present"
-                      ],
-                      queueable_job: [
-                        "id 41, present",
-                        "id 42, present"
+                      "stage": [
+                        "id 26, present"
                       ]
                     },
                     "id 117, present"
                   ],
-                  request: [
+                  "commit": [
                     {
-                      _: "id 25, present",
-                      abuse: [
-                        "id 23, present",
-                        "id 24, present"
-                      ],
-                      message: [
-                        "id 23, present",
-                        "id 24, present"
-                      ],
-                      job: [
+                      "_": "id 13, present",
+                      "build": [
                         {
-                          _: "id 131, present",
-                          log: [
+                          "_": "id 120, present",
+                          "job": [
+                            "id 121, present"
+                          ],
+                          "repository": [
+                            "id 47, present",
+                            "id 46, present"
+                          ],
+                          "tag": [
+                            "id 27, present"
+                          ],
+                          "branch": [
+                            "id 28, present"
+                          ],
+                          "stage": [
+                            "id 27, present"
+                          ]
+                        },
+                        "id 122, present"
+                      ],
+                      "job": [
+                        {
+                          "_": "id 123, present",
+                          "queueable_job": [
+                            "id 43, present",
+                            "id 44, present"
+                          ],
+                          "job_version": [
+                            "id 43, present",
+                            "id 44, present"
+                          ]
+                        },
+                        "id 124, present"
+                      ],
+                      "request": [
+                        {
+                          "_": "id 23, present",
+                          "abuse": [
+                            "id 21, present",
+                            "id 22, present"
+                          ],
+                          "message": [
+                            "id 21, present",
+                            "id 22, present"
+                          ],
+                          "job": [
+                            {
+                              "_": "id 128, present",
+                              "queueable_job": [
+                                "id 45, present",
+                                "id 46, present"
+                              ],
+                              "job_version": [
+                                "id 45, present",
+                                "id 46, present"
+                              ]
+                            },
+                            "id 129, present"
+                          ],
+                          "build": [
+                            {
+                              "_": "id 125, present",
+                              "job": [
+                                "id 126, present"
+                              ],
+                              "repository": [
+                                "id 49, present",
+                                "id 48, present"
+                              ],
+                              "tag": [
+                                "id 28, present"
+                              ],
+                              "branch": [
+                                "id 29, present"
+                              ],
+                              "stage": [
+                                "id 28, present"
+                              ]
+                            },
+                            "id 127, present"
+                          ],
+                          "request_payload": [
+                            "id 21, present",
+                            "id 22, present"
+                          ],
+                          "request_raw_configuration": [
+                            "id 21, present",
+                            "id 22, present"
+                          ],
+                          "deleted_job": [
+                            "id 38, present",
+                            "id 39, present"
+                          ],
+                          "deleted_build": [
+                            "id 41, present",
+                            "id 42, present"
+                          ],
+                          "deleted_request_payload": [
+                            "id 21, present",
+                            "id 22, present"
+                          ],
+                          "deleted_request_raw_configuration": [
+                            "id 21, present",
+                            "id 22, present"
+                          ]
+                        },
+                        "id 24, present"
+                      ],
+                      "deleted_build": [
+                        "id 43, present",
+                        "id 44, present"
+                      ],
+                      "deleted_job": [
+                        "id 40, present",
+                        "id 41, present"
+                      ],
+                      "deleted_request": [
+                        "id 19, present",
+                        "id 20, present"
+                      ]
+                    },
+                    "id 14, present"
+                  ],
+                  "cron": [
+                    "id 3, present"
+                  ],
+                  "job": [
+                    {
+                      "_": "id 118, present",
+                      "queueable_job": [
+                        "id 41, present",
+                        "id 42, present"
+                      ],
+                      "job_version": [
+                        "id 41, present",
+                        "id 42, present"
+                      ]
+                    },
+                    "id 119, present"
+                  ],
+                  "request": [
+                    {
+                      "_": "id 25, present",
+                      "abuse": [
+                        "id 23, present",
+                        "id 24, present"
+                      ],
+                      "message": [
+                        "id 23, present",
+                        "id 24, present"
+                      ],
+                      "job": [
+                        {
+                          "_": "id 133, present",
+                          "queueable_job": [
                             "id 47, present",
                             "id 48, present"
                           ],
-                          annotation: [
+                          "job_version": [
                             "id 47, present",
                             "id 48, present"
+                          ]
+                        },
+                        "id 134, present"
+                      ],
+                      "build": [
+                        {
+                          "_": "id 130, present",
+                          "job": [
+                            "id 131, present"
                           ],
-                          queueable_job: [
-                            "id 47, present",
-                            "id 48, present"
+                          "repository": [
+                            "id 51, present",
+                            "id 50, present"
+                          ],
+                          "tag": [
+                            "id 29, present"
+                          ],
+                          "branch": [
+                            "id 30, present"
+                          ],
+                          "stage": [
+                            "id 29, present"
                           ]
                         },
                         "id 132, present"
                       ],
-                      build: [
-                        {
-                          _: "id 128, present",
-                          job: [
-                            "id 129, present"
-                          ],
-                          repository: [
-                            "id 51, present",
-                            "id 50, present"
-                          ],
-                          tag: [
-                            "id 29, present"
-                          ],
-                          branch: [
-                            "id 102, present"
-                          ],
-                          stage: [
-                            "id 46, present"
-                          ]
-                        },
-                        "id 130, present"
+                      "request_payload": [
+                        "id 23, present",
+                        "id 24, present"
+                      ],
+                      "request_raw_configuration": [
+                        "id 23, present",
+                        "id 24, present"
+                      ],
+                      "deleted_job": [
+                        "id 42, present",
+                        "id 43, present"
+                      ],
+                      "deleted_build": [
+                        "id 45, present",
+                        "id 46, present"
+                      ],
+                      "deleted_request_payload": [
+                        "id 23, present",
+                        "id 24, present"
+                      ],
+                      "deleted_request_raw_configuration": [
+                        "id 23, present",
+                        "id 24, present"
                       ]
                     },
                     "id 26, present"
+                  ],
+                  "deleted_build": [
+                    "id 39, present",
+                    "id 40, present"
+                  ],
+                  "deleted_commit": [
+                    "id 9, present",
+                    "id 10, present"
+                  ],
+                  "deleted_job": [
+                    "id 36, present",
+                    "id 37, present"
+                  ],
+                  "deleted_request": [
+                    "id 21, present",
+                    "id 22, present"
                   ]
                 },
-                "id 103, present"
+                "id 31, present"
               ],
-              stage: [
+              "stage": [
                 {
-                  _: "id 37, present",
-                  job: [
-                    "id 89, present",
-                    "id 90, present"
+                  "_": "id 19, present",
+                  "job": [
+                    "id 90, present",
+                    "id 91, present"
                   ]
                 },
                 {
-                  _: "id 38, present",
-                  job: [
-                    "id 91, present",
-                    "id 92, present"
+                  "_": "id 20, present",
+                  "job": [
+                    "id 92, present",
+                    "id 93, present"
                   ]
-                }
+                },
+                "id 21, present"
+              ],
+              "deleted_job": [
+                "id 44, present"
+              ],
+              "deleted_tag": [
+                "id 2, present"
+              ],
+              "deleted_stage": [
+                "id 2, present"
               ]
             },
-            "id 137, present"
+            "id 139, present"
+          ],
+          "deleted_request": [
+            "id 23, present",
+            "id 24, present"
+          ],
+          "deleted_build": [
+            "id 49, present",
+            "id 50, present"
           ]
         },
         "id 6, present"
       ],
-      tag: [
+      "tag": [
         {
-          _: "id 33, present",
-          build: [
+          "_": "id 33, present",
+          "build": [
             {
-              _: "id 143, present",
-              job: [
-                "id 144, present"
+              "_": "id 145, present",
+              "job": [
+                "id 146, present"
               ],
-              repository: [
+              "repository": [
                 "id 59, present",
                 "id 58, present"
               ],
-              tag: [
+              "tag": [
                 "id 34, present"
               ],
-              branch: [
-                "id 107, present"
+              "branch": [
+                "id 35, present"
               ],
-              stage: [
-                "id 48, present"
+              "stage": [
+                "id 31, present"
               ]
             },
-            "id 145, present"
+            "id 147, present"
           ],
-          commit: [
+          "commit": [
             {
-              _: "id 227, present",
-              build: [
+              "_": "id 17, present",
+              "build": [
                 {
-                  _: "id 146, present",
-                  job: [
-                    "id 147, present"
+                  "_": "id 148, present",
+                  "job": [
+                    "id 149, present"
                   ],
-                  repository: [
+                  "repository": [
                     "id 61, present",
                     "id 60, present"
                   ],
-                  tag: [
+                  "tag": [
                     "id 35, present"
                   ],
-                  branch: [
-                    "id 108, present"
+                  "branch": [
+                    "id 36, present"
                   ],
-                  stage: [
-                    "id 49, present"
-                  ]
-                },
-                "id 148, present"
-              ],
-              job: [
-                {
-                  _: "id 149, present",
-                  log: [
-                    "id 51, present",
-                    "id 52, present"
-                  ],
-                  annotation: [
-                    "id 51, present",
-                    "id 52, present"
-                  ],
-                  queueable_job: [
-                    "id 51, present",
-                    "id 52, present"
+                  "stage": [
+                    "id 32, present"
                   ]
                 },
                 "id 150, present"
               ],
-              request: [
+              "job": [
                 {
-                  _: "id 31, present",
-                  abuse: [
+                  "_": "id 151, present",
+                  "queueable_job": [
+                    "id 51, present",
+                    "id 52, present"
+                  ],
+                  "job_version": [
+                    "id 51, present",
+                    "id 52, present"
+                  ]
+                },
+                "id 152, present"
+              ],
+              "request": [
+                {
+                  "_": "id 31, present",
+                  "abuse": [
                     "id 27, present",
                     "id 28, present"
                   ],
-                  message: [
+                  "message": [
                     "id 27, present",
                     "id 28, present"
                   ],
-                  job: [
+                  "job": [
                     {
-                      _: "id 154, present",
-                      log: [
+                      "_": "id 156, present",
+                      "queueable_job": [
                         "id 53, present",
                         "id 54, present"
                       ],
-                      annotation: [
+                      "job_version": [
                         "id 53, present",
                         "id 54, present"
+                      ]
+                    },
+                    "id 157, present"
+                  ],
+                  "build": [
+                    {
+                      "_": "id 153, present",
+                      "job": [
+                        "id 154, present"
                       ],
-                      queueable_job: [
-                        "id 53, present",
-                        "id 54, present"
+                      "repository": [
+                        "id 63, present",
+                        "id 62, present"
+                      ],
+                      "tag": [
+                        "id 36, present"
+                      ],
+                      "branch": [
+                        "id 37, present"
+                      ],
+                      "stage": [
+                        "id 33, present"
                       ]
                     },
                     "id 155, present"
                   ],
-                  build: [
-                    {
-                      _: "id 151, present",
-                      job: [
-                        "id 152, present"
-                      ],
-                      repository: [
-                        "id 63, present",
-                        "id 62, present"
-                      ],
-                      tag: [
-                        "id 36, present"
-                      ],
-                      branch: [
-                        "id 109, present"
-                      ],
-                      stage: [
-                        "id 50, present"
-                      ]
-                    },
-                    "id 153, present"
+                  "request_payload": [
+                    "id 27, present",
+                    "id 28, present"
+                  ],
+                  "request_raw_configuration": [
+                    "id 27, present",
+                    "id 28, present"
+                  ],
+                  "deleted_job": [
+                    "id 47, present",
+                    "id 48, present"
+                  ],
+                  "deleted_build": [
+                    "id 51, present",
+                    "id 52, present"
+                  ],
+                  "deleted_request_payload": [
+                    "id 27, present",
+                    "id 28, present"
+                  ],
+                  "deleted_request_raw_configuration": [
+                    "id 27, present",
+                    "id 28, present"
                   ]
                 },
                 "id 32, present"
+              ],
+              "deleted_build": [
+                "id 53, present",
+                "id 54, present"
+              ],
+              "deleted_job": [
+                "id 49, present",
+                "id 50, present"
+              ],
+              "deleted_request": [
+                "id 25, present",
+                "id 26, present"
               ]
             },
-            "id 228, present"
+            "id 18, present"
           ],
-          request: [
+          "request": [
             {
-              _: "id 33, present",
-              abuse: [
+              "_": "id 33, present",
+              "abuse": [
                 "id 29, present",
                 "id 30, present"
               ],
-              message: [
+              "message": [
                 "id 29, present",
                 "id 30, present"
               ],
-              job: [
+              "job": [
                 {
-                  _: "id 159, present",
-                  log: [
+                  "_": "id 161, present",
+                  "queueable_job": [
                     "id 55, present",
                     "id 56, present"
                   ],
-                  annotation: [
+                  "job_version": [
                     "id 55, present",
                     "id 56, present"
+                  ]
+                },
+                "id 162, present"
+              ],
+              "build": [
+                {
+                  "_": "id 158, present",
+                  "job": [
+                    "id 159, present"
                   ],
-                  queueable_job: [
-                    "id 55, present",
-                    "id 56, present"
+                  "repository": [
+                    "id 65, present",
+                    "id 64, present"
+                  ],
+                  "tag": [
+                    "id 37, present"
+                  ],
+                  "branch": [
+                    "id 38, present"
+                  ],
+                  "stage": [
+                    "id 34, present"
                   ]
                 },
                 "id 160, present"
               ],
-              build: [
-                {
-                  _: "id 156, present",
-                  job: [
-                    "id 157, present"
-                  ],
-                  repository: [
-                    "id 65, present",
-                    "id 64, present"
-                  ],
-                  tag: [
-                    "id 37, present"
-                  ],
-                  branch: [
-                    "id 110, present"
-                  ],
-                  stage: [
-                    "id 51, present"
-                  ]
-                },
-                "id 158, present"
+              "request_payload": [
+                "id 29, present",
+                "id 30, present"
+              ],
+              "request_raw_configuration": [
+                "id 29, present",
+                "id 30, present"
+              ],
+              "deleted_job": [
+                "id 51, present",
+                "id 52, present"
+              ],
+              "deleted_build": [
+                "id 55, present",
+                "id 56, present"
+              ],
+              "deleted_request_payload": [
+                "id 29, present",
+                "id 30, present"
+              ],
+              "deleted_request_raw_configuration": [
+                "id 29, present",
+                "id 30, present"
               ]
             },
             "id 34, present"
+          ],
+          "deleted_build": [
+            "id 57, present",
+            "id 58, present"
+          ],
+          "deleted_commit": [
+            "id 11, present",
+            "id 12, present"
+          ],
+          "deleted_request": [
+            "id 27, present",
+            "id 28, present"
           ]
         },
         "id 38, present"
+      ],
+      "build_config": [
+        {
+          "_": "id 1, present",
+          "build": [
+            {
+              "_": "id 163, present",
+              "job": [
+                "id 164, present"
+              ],
+              "repository": [
+                "id 67, present",
+                "id 66, present"
+              ],
+              "tag": [
+                "id 39, present"
+              ],
+              "branch": [
+                "id 39, present"
+              ],
+              "stage": [
+                "id 35, present"
+              ]
+            },
+            "id 165, present"
+          ],
+          "deleted_build": [
+            "id 59, present",
+            "id 60, present"
+          ]
+        },
+        "id 2, present"
+      ],
+      "email_unsubscribe": [
+        "id 1, present",
+        "id 2, present"
+      ],
+      "request_config": [
+        {
+          "_": "id 1, present",
+          "request": [
+            {
+              "_": "id 35, present",
+              "abuse": [
+                "id 31, present",
+                "id 32, present"
+              ],
+              "message": [
+                "id 31, present",
+                "id 32, present"
+              ],
+              "job": [
+                {
+                  "_": "id 169, present",
+                  "queueable_job": [
+                    "id 57, present",
+                    "id 58, present"
+                  ],
+                  "job_version": [
+                    "id 57, present",
+                    "id 58, present"
+                  ]
+                },
+                "id 170, present"
+              ],
+              "build": [
+                {
+                  "_": "id 166, present",
+                  "job": [
+                    "id 167, present"
+                  ],
+                  "repository": [
+                    "id 69, present",
+                    "id 68, present"
+                  ],
+                  "tag": [
+                    "id 40, present"
+                  ],
+                  "branch": [
+                    "id 40, present"
+                  ],
+                  "stage": [
+                    "id 36, present"
+                  ]
+                },
+                "id 168, present"
+              ],
+              "request_payload": [
+                "id 31, present",
+                "id 32, present"
+              ],
+              "request_raw_configuration": [
+                "id 31, present",
+                "id 32, present"
+              ],
+              "deleted_job": [
+                "id 53, present",
+                "id 54, present"
+              ],
+              "deleted_build": [
+                "id 61, present",
+                "id 62, present"
+              ],
+              "deleted_request_payload": [
+                "id 31, present",
+                "id 32, present"
+              ],
+              "deleted_request_raw_configuration": [
+                "id 31, present",
+                "id 32, present"
+              ]
+            },
+            "id 36, present"
+          ],
+          "deleted_request": [
+            "id 29, present",
+            "id 30, present"
+          ]
+        },
+        "id 2, present"
+      ],
+      "job_config": [
+        {
+          "_": "id 1, present",
+          "job": [
+            {
+              "_": "id 171, present",
+              "queueable_job": [
+                "id 59, present",
+                "id 60, present"
+              ],
+              "job_version": [
+                "id 59, present",
+                "id 60, present"
+              ]
+            },
+            "id 172, present"
+          ],
+          "deleted_job": [
+            "id 55, present",
+            "id 56, present"
+          ]
+        },
+        "id 2, present"
+      ],
+      "request_raw_config": [
+        {
+          "_": "id 1, present",
+          "request_raw_configuration": [
+            "id 33, present",
+            "id 34, present"
+          ],
+          "deleted_request_raw_configuration": [
+            "id 33, present",
+            "id 34, present"
+          ]
+        },
+        "id 2, present"
+      ],
+      "repo_count": [
+        "id 1, present",
+        "id 1, present, duplicate"
+      ],
+      "request_yaml_config": [
+        {
+          "_": "id 1, present",
+          "request": [
+            {
+              "_": "id 37, present",
+              "abuse": [
+                "id 33, present",
+                "id 34, present"
+              ],
+              "message": [
+                "id 33, present",
+                "id 34, present"
+              ],
+              "job": [
+                {
+                  "_": "id 176, present",
+                  "queueable_job": [
+                    "id 61, present",
+                    "id 62, present"
+                  ],
+                  "job_version": [
+                    "id 61, present",
+                    "id 62, present"
+                  ]
+                },
+                "id 177, present"
+              ],
+              "build": [
+                {
+                  "_": "id 173, present",
+                  "job": [
+                    "id 174, present"
+                  ],
+                  "repository": [
+                    "id 71, present",
+                    "id 70, present"
+                  ],
+                  "tag": [
+                    "id 41, present"
+                  ],
+                  "branch": [
+                    "id 41, present"
+                  ],
+                  "stage": [
+                    "id 37, present"
+                  ]
+                },
+                "id 175, present"
+              ],
+              "request_payload": [
+                "id 33, present",
+                "id 34, present"
+              ],
+              "request_raw_configuration": [
+                "id 35, present",
+                "id 36, present"
+              ],
+              "deleted_job": [
+                "id 57, present",
+                "id 58, present"
+              ],
+              "deleted_build": [
+                "id 63, present",
+                "id 64, present"
+              ],
+              "deleted_request_payload": [
+                "id 33, present",
+                "id 34, present"
+              ],
+              "deleted_request_raw_configuration": [
+                "id 35, present",
+                "id 36, present"
+              ]
+            },
+            "id 38, present"
+          ],
+          "deleted_request": [
+            "id 31, present",
+            "id 32, present"
+          ]
+        },
+        "id 2, present"
+      ],
+      "deleted_build": [
+        "id 65, present",
+        "id 66, present"
+      ],
+      "deleted_request": [
+        "id 33, present",
+        "id 34, present"
+      ],
+      "deleted_job": [
+        "id 59, present",
+        "id 60, present"
+      ],
+      "deleted_ssl_key": [
+        "id 1, present",
+        "id 2, present"
+      ],
+      "deleted_commit": [
+        "id 13, present",
+        "id 14, present"
+      ],
+      "deleted_pull_request": [
+        "id 1, present",
+        "id 2, present"
+      ],
+      "deleted_tag": [
+        "id 3, present",
+        "id 4, present"
+      ],
+      "deleted_build_config": [
+        "id 1, present",
+        "id 2, present"
+      ],
+      "deleted_request_config": [
+        "id 1, present",
+        "id 2, present"
+      ],
+      "deleted_job_config": [
+        "id 1, present",
+        "id 2, present"
+      ],
+      "deleted_request_raw_config": [
+        "id 1, present",
+        "id 2, present"
+      ],
+      "deleted_request_yaml_config": [
+        "id 1, present",
+        "id 2, present"
       ]
     }
   end

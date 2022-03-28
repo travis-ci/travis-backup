@@ -8,6 +8,7 @@ class Tag < Model
   has_many :builds
   has_many :commits
   has_many :requests
-
-  self.table_name = 'tags'
+  has_many :deleted_builds
+  has_many :deleted_commits
+  has_many :deleted_requests
 end

@@ -1,18 +1,6 @@
 # frozen_string_literal: true
 
 require 'model'
-require 'models/abuse'
-require 'models/subscription'
-require 'models/owner_group'
-require 'models/trial'
-require 'models/trial_allowance'
-require 'models/broadcast'
-require 'models/star'
-require 'models/permission'
-require 'models/token'
-require 'models/email'
-require 'models/membership'
-require 'models/user_beta_feature'
 
 class User < Model
   has_many :builds_for_that_this_user_is_owner, as: :owner, class_name: 'Build'
@@ -34,6 +22,13 @@ class User < Model
   has_many :emails
   has_many :memberships
   has_many :user_beta_features
+  has_many :user_utm_params
+  has_many :email_unsubscribes
+  has_many :cancellations
 
-  self.table_name = 'users'
+  has_many :deleted_builds_for_that_this_user_is_owner, as: :owner, class_name: 'DeletedBuild'
+  has_many :deleted_builds_for_that_this_user_is_sender, as: :sender, class_name: 'DeletedBuild'
+  has_many :deleted_jobs, as: :owner
+  has_many :deleted_requests_for_that_this_user_is_owner, as: :owner, class_name: 'DeletedRequest'
+  has_many :deleted_requests_for_that_this_user_is_sender, as: :sender, class_name: 'DeletedRequest'
 end

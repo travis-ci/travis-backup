@@ -3,6 +3,7 @@
 require 'model'
 
 class Organization < Model
+  belongs_to :beta_migration_request
   has_many :builds_for_that_this_organization_is_owner, as: :owner, class_name: 'Build'
   has_many :builds_for_that_this_organization_is_sender, as: :sender, class_name: 'Build'
   has_many :repositories, as: :owner
@@ -17,5 +18,9 @@ class Organization < Model
   has_many :requests_for_that_this_organization_is_sender, as: :sender, class_name: 'Request'
   has_many :memberships
 
-  self.table_name = 'organizations'
+  has_many :deleted_builds_for_that_this_organization_is_owner, as: :owner, class_name: 'DeletedBuild'
+  has_many :deleted_builds_for_that_this_organization_is_sender, as: :sender, class_name: 'DeletedBuild'
+  has_many :deleted_jobs, as: :owner
+  has_many :deleted_requests_for_that_this_organization_is_owner, as: :owner, class_name: 'DeletedRequest'
+  has_many :deleted_requests_for_that_this_organization_is_sender, as: :sender, class_name: 'DeletedRequest'
 end

@@ -11,5 +11,8 @@ class Branch < Model
   has_many :jobs, as: :source
   has_many :requests
 
-  self.table_name = 'branches'
+  has_many :deleted_builds
+  has_many :deleted_commits
+  has_many :deleted_jobs, as: :source
+  has_many :deleted_requests
 end

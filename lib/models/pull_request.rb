@@ -6,6 +6,6 @@ class PullRequest < Model
   belongs_to :repository
   has_many :requests
   has_many :builds
-
-  self.table_name = 'pull_requests'
+  has_many :deleted_requests
+  has_many :deleted_builds
 end

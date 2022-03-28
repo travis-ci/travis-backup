@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'model'
-require 'models/repository'
 
 class Request < Model
   belongs_to :owner, polymorphic: true
@@ -11,10 +10,16 @@ class Request < Model
   belongs_to :pull_request
   belongs_to :tag
   belongs_to :commit
+  belongs_to :request_yaml_configs
+  belongs_to :request_configs
   has_many :abuses
   has_many :messages, as: :subject
   has_many :jobs, as: :source
   has_many :builds
-
-  self.table_name = 'requests'
+  has_many :request_payloads
+  has_many :request_raw_configurations
+  has_many :deleted_jobs, as: :source
+  has_many :deleted_builds
+  has_many :deleted_request_payloads
+  has_many :deleted_request_raw_configurations
 end
