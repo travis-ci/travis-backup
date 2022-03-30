@@ -1,0 +1,21 @@
+{
+  "table_name": "request_configs",
+  "data": [
+    {
+      "id": 1,
+      "repository_id": 1,
+      "key": "some_test_key",
+      "org_id": null,
+      "com_id": null,
+      "config": null
+    },
+    {
+      "id": 2,
+      "repository_id": 1,
+      "key": "some_test_key",
+      "org_id": null,
+      "com_id": null,
+      "config": null
+    }
+  ]
+}

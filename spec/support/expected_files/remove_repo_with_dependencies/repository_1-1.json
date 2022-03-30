@@ -5,8 +5,8 @@
       "id": 1,
       "name": null,
       "url": null,
-      "created_at": "2021-04-11 22:05:24 UTC",
-      "updated_at": "2021-04-11 22:05:24 UTC",
+      "created_at": "2021-08-30 23:31:15 UTC",
+      "updated_at": "2021-08-30 23:31:15 UTC",
       "last_build_id": null,
       "last_build_number": null,
       "last_build_started_at": null,
@@ -16,8 +16,8 @@
       "active": null,
       "description": null,
       "last_build_duration": null,
-      "owner_id": null,
       "owner_type": null,
+      "owner_id": null,
       "private": false,
       "last_build_state": null,
       "github_id": null,
@@ -26,7 +26,20 @@
       "settings": null,
       "next_build_number": null,
       "invalidated_at": null,
-      "current_build_id": null
+      "current_build_id": null,
+      "org_id": null,
+      "com_id": null,
+      "migrating": null,
+      "migrated_at": null,
+      "active_on_org": null,
+      "managed_by_installation_at": null,
+      "migration_status": null,
+      "history_migration_status": null,
+      "vcs_type": "GithubRepository",
+      "vcs_id": null,
+      "fork": null,
+      "vcs_slug": null,
+      "vcs_source_host": null
     }
   ]
 }
