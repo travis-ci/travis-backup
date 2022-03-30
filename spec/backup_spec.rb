@@ -9,7 +9,7 @@ require 'pry'
 require 'byebug'
 
 describe Backup do
-  before(:all) do
+  before(:each) do
     BeforeTests.new.run
   end
 
@@ -17,15 +17,6 @@ describe Backup do
   let!(:backup) { Backup.new(files_location: files_location, limit: 5) }
 
   describe 'run' do
-    after(:each) do
-      Organization.destroy_all
-      User.destroy_all
-      Repository.destroy_all
-      Build.destroy_all
-      Job.destroy_all
-      Request.destroy_all
-    end
-
     let!(:unassigned_repositories) {
       FactoryBot.create_list(:repository_with_requests, 3)
     }
