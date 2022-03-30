@@ -141,8 +141,6 @@ describe Backup::RemoveSpecified do
     end
 
     let!(:repository) {
-      FactoryBot.rewind_sequences
-
       db_helper.do_without_triggers do
         FactoryBot.create(
           :repository_for_removing_heavy_data,
@@ -238,8 +236,6 @@ describe Backup::RemoveSpecified do
   #   end
 
   #   let!(:user) {
-  #     FactoryBot.rewind_sequences
-
   #     db_helper.do_without_triggers do
   #       FactoryBot.create(
   #         :user_with_all_dependencies,
@@ -322,8 +318,6 @@ describe Backup::RemoveSpecified do
   #   end
 
   #   let!(:organization) {
-  #     FactoryBot.rewind_sequences
-
   #     db_helper.do_without_triggers do
   #       FactoryBot.create(
   #         :organization_with_all_dependencies,
@@ -405,8 +399,6 @@ describe Backup::RemoveSpecified do
   #   end
 
   #   let!(:repository) {
-  #     FactoryBot.rewind_sequences
-
   #     db_helper.do_without_triggers do
   #       FactoryBot.create(
   #         :repository_with_all_dependencies,

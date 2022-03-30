@@ -9,7 +9,6 @@ require 'byebug'
 describe Model do
   before(:each) do
     BeforeTests.new.run
-    FactoryBot.rewind_sequences
   end
 
   describe 'ids_of_all_dependencies_with_filtered' do
