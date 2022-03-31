@@ -2282,61 +2282,7 @@ class ExpectedDependencyTrees
                 "id 32, present"
               ]
             },
-            "id 36, present"
-          ],
-          "deleted_request": [
-            "id 29, present",
-            "id 30, present"
-          ]
-        },
-        "id 2, present"
-      ],
-      "job_config": [
-        {
-          "_": "id 1, present",
-          "job": [
-            {
-              "_": "id 171, present",
-              "queueable_job": [
-                "id 59, present",
-                "id 60, present"
-              ],
-              "job_version": [
-                "id 59, present",
-                "id 60, present"
-              ]
-            },
-            "id 172, present"
-          ],
-          "deleted_job": [
-            "id 55, present",
-            "id 56, present"
-          ]
-        },
-        "id 2, present"
-      ],
-      "request_raw_config": [
-        {
-          "_": "id 1, present",
-          "request_raw_configuration": [
-            "id 33, present",
-            "id 34, present"
-          ],
-          "deleted_request_raw_configuration": [
-            "id 33, present",
-            "id 34, present"
-          ]
-        },
-        "id 2, present"
-      ],
-      "repo_count": [
-        "id 1, present",
-        "id 1, present, duplicate"
-      ],
-      "request_yaml_config": [
-        {
-          "_": "id 1, present",
-          "request": [
+            "id 36, present",
             {
               "_": "id 37, present",
               "abuse": [
@@ -2411,10 +2357,58 @@ class ExpectedDependencyTrees
             "id 38, present"
           ],
           "deleted_request": [
+            "id 29, present",
+            "id 30, present",
             "id 31, present",
             "id 32, present"
           ]
         },
+        "id 2, present"
+      ],
+      "job_config": [
+        {
+          "_": "id 1, present",
+          "job": [
+            {
+              "_": "id 171, present",
+              "queueable_job": [
+                "id 59, present",
+                "id 60, present"
+              ],
+              "job_version": [
+                "id 59, present",
+                "id 60, present"
+              ]
+            },
+            "id 172, present"
+          ],
+          "deleted_job": [
+            "id 55, present",
+            "id 56, present"
+          ]
+        },
+        "id 2, present"
+      ],
+      "request_raw_config": [
+        {
+          "_": "id 1, present",
+          "request_raw_configuration": [
+            "id 33, present",
+            "id 34, present"
+          ],
+          "deleted_request_raw_configuration": [
+            "id 33, present",
+            "id 34, present"
+          ]
+        },
+        "id 2, present"
+      ],
+      "repo_count": [
+        "id 1, present",
+        "id 1, present, duplicate"
+      ],
+      "request_yaml_config": [
+        "id 1, present",
         "id 2, present"
       ],
       "deleted_build": [
