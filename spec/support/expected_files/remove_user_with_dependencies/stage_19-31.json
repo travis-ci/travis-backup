@@ -1,0 +1,60 @@
+{
+  "table_name": "stages",
+  "data": [
+    {
+      "id": 19,
+      "build_id": 89,
+      "number": null,
+      "name": null,
+      "state": null,
+      "started_at": null,
+      "finished_at": null,
+      "org_id": null,
+      "com_id": null
+    },
+    {
+      "id": 20,
+      "build_id": 89,
+      "number": null,
+      "name": null,
+      "state": null,
+      "started_at": null,
+      "finished_at": null,
+      "org_id": null,
+      "com_id": null
+    },
+    {
+      "id": 21,
+      "build_id": 89,
+      "number": null,
+      "name": null,
+      "state": null,
+      "started_at": null,
+      "finished_at": null,
+      "org_id": null,
+      "com_id": null
+    },
+    {
+      "id": 30,
+      "build_id": 140,
+      "number": null,
+      "name": null,
+      "state": null,
+      "started_at": null,
+      "finished_at": null,
+      "org_id": null,
+      "com_id": null
+    },
+    {
+      "id": 31,
+      "build_id": 145,
+      "number": null,
+      "name": null,
+      "state": null,
+      "started_at": null,
+      "finished_at": null,
+      "org_id": null,
+      "com_id": null
+    }
+  ]
+}

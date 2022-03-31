@@ -1,0 +1,45 @@
+{
+  "table_name": "abuses",
+  "data": [
+    {
+      "id": 53,
+      "owner_type": null,
+      "owner_id": null,
+      "request_id": 61,
+      "level": 53,
+      "reason": "some text",
+      "created_at": "2021-08-31 07:51:57 UTC",
+      "updated_at": "2021-08-31 07:51:57 UTC"
+    },
+    {
+      "id": 54,
+      "owner_type": null,
+      "owner_id": null,
+      "request_id": 61,
+      "level": 54,
+      "reason": "some text",
+      "created_at": "2021-08-31 07:51:57 UTC",
+      "updated_at": "2021-08-31 07:51:57 UTC"
+    },
+    {
+      "id": 55,
+      "owner_type": "User",
+      "owner_id": 1,
+      "request_id": null,
+      "level": 55,
+      "reason": "some text",
+      "created_at": "2021-08-31 07:51:57 UTC",
+      "updated_at": "2021-08-31 07:51:57 UTC"
+    },
+    {
+      "id": 56,
+      "owner_type": "User",
+      "owner_id": 1,
+      "request_id": null,
+      "level": 56,
+      "reason": "some text",
+      "created_at": "2021-08-31 07:51:57 UTC",
+      "updated_at": "2021-08-31 07:51:57 UTC"
+    }
+  ]
+}

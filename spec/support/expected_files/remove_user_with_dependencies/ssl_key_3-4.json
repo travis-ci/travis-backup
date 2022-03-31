@@ -1,0 +1,25 @@
+{
+  "table_name": "ssl_keys",
+  "data": [
+    {
+      "id": 3,
+      "repository_id": 1,
+      "public_key": null,
+      "private_key": null,
+      "created_at": "2021-08-31 07:51:57 UTC",
+      "updated_at": "2021-08-31 07:51:57 UTC",
+      "org_id": null,
+      "com_id": null
+    },
+    {
+      "id": 4,
+      "repository_id": 1,
+      "public_key": null,
+      "private_key": null,
+      "created_at": "2021-08-31 07:51:57 UTC",
+      "updated_at": "2021-08-31 07:51:57 UTC",
+      "org_id": null,
+      "com_id": null
+    }
+  ]
+}

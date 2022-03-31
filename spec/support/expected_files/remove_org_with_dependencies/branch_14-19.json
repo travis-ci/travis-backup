@@ -1,0 +1,27 @@
+{
+  "table_name": "branches",
+  "data": [
+    {
+      "id": 14,
+      "repository_id": 1,
+      "last_build_id": null,
+      "name": "branch_14",
+      "exists_on_github": true,
+      "created_at": "2021-08-31 07:45:37 UTC",
+      "updated_at": "2021-08-31 07:45:37 UTC",
+      "org_id": null,
+      "com_id": null
+    },
+    {
+      "id": 19,
+      "repository_id": 1,
+      "last_build_id": null,
+      "name": "branch_19",
+      "exists_on_github": true,
+      "created_at": "2021-08-31 07:45:37 UTC",
+      "updated_at": "2021-08-31 07:45:37 UTC",
+      "org_id": null,
+      "com_id": null
+    }
+  ]
+}

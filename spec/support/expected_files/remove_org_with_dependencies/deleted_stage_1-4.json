@@ -1,0 +1,49 @@
+{
+  "table_name": "deleted_stages",
+  "data": [
+    {
+      "id": 1,
+      "build_id": 1,
+      "number": null,
+      "name": null,
+      "state": null,
+      "started_at": null,
+      "finished_at": null,
+      "org_id": null,
+      "com_id": null
+    },
+    {
+      "id": 2,
+      "build_id": 89,
+      "number": null,
+      "name": null,
+      "state": null,
+      "started_at": null,
+      "finished_at": null,
+      "org_id": null,
+      "com_id": null
+    },
+    {
+      "id": 3,
+      "build_id": 178,
+      "number": null,
+      "name": null,
+      "state": null,
+      "started_at": null,
+      "finished_at": null,
+      "org_id": null,
+      "com_id": null
+    },
+    {
+      "id": 4,
+      "build_id": 229,
+      "number": null,
+      "name": null,
+      "state": null,
+      "started_at": null,
+      "finished_at": null,
+      "org_id": null,
+      "com_id": null
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "table_name": "crons",
+  "data": [
+    {
+      "id": 2,
+      "branch_id": 14,
+      "interval": "test",
+      "created_at": "2021-08-31 07:45:37 UTC",
+      "updated_at": "2021-08-31 07:45:37 UTC",
+      "next_run": null,
+      "last_run": null,
+      "dont_run_if_recent_build_exists": false,
+      "org_id": null,
+      "com_id": null,
+      "active": true
+    }
+  ]
+}

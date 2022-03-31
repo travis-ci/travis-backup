@@ -3,25 +3,25 @@
   "data": [
     {
       "id": 1,
-      "owner_id": 9,
       "owner_type": "User",
+      "owner_id": 1,
       "chartmogul_customer_uuids": [
 
       ],
       "status": "new",
-      "created_at": "2021-04-11 21:55:03 UTC",
-      "updated_at": "2021-04-11 21:55:03 UTC"
+      "created_at": "2021-08-31 07:51:57 UTC",
+      "updated_at": "2021-08-31 07:51:57 UTC"
     },
     {
       "id": 2,
-      "owner_id": 9,
       "owner_type": "User",
+      "owner_id": 1,
       "chartmogul_customer_uuids": [
 
       ],
       "status": "new",
-      "created_at": "2021-04-11 21:55:03 UTC",
-      "updated_at": "2021-04-11 21:55:03 UTC"
+      "created_at": "2021-08-31 07:51:57 UTC",
+      "updated_at": "2021-08-31 07:51:57 UTC"
     }
   ]
 }

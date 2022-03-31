@@ -1,0 +1,27 @@
+{
+  "table_name": "deleted_tags",
+  "data": [
+    {
+      "id": 3,
+      "repository_id": 1,
+      "name": null,
+      "last_build_id": null,
+      "exists_on_github": null,
+      "created_at": "2021-08-31 07:51:57 UTC",
+      "updated_at": "2021-08-31 07:51:57 UTC",
+      "org_id": null,
+      "com_id": null
+    },
+    {
+      "id": 4,
+      "repository_id": 1,
+      "name": null,
+      "last_build_id": null,
+      "exists_on_github": null,
+      "created_at": "2021-08-31 07:51:57 UTC",
+      "updated_at": "2021-08-31 07:51:57 UTC",
+      "org_id": null,
+      "com_id": null
+    }
+  ]
+}

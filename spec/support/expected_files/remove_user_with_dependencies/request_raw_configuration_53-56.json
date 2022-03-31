@@ -1,0 +1,37 @@
+{
+  "table_name": "request_raw_configurations",
+  "data": [
+    {
+      "id": 53,
+      "request_id": 59,
+      "request_raw_config_id": null,
+      "source": null,
+      "org_id": null,
+      "merge_mode": null
+    },
+    {
+      "id": 54,
+      "request_id": 59,
+      "request_raw_config_id": null,
+      "source": null,
+      "org_id": null,
+      "merge_mode": null
+    },
+    {
+      "id": 55,
+      "request_id": 61,
+      "request_raw_config_id": null,
+      "source": null,
+      "org_id": null,
+      "merge_mode": null
+    },
+    {
+      "id": 56,
+      "request_id": 61,
+      "request_raw_config_id": null,
+      "source": null,
+      "org_id": null,
+      "merge_mode": null
+    }
+  ]
+}

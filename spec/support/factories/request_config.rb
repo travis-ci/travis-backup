@@ -8,14 +8,23 @@ FactoryBot.define do
     key { 'some_test_key' }
 
     factory :request_config_with_all_dependencies do
-      after(:create) do |request_config|
+      transient do
+        created_at { nil }
+        updated_at { nil }
+      end
+
+      after(:create) do |request_config, evaluator|
         create(
           :request_with_all_dependencies_and_sibling,
-          config_id: request_config.id
+          config_id: request_config.id,
+          created_at: evaluator.created_at,
+          updated_at: evaluator.updated_at
         )
         create_list(
           :deleted_request, 2,
-          config_id: request_config.id
+          config_id: request_config.id,
+          created_at: evaluator.created_at,
+          updated_at: evaluator.updated_at
         )
       end
 
