@@ -16,13 +16,13 @@ FactoryBot.define do
       after(:create) do |request_yaml_config, evaluator|
         create(
           :request_with_all_dependencies_and_sibling,
-          config_id: request_yaml_config.id,
+          yaml_config_id: request_yaml_config.id,
           created_at: evaluator.created_at,
           updated_at: evaluator.updated_at
         )
         create_list(
           :deleted_request, 2,
-          config_id: request_yaml_config.id,
+          yaml_config_id: request_yaml_config.id,
           created_at: evaluator.created_at,
           updated_at: evaluator.updated_at
         )

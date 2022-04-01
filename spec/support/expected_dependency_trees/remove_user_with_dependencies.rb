@@ -2803,7 +2803,61 @@ class ExpectedDependencyTrees
                         "id 32, removed"
                       ]
                     },
-                    "id 36, removed",
+                    "id 36, removed"
+                  ],
+                  "deleted_request": [
+                    "id 29, removed",
+                    "id 30, removed"
+                  ]
+                },
+                "id 2, removed"
+              ],
+              "job_config": [
+                {
+                  "_": "id 1, removed",
+                  "job": [
+                    {
+                      "_": "id 171, removed",
+                      "queueable_job": [
+                        "id 59, removed",
+                        "id 60, removed"
+                      ],
+                      "job_version": [
+                        "id 59, removed",
+                        "id 60, removed"
+                      ]
+                    },
+                    "id 172, removed"
+                  ],
+                  "deleted_job": [
+                    "id 55, removed",
+                    "id 56, removed"
+                  ]
+                },
+                "id 2, removed"
+              ],
+              "request_raw_config": [
+                {
+                  "_": "id 1, removed",
+                  "request_raw_configuration": [
+                    "id 33, removed",
+                    "id 34, removed"
+                  ],
+                  "deleted_request_raw_configuration": [
+                    "id 33, removed",
+                    "id 34, removed"
+                  ]
+                },
+                "id 2, removed"
+              ],
+              "repo_count": [
+                "id 1, removed",
+                "id 1, removed, duplicate"
+              ],
+              "request_yaml_config": [
+                {
+                  "_": "id 1, removed",
+                  "request": [
                     {
                       "_": "id 37, removed",
                       "abuse": [
@@ -2878,58 +2932,10 @@ class ExpectedDependencyTrees
                     "id 38, removed"
                   ],
                   "deleted_request": [
-                    "id 29, removed",
-                    "id 30, removed",
                     "id 31, removed",
                     "id 32, removed"
                   ]
                 },
-                "id 2, removed"
-              ],
-              "job_config": [
-                {
-                  "_": "id 1, removed",
-                  "job": [
-                    {
-                      "_": "id 171, removed",
-                      "queueable_job": [
-                        "id 59, removed",
-                        "id 60, removed"
-                      ],
-                      "job_version": [
-                        "id 59, removed",
-                        "id 60, removed"
-                      ]
-                    },
-                    "id 172, removed"
-                  ],
-                  "deleted_job": [
-                    "id 55, removed",
-                    "id 56, removed"
-                  ]
-                },
-                "id 2, removed"
-              ],
-              "request_raw_config": [
-                {
-                  "_": "id 1, removed",
-                  "request_raw_configuration": [
-                    "id 33, removed",
-                    "id 34, removed"
-                  ],
-                  "deleted_request_raw_configuration": [
-                    "id 33, removed",
-                    "id 34, removed"
-                  ]
-                },
-                "id 2, removed"
-              ],
-              "repo_count": [
-                "id 1, removed",
-                "id 1, removed, duplicate"
-              ],
-              "request_yaml_config": [
-                "id 1, removed",
                 "id 2, removed"
               ],
               "deleted_build": [
