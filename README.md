@@ -1,6 +1,6 @@
 # README
 
-*travis-backup-for-v3* is an application that helps with housekeeping and backup for Travis CI database v3.0. It removes requests and builds with their dependencies, as long as they are older than given threshold says.
+*travis-backup-for-v3* is an application that helps with housekeeping and backup for Travis CI database v3.0. By default it removes requests and builds with their dependencies, as long as they are older than given threshold says (and backups them in files, if this option is active). It can also be used to remove specified users, organizations or repositories with their dependencies.
 
 ### Installation and run
 
@@ -54,6 +54,8 @@ backup.run(repo_id: 1)
 ```
 
 #### Special modes
+
+Using `--user_id`, `--org_id` or `--repo_id` flag without setting `--threshold` results in removing the specified user/organization/repository with all its dependencies. It can be combined with `--backup` flag in order to save removed data in files.
 
 Using `--dry_run` flag you can check which data would be removed by gem, but without removing them actually. Instead of that reports will be printed on standard output. This flag can be also combined with special modes.
 

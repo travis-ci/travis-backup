@@ -1,0 +1,17 @@
+{
+  "table_name": "repo_counts",
+  "data": [
+    {
+      "repository_id": 1,
+      "requests": null,
+      "commits": null,
+      "branches": null,
+      "pull_requests": null,
+      "tags": null,
+      "builds": null,
+      "stages": null,
+      "jobs": null,
+      "range": null
+    }
+  ]
+}

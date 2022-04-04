@@ -1,0 +1,45 @@
+{
+  "table_name": "deleted_request_raw_configurations",
+  "data": [
+    {
+      "id": 14,
+      "request_id": 15,
+      "request_raw_config_id": null,
+      "source": null,
+      "org_id": null,
+      "merge_mode": null
+    },
+    {
+      "id": 15,
+      "request_id": 17,
+      "request_raw_config_id": null,
+      "source": null,
+      "org_id": null,
+      "merge_mode": null
+    },
+    {
+      "id": 16,
+      "request_id": 17,
+      "request_raw_config_id": null,
+      "source": null,
+      "org_id": null,
+      "merge_mode": null
+    },
+    {
+      "id": 25,
+      "request_id": 29,
+      "request_raw_config_id": null,
+      "source": null,
+      "org_id": null,
+      "merge_mode": null
+    },
+    {
+      "id": 26,
+      "request_id": 29,
+      "request_raw_config_id": null,
+      "source": null,
+      "org_id": null,
+      "merge_mode": null
+    }
+  ]
+}

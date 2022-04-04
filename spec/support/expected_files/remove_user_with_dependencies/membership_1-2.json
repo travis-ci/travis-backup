@@ -4,13 +4,13 @@
     {
       "id": 1,
       "organization_id": null,
-      "user_id": 9,
+      "user_id": 1,
       "role": null
     },
     {
       "id": 2,
       "organization_id": null,
-      "user_id": 9,
+      "user_id": 1,
       "role": null
     }
   ]

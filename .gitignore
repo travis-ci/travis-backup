@@ -6,3 +6,4 @@ dump/*
 !dump/.keep
 *.gem
 .byebug_history
+*.code-workspace

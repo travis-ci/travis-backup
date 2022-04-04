@@ -131,7 +131,8 @@ class Config
   def check_values
     if !@move_logs && !@remove_orphans && !@threshold && !@user_id && !@org_id && !@repo_id && !@load_from_files
       message = abort_message("Please provide the threshold argument. Data younger than it will be omitted. " +
-        "Threshold defines number of months from now.")
+        "Threshold defines number of months from now. Alternatively you can define user_id, org_id or repo_id " +
+        "to remove whole user, organization or repository with all dependencies.")
       abort message
     end
 
@@ -151,9 +152,11 @@ class Config
 
   def abort_message(intro)
     "\n#{intro}\n\nExample usage:\n"+
-    "\n  $ bin/travis_backup 'postgres://my_database_url' --threshold 6\n" +
+    "\n  $ bin/travis_backup 'postgres://my_database_url' --threshold 6" +
+    "\n  $ bin/travis_backup 'postgres://my_database_url' --user_id 1\n" +
     "\nor using in code:\n" +
-    "\n  Backup.new(database_url: 'postgres://my_database_url', threshold: 6)\n" +
+    "\n  Backup.new(database_url: 'postgres://my_database_url', threshold: 6)" +
+    "\n  Backup.new(database_url: 'postgres://my_database_url', user_id: 1)\n" +
     "\nYou can also set it using environment variables or configuration files.\n"
   end
 

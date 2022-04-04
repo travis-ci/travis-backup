@@ -7,7 +7,9 @@
       "repository_id": 1,
       "admin": false,
       "push": false,
-      "pull": false
+      "pull": false,
+      "org_id": null,
+      "com_id": null
     },
     {
       "id": 4,
@@ -15,7 +17,9 @@
       "repository_id": 1,
       "admin": false,
       "push": false,
-      "pull": false
+      "pull": false,
+      "org_id": null,
+      "com_id": null
     }
   ]
 }

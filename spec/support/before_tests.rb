@@ -1,3 +1,5 @@
+require 'factory_bot'
+
 class BeforeTests
   def run
     config = Config.new
@@ -6,6 +8,7 @@ class BeforeTests
     helper.do_in_other_db(config.destination_db_url) do
       truncate_all_tables
     end
+    FactoryBot.rewind_sequences
   end
 
   def truncate_all_tables
