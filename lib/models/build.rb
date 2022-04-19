@@ -3,6 +3,8 @@
 require 'model'
 
 class Build < Model
+  self.inheritance_column = :_type_disabled
+
   belongs_to :repository
   belongs_to :owner, polymorphic: true
   belongs_to :sender, polymorphic: true

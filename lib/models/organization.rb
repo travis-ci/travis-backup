@@ -3,6 +3,8 @@
 require 'model'
 
 class Organization < Model
+  self.inheritance_column = :_type_disabled
+
   belongs_to :beta_migration_request
   has_many :builds_for_that_this_organization_is_owner, as: :owner, class_name: 'Build'
   has_many :builds_for_that_this_organization_is_sender, as: :sender, class_name: 'Build'

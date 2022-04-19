@@ -3,6 +3,8 @@
 require 'model'
 
 class DeletedJob < Model
+  self.inheritance_column = :_type_disabled
+
   belongs_to :source, polymorphic: true
   belongs_to :owner, polymorphic: true
   belongs_to :repository

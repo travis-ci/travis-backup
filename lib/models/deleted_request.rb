@@ -3,6 +3,8 @@
 require 'model'
 
 class DeletedRequest < Model
+  self.inheritance_column = :_type_disabled
+
   belongs_to :owner, polymorphic: true
   belongs_to :sender, polymorphic: true
   belongs_to :repository

@@ -3,6 +3,8 @@
 require 'model'
 
 class User < Model
+  self.inheritance_column = :_type_disabled
+
   has_many :builds_for_that_this_user_is_owner, as: :owner, class_name: 'Build'
   has_many :builds_for_that_this_user_is_sender, as: :sender, class_name: 'Build'
   has_many :repositories, as: :owner

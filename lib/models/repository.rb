@@ -3,6 +3,8 @@
 require 'model'
 
 class Repository < Model
+  self.inheritance_column = :_type_disabled
+
   belongs_to :owner, polymorphic: true
   belongs_to :current_build, foreign_key: :current_build_id, class_name: 'Build'
   belongs_to :last_build, foreign_key: :last_build_id, class_name: 'Build'
