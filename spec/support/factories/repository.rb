@@ -135,6 +135,36 @@ FactoryBot.define do
           create_for_repo_without_timestamps(repository, :request)
 
           repository.update(last_build_id: last_build.id)
+
+          repository.request_configs.each do |config|
+            config.requests.each do |request|
+              request.update(repository_id: repository.id)
+            end
+          end
+
+          repository.request_raw_configs.each do |config|
+            config.requests.each do |request|
+              request.update(repository_id: repository.id)
+            end
+          end
+
+          repository.request_yaml_configs.each do |config|
+            config.requests.each do |request|
+              request.update(repository_id: repository.id)
+            end
+          end
+
+          repository.build_configs.each do |config|
+            config.builds.each do |build|
+              build.update(repository_id: repository.id)
+            end
+          end
+
+          repository.job_configs.each do |config|
+            config.jobs.each do |job|
+              job.update(repository_id: repository.id)
+            end
+          end
         end
       end
     end

@@ -624,6 +624,26 @@ class ExpectedDependencyTrees
         },
         "id 51, present",
         {
+          "_": "id 163, present",
+          "job": [
+            "id 164, present"
+          ],
+          "repository": [
+            "id 67, present",
+            "id 66, present"
+          ],
+          "tag": [
+            "id 39, present"
+          ],
+          "branch": [
+            "id 39, present"
+          ],
+          "stage": [
+            "id 35, present"
+          ]
+        },
+        "id 165, present",
+        {
           "_": "id 178, present",
           "job": [
             {
@@ -799,6 +819,78 @@ class ExpectedDependencyTrees
           ]
         },
         "id 12, removed",
+        {
+          "_": "id 35, removed",
+          "abuse": [
+            "id 31, removed",
+            "id 32, removed"
+          ],
+          "message": [
+            "id 31, removed",
+            "id 32, removed"
+          ],
+          "job": [
+            {
+              "_": "id 169, removed",
+              "queueable_job": [
+                "id 57, removed",
+                "id 58, removed"
+              ],
+              "job_version": [
+                "id 57, removed",
+                "id 58, removed"
+              ]
+            },
+            "id 170, removed"
+          ],
+          "build": [
+            {
+              "_": "id 166, removed",
+              "job": [
+                "id 167, removed"
+              ],
+              "repository": [
+                "id 69, present",
+                "id 68, present"
+              ],
+              "tag": [
+                "id 40, present"
+              ],
+              "branch": [
+                "id 40, present"
+              ],
+              "stage": [
+                "id 36, removed"
+              ]
+            },
+            "id 168, removed"
+          ],
+          "request_payload": [
+            "id 31, removed",
+            "id 32, removed"
+          ],
+          "request_raw_configuration": [
+            "id 31, removed",
+            "id 32, removed"
+          ],
+          "deleted_job": [
+            "id 53, removed",
+            "id 54, removed"
+          ],
+          "deleted_build": [
+            "id 61, removed",
+            "id 62, removed"
+          ],
+          "deleted_request_payload": [
+            "id 31, removed",
+            "id 32, removed"
+          ],
+          "deleted_request_raw_configuration": [
+            "id 31, removed",
+            "id 32, removed"
+          ]
+        },
+        "id 36, removed",
         "id 39, removed",
         "id 40, present"
       ],
@@ -814,7 +906,19 @@ class ExpectedDependencyTrees
             "id 20, present"
           ]
         },
-        "id 58, present"
+        "id 58, present",
+        {
+          "_": "id 171, present",
+          "queueable_job": [
+            "id 59, present",
+            "id 60, present"
+          ],
+          "job_version": [
+            "id 59, present",
+            "id 60, present"
+          ]
+        },
+        "id 172, present"
       ],
       "branch": [
         {
@@ -2175,26 +2279,8 @@ class ExpectedDependencyTrees
         {
           "_": "id 1, present",
           "build": [
-            {
-              "_": "id 163, present",
-              "job": [
-                "id 164, present"
-              ],
-              "repository": [
-                "id 67, present",
-                "id 66, present"
-              ],
-              "tag": [
-                "id 39, present"
-              ],
-              "branch": [
-                "id 39, present"
-              ],
-              "stage": [
-                "id 35, present"
-              ]
-            },
-            "id 165, present"
+            "id 163, present, duplicate",
+            "id 165, present, duplicate"
           ],
           "deleted_build": [
             "id 59, present",
@@ -2211,78 +2297,8 @@ class ExpectedDependencyTrees
         {
           "_": "id 1, present",
           "request": [
-            {
-              "_": "id 35, present",
-              "abuse": [
-                "id 31, present",
-                "id 32, present"
-              ],
-              "message": [
-                "id 31, present",
-                "id 32, present"
-              ],
-              "job": [
-                {
-                  "_": "id 169, present",
-                  "queueable_job": [
-                    "id 57, present",
-                    "id 58, present"
-                  ],
-                  "job_version": [
-                    "id 57, present",
-                    "id 58, present"
-                  ]
-                },
-                "id 170, present"
-              ],
-              "build": [
-                {
-                  "_": "id 166, present",
-                  "job": [
-                    "id 167, present"
-                  ],
-                  "repository": [
-                    "id 69, present",
-                    "id 68, present"
-                  ],
-                  "tag": [
-                    "id 40, present"
-                  ],
-                  "branch": [
-                    "id 40, present"
-                  ],
-                  "stage": [
-                    "id 36, present"
-                  ]
-                },
-                "id 168, present"
-              ],
-              "request_payload": [
-                "id 31, present",
-                "id 32, present"
-              ],
-              "request_raw_configuration": [
-                "id 31, present",
-                "id 32, present"
-              ],
-              "deleted_job": [
-                "id 53, present",
-                "id 54, present"
-              ],
-              "deleted_build": [
-                "id 61, present",
-                "id 62, present"
-              ],
-              "deleted_request_payload": [
-                "id 31, present",
-                "id 32, present"
-              ],
-              "deleted_request_raw_configuration": [
-                "id 31, present",
-                "id 32, present"
-              ]
-            },
-            "id 36, present"
+            "id 35, removed, duplicate",
+            "id 36, removed, duplicate"
           ],
           "deleted_request": [
             "id 29, present",
@@ -2295,18 +2311,8 @@ class ExpectedDependencyTrees
         {
           "_": "id 1, present",
           "job": [
-            {
-              "_": "id 171, present",
-              "queueable_job": [
-                "id 59, present",
-                "id 60, present"
-              ],
-              "job_version": [
-                "id 59, present",
-                "id 60, present"
-              ]
-            },
-            "id 172, present"
+            "id 171, present, duplicate",
+            "id 172, present, duplicate"
           ],
           "deleted_job": [
             "id 55, present",
