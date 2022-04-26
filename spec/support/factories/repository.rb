@@ -12,6 +12,13 @@ def create_for_repo(repository, what, how_many = 1)
   )
 end
 
+def create_for_repo_without_timestamps(repository, what, how_many = 1)
+  create_list(
+    what, how_many,
+    repository_id: repository.id
+  )
+end
+
 FactoryBot.define do
   factory :repository do
     factory :repository_with_builds_jobs_and_logs do
@@ -83,7 +90,7 @@ FactoryBot.define do
         create_for_repo(repository, :branch_with_all_dependencies_and_sibling)
         create_for_repo(repository, :commit_with_all_dependencies_and_sibling)
         create_for_repo(repository, :ssl_key, 2)
-        create_list(:permission, 2, repository_id: repository.id)
+        create_for_repo_without_timestamps(repository, :permission, 2)
         create_for_repo(repository, :star, 2)
         create_for_repo(repository, :pull_request_with_all_dependencies_and_sibling)
         create_for_repo(repository, :tag_with_all_dependencies_and_sibling)
@@ -92,8 +99,8 @@ FactoryBot.define do
         create_for_repo(repository, :email_unsubscribe, 2)
         create_for_repo(repository, :request_config_with_all_dependencies_and_sibling)
         create_for_repo(repository, :job_config_with_all_dependencies_and_sibling)
-        create(:request_raw_config_with_all_dependencies_and_sibling, repository_id: repository.id)
-        create_list(:repo_count, 2, repository_id: repository.id)
+        create_for_repo_without_timestamps(repository, :request_raw_config_with_all_dependencies_and_sibling)
+        create_for_repo_without_timestamps(repository, :repo_count, 2)
         create_for_repo(repository, :request_yaml_config_with_all_dependencies_and_sibling)
 
         create_for_repo(repository, :deleted_build, 2)
@@ -103,11 +110,11 @@ FactoryBot.define do
         create_for_repo(repository, :deleted_commit, 2)
         create_for_repo(repository, :deleted_pull_request, 2)
         create_for_repo(repository, :deleted_tag, 2)
-        create_list(:deleted_build_config, 2, repository_id: repository.id)
-        create_list(:deleted_job_config, 2, repository_id: repository.id)
-        create_list(:deleted_request_config, 2, repository_id: repository.id)
-        create_list(:deleted_request_raw_config, 2, repository_id: repository.id)
-        create_list(:deleted_request_yaml_config, 2, repository_id: repository.id)
+        create_for_repo_without_timestamps(repository, :deleted_build_config, 2)
+        create_for_repo_without_timestamps(repository, :deleted_job_config, 2)
+        create_for_repo_without_timestamps(repository, :deleted_request_config, 2)
+        create_for_repo_without_timestamps(repository, :deleted_request_raw_config, 2)
+        create_for_repo_without_timestamps(repository, :deleted_request_yaml_config, 2)
       end
 
       factory :repository_with_all_dependencies_and_sibling do
@@ -122,10 +129,10 @@ FactoryBot.define do
 
         after(:create) do |repository|
           create_for_repo(repository, :build_for_removing_heavy_data)
-          create(:build_for_removing_heavy_data, repository_id: repository.id)
+          create_for_repo_without_timestamps(repository, :build_for_removing_heavy_data)
           last_build = create_for_repo(repository, :build_for_removing_heavy_data).last
           create_for_repo(repository, :request)
-          create(:request, repository_id: repository.id)
+          create_for_repo_without_timestamps(repository, :request)
 
           repository.update(last_build_id: last_build.id)
         end
@@ -140,7 +147,7 @@ FactoryBot.define do
         create_for_repo(repository, :branch)
         create_for_repo(repository, :commit)
         create_for_repo(repository, :ssl_key)
-        create(:permission, repository_id: repository.id)
+        create_for_repo_without_timestamps(repository, :permission)
         create_for_repo(repository, :star)
         create_for_repo(repository, :pull_request)
         create_for_repo(repository, :tag)
