@@ -891,6 +891,78 @@ class ExpectedDependencyTrees
           ]
         },
         "id 36, removed",
+        {
+          "_": "id 37, removed",
+          "abuse": [
+            "id 33, removed",
+            "id 34, removed"
+          ],
+          "message": [
+            "id 33, removed",
+            "id 34, removed"
+          ],
+          "job": [
+            {
+              "_": "id 176, removed",
+              "queueable_job": [
+                "id 61, removed",
+                "id 62, removed"
+              ],
+              "job_version": [
+                "id 61, removed",
+                "id 62, removed"
+              ]
+            },
+            "id 177, removed"
+          ],
+          "build": [
+            {
+              "_": "id 173, removed",
+              "job": [
+                "id 174, removed"
+              ],
+              "repository": [
+                "id 71, present",
+                "id 70, present"
+              ],
+              "tag": [
+                "id 41, present"
+              ],
+              "branch": [
+                "id 41, present"
+              ],
+              "stage": [
+                "id 37, removed"
+              ]
+            },
+            "id 175, removed"
+          ],
+          "request_payload": [
+            "id 33, removed",
+            "id 34, removed"
+          ],
+          "request_raw_configuration": [
+            "id 35, removed",
+            "id 36, removed"
+          ],
+          "deleted_job": [
+            "id 57, removed",
+            "id 58, removed"
+          ],
+          "deleted_build": [
+            "id 63, removed",
+            "id 64, removed"
+          ],
+          "deleted_request_payload": [
+            "id 33, removed",
+            "id 34, removed"
+          ],
+          "deleted_request_raw_configuration": [
+            "id 35, removed",
+            "id 36, removed"
+          ]
+        },
+        "id 38, removed",
         "id 39, removed",
         "id 40, present"
       ],
@@ -2287,7 +2359,7 @@ class ExpectedDependencyTrees
             "id 60, present"
           ]
         },
-        "id 2, present"
+        "id 2, removed"
       ],
       "email_unsubscribe": [
         "id 1, present",
@@ -2295,7 +2367,7 @@ class ExpectedDependencyTrees
       ],
       "request_config": [
         {
-          "_": "id 1, present",
+          "_": "id 1, removed",
           "request": [
             "id 35, removed, duplicate",
             "id 36, removed, duplicate"
@@ -2305,7 +2377,7 @@ class ExpectedDependencyTrees
             "id 30, present"
           ]
         },
-        "id 2, present"
+        "id 2, removed"
       ],
       "job_config": [
         {
@@ -2319,7 +2391,7 @@ class ExpectedDependencyTrees
             "id 56, present"
           ]
         },
-        "id 2, present"
+        "id 2, removed"
       ],
       "request_raw_config": [
         {
@@ -2333,7 +2405,7 @@ class ExpectedDependencyTrees
             "id 34, present"
           ]
         },
-        "id 2, present"
+        "id 2, removed"
       ],
       "repo_count": [
         "id 1, present",
@@ -2341,87 +2413,17 @@ class ExpectedDependencyTrees
       ],
       "request_yaml_config": [
         {
-          "_": "id 1, present",
+          "_": "id 1, removed",
           "request": [
-            {
-              "_": "id 37, present",
-              "abuse": [
-                "id 33, present",
-                "id 34, present"
-              ],
-              "message": [
-                "id 33, present",
-                "id 34, present"
-              ],
-              "job": [
-                {
-                  "_": "id 176, present",
-                  "queueable_job": [
-                    "id 61, present",
-                    "id 62, present"
-                  ],
-                  "job_version": [
-                    "id 61, present",
-                    "id 62, present"
-                  ]
-                },
-                "id 177, present"
-              ],
-              "build": [
-                {
-                  "_": "id 173, present",
-                  "job": [
-                    "id 174, present"
-                  ],
-                  "repository": [
-                    "id 71, present",
-                    "id 70, present"
-                  ],
-                  "tag": [
-                    "id 41, present"
-                  ],
-                  "branch": [
-                    "id 41, present"
-                  ],
-                  "stage": [
-                    "id 37, present"
-                  ]
-                },
-                "id 175, present"
-              ],
-              "request_payload": [
-                "id 33, present",
-                "id 34, present"
-              ],
-              "request_raw_configuration": [
-                "id 35, present",
-                "id 36, present"
-              ],
-              "deleted_job": [
-                "id 57, present",
-                "id 58, present"
-              ],
-              "deleted_build": [
-                "id 63, present",
-                "id 64, present"
-              ],
-              "deleted_request_payload": [
-                "id 33, present",
-                "id 34, present"
-              ],
-              "deleted_request_raw_configuration": [
-                "id 35, present",
-                "id 36, present"
-              ]
-            },
-            "id 38, present"
+            "id 37, removed, duplicate",
+            "id 38, removed, duplicate"
           ],
           "deleted_request": [
             "id 31, present",
             "id 32, present"
           ]
         },
-        "id 2, present"
+        "id 2, removed"
       ],
       "deleted_build": [
         "id 65, present",

@@ -142,11 +142,13 @@ FactoryBot.define do
             end
           end
 
-          repository.request_raw_configs.each do |config|
-            config.requests.each do |request|
-              request.update(repository_id: repository.id)
-            end
-          end
+          # repository.request_raw_configs.each do |config|
+          #   config.request_raw_configurations.each do |configuration|
+          #     configuration.requests.each do |request|
+          #       request.update(repository_id: repository.id)
+          #     end
+          #   end
+          # end
 
           repository.request_yaml_configs.each do |config|
             config.requests.each do |request|
