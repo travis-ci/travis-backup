@@ -1,0 +1,13 @@
+{
+  "table_name": "job_configs",
+  "data": [
+    {
+      "id": 2,
+      "repository_id": 1,
+      "key": "some_test_key",
+      "org_id": null,
+      "com_id": null,
+      "config": null
+    }
+  ]
+}
