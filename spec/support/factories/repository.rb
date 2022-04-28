@@ -134,6 +134,8 @@ FactoryBot.define do
           create_for_repo(repository, :request)
           create_for_repo_without_timestamps(repository, :request)
 
+          Repository.record_timestamps = false
+          Request.record_timestamps = false
           repository.update(last_build_id: last_build.id)
 
           repository.request_configs.each do |config|
@@ -167,6 +169,9 @@ FactoryBot.define do
               job.update(repository_id: repository.id)
             end
           end
+
+          Repository.record_timestamps = true
+          Request.record_timestamps = true
         end
       end
     end

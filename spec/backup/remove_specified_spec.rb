@@ -154,7 +154,6 @@ describe Backup::RemoveSpecified do
       it 'removes requests with all its dependencies' do
         dependency_tree = repository.dependency_tree
         remove_specified.remove_repo_requests(repository)
-        # puts JSON.pretty_generate dependency_tree.status_tree_condensed
         expect(dependency_tree.status_tree_condensed).to eql(ExpectedDependencyTrees.remove_repo_requests)
       end
 
@@ -162,7 +161,7 @@ describe Backup::RemoveSpecified do
         db_helper.do_without_triggers do
           expect {
             remove_specified.remove_repo_requests(repository)
-          }.to change { Model.sum_of_subclasses_rows }.by(-29)
+          }.to change { Model.sum_of_subclasses_rows }.by(-92)
         end
       end
 

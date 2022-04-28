@@ -18,19 +18,19 @@ describe Backup do
 
   describe 'run' do
     let!(:unassigned_repositories) {
-      FactoryBot.create_list(:repository_with_requests, 3)
+      FactoryBot.create_list(:repository, 3)
     }
     let!(:user1) {
-      FactoryBot.create(:user_with_repos)
+      FactoryBot.create(:user)
     }
     let!(:user2) {
-      FactoryBot.create(:user_with_repos)
+      FactoryBot.create(:user)
     }
     let!(:organization1) {
-      FactoryBot.create(:organization_with_repos)
+      FactoryBot.create(:organization)
     }
     let!(:organization2) {
-      FactoryBot.create(:organization_with_repos)
+      FactoryBot.create(:organization)
     }
 
     context 'when threshold for heavy data is given' do
