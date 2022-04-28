@@ -122,57 +122,70 @@ FactoryBot.define do
           create(:repository, repository.attributes_without_id.symbolize_keys)
         end
       end
+    end
 
-      factory :repository_for_removing_heavy_data do
-        created_at { 12.months.ago.to_time.utc }
-        updated_at { 12.months.ago.to_time.utc }
+    factory :repository_for_removing_heavy_data do
+      created_at { 12.months.ago.to_time.utc }
+      updated_at { 12.months.ago.to_time.utc }
 
-        after(:create) do |repository|
-          create_for_repo(repository, :build_for_removing_heavy_data)
-          create_for_repo_without_timestamps(repository, :build_for_removing_heavy_data)
-          last_build = create_for_repo(repository, :build_for_removing_heavy_data).last
-          create_for_repo(repository, :request)
-          create_for_repo_without_timestamps(repository, :request)
+      after(:create) do |repository|
+        # create_for_repo(repository, :build_for_removing_heavy_data)
+        # create_for_repo_without_timestamps(repository, :build_for_removing_heavy_data)
+        # last_build = create_for_repo(repository, :build_for_removing_heavy_data).last
+        create_for_repo(repository, :request_with_all_dependencies_and_sibling)
+        create_for_repo_without_timestamps(repository, :request_with_all_dependencies_and_sibling)
 
-          Repository.record_timestamps = false
-          Request.record_timestamps = false
-          repository.update(last_build_id: last_build.id)
+        create_for_repo(repository, :build_config_with_all_dependencies_and_sibling)
+        create_for_repo(repository, :request_config_with_all_dependencies_and_sibling)
+        create_for_repo(repository, :job_config_with_all_dependencies_and_sibling)
+        create_for_repo(repository, :request_yaml_config_with_all_dependencies_and_sibling)
+        create_for_repo_without_timestamps(repository, :request_raw_config_with_all_dependencies_and_sibling)
 
-          repository.request_configs.each do |config|
-            config.requests.each do |request|
-              request.update(repository_id: repository.id)
-            end
+        Repository.record_timestamps = false
+        Request.record_timestamps = false
+
+        # repository.update(last_build_id: repository.id)
+
+        repository.request_configs.each do |config|
+          config.requests.each do |request|
+            request.update(repository_id: repository.id)
           end
-
-          # repository.request_raw_configs.each do |config|
-          #   config.request_raw_configurations.each do |configuration|
-          #     configuration.requests.each do |request|
-          #       request.update(repository_id: repository.id)
-          #     end
-          #   end
-          # end
-
-          repository.request_yaml_configs.each do |config|
-            config.requests.each do |request|
-              request.update(repository_id: repository.id)
-            end
-          end
-
-          repository.build_configs.each do |config|
-            config.builds.each do |build|
-              build.update(repository_id: repository.id)
-            end
-          end
-
-          repository.job_configs.each do |config|
-            config.jobs.each do |job|
-              job.update(repository_id: repository.id)
-            end
-          end
-
-          Repository.record_timestamps = true
-          Request.record_timestamps = true
         end
+
+        # repository.request_raw_configs.each do |config|
+        #   config.request_raw_configurations.each do |configuration|
+        #     configuration.requests.each do |request|
+        #       request.update(repository_id: repository.id)
+        #     end
+        #   end
+        # end
+
+        repository.request_yaml_configs.each do |config|
+          config.requests.each do |request|
+            request.update(repository_id: repository.id)
+          end
+        end
+
+        repository.build_configs.each do |config|
+          config.builds.each do |build|
+            build.update(repository_id: repository.id)
+          end
+        end
+
+        repository.job_configs.each do |config|
+          config.jobs.each do |job|
+            job.update(repository_id: repository.id)
+          end
+        end
+
+        repository.requests.each do |request|
+          request.builds.each do |build|
+            build.update(repository_id: repository.id)
+          end
+        end
+
+        Repository.record_timestamps = true
+        Request.record_timestamps = true
       end
     end
 
