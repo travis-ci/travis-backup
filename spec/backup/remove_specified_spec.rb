@@ -162,7 +162,7 @@ describe Backup::RemoveSpecified do
         db_helper.do_without_triggers do
           expect {
             remove_specified.remove_repo_requests(repository)
-          }.to change { Model.sum_of_subclasses_rows }.by(-92)
+          }.to change { Model.sum_of_subclasses_rows }.by(-86)
         end
       end
 

@@ -68,63 +68,79 @@ class Backup
 
       private
 
+      def find_config_ids_orphaned_now(model1:, model2:, repository:, foreign_key:, ids_to_remove:)
+        ids_to_exclude = ids_to_remove[model2.table_name.singularize.to_sym].join(', ')
+
+        orphaned_earlier = model1.find_by_sql(%{
+          select a.id
+          from #{model1.table_name} as a
+          left join #{model2.table_name} as b on
+          a.id = b.#{foreign_key}
+          where a.repository_id = #{repository.id}
+          group by a.id
+          having count(b.id) = 0;
+        }).map { |x| x.id }
+
+
+        all_orphaned = model1.find_by_sql(%{
+          select a.id
+          from #{model1.table_name} as a
+          left join #{model2.table_name} as b on
+          a.id = b.#{foreign_key} and b.id not in (#{ids_to_exclude})
+          where a.repository_id = #{repository.id}
+          group by a.id
+          having count(b.id) = 0;
+        }).map { |x| x.id }
+
+        all_orphaned - orphaned_earlier
+      end
+
       def orphaned_configs_to_remove(repository, ids_to_remove)
         if ids_to_remove[:request]
-          request_config_ids = RequestConfig.find_by_sql(%{
-            select a.id
-            from request_configs as a
-            left join requests as b on
-            a.id = b.config_id and b.id not in (#{ids_to_remove[:request].join(', ')})
-            where a.repository_id = #{repository.id}
-            group by a.id
-            having count(b.id) = 0;           
-          }).map { |x| x.id }
-
-          request_yaml_config_ids = RequestYamlConfig.find_by_sql(%{
-            select a.id
-            from request_yaml_configs as a
-            left join requests as b on
-            a.id = b.yaml_config_id and b.id not in (#{ids_to_remove[:request].join(', ')})
-            where a.repository_id = #{repository.id}
-            group by a.id
-            having count(b.id) = 0;           
-          }).map { |x| x.id }
+          request_config_ids = find_config_ids_orphaned_now(
+            model1: RequestConfig,
+            model2: Request,
+            repository: repository,
+            foreign_key: 'config_id',
+            ids_to_remove: ids_to_remove
+          )
+          request_yaml_config_ids = find_config_ids_orphaned_now(
+            model1: RequestYamlConfig,
+            model2: Request,
+            repository: repository,
+            foreign_key: 'yaml_config_id',
+            ids_to_remove: ids_to_remove
+          )
         end
 
         if ids_to_remove[:request_raw_configuration]
-          request_raw_config_ids = RequestRawConfig.find_by_sql(%{
-            select a.id
-            from request_raw_configs as a
-            left join request_raw_configurations as b on
-            a.id = b.request_raw_config_id and b.id not in (#{ids_to_remove[:request_raw_configuration].join(', ')})
-            where a.repository_id = #{repository.id}
-            group by a.id
-            having count(b.id) = 0;           
-          }).map { |x| x.id }
+          request_raw_config_ids = find_config_ids_orphaned_now(
+            model1: RequestRawConfig,
+            model2: RequestRawConfiguration,
+            repository: repository,
+            foreign_key: 'request_raw_config_id',
+            ids_to_remove: ids_to_remove
+          )
         end
 
         if ids_to_remove[:build]
-          build_config_ids = BuildConfig.find_by_sql(%{
-            select a.id
-            from build_configs as a
-            left join builds as b on
-            a.id = b.config_id and b.id not in (#{ids_to_remove[:build].join(', ')})
-            where a.repository_id = #{repository.id}
-            group by a.id
-            having count(b.id) = 0;
-          }).map { |x| x.id }
+          build_config_ids = find_config_ids_orphaned_now(
+            model1: BuildConfig,
+            model2: Build,
+            repository: repository,
+            foreign_key: 'config_id',
+            ids_to_remove: ids_to_remove
+          )
         end
 
         if ids_to_remove[:job]
-          job_config_ids = JobConfig.find_by_sql(%{
-            select a.id
-            from job_configs as a
-            left join jobs as b on
-            a.id = b.config_id and b.id not in (#{ids_to_remove[:job].join(', ')})
-            where a.repository_id = #{repository.id}
-            group by a.id
-            having count(b.id) = 0;
-          }).map { |x| x.id }
+          job_config_ids = find_config_ids_orphaned_now(
+            model1: JobConfig,
+            model2: Job,
+            repository: repository,
+            foreign_key: 'config_id',
+            ids_to_remove: ids_to_remove
+          )
         end
 
         orphaned_ids = IdHash.new

@@ -348,7 +348,7 @@ class ExpectedDependencyTrees
             "id 6, present"
           ]
         },
-        "id 2, removed"
+        "id 2, present"
       ],
       "request_config": [
         {
@@ -362,7 +362,7 @@ class ExpectedDependencyTrees
             "id 2, present"
           ]
         },
-        "id 2, removed"
+        "id 2, present"
       ],
       "job_config": [
         {
@@ -376,7 +376,7 @@ class ExpectedDependencyTrees
             "id 8, present"
           ]
         },
-        "id 2, removed"
+        "id 2, present"
       ],
       "request_raw_config": [
         {
@@ -390,7 +390,7 @@ class ExpectedDependencyTrees
             "id 10, present"
           ]
         },
-        "id 2, removed"
+        "id 2, present"
       ],
       "request_yaml_config": [
         {
@@ -404,7 +404,7 @@ class ExpectedDependencyTrees
             "id 4, present"
           ]
         },
-        "id 2, removed"
+        "id 2, present"
       ]
     }
   end
