@@ -2,8 +2,8 @@
   "table_name": "stages",
   "data": [
     {
-      "id": 42,
-      "build_id": 192,
+      "id": 1,
+      "build_id": 1,
       "number": null,
       "name": null,
       "state": null,
@@ -13,8 +13,19 @@
       "com_id": null
     },
     {
-      "id": 43,
-      "build_id": 192,
+      "id": 4,
+      "build_id": 14,
+      "number": null,
+      "name": null,
+      "state": null,
+      "started_at": null,
+      "finished_at": null,
+      "org_id": null,
+      "com_id": null
+    },
+    {
+      "id": 5,
+      "build_id": 21,
       "number": null,
       "name": null,
       "state": null,

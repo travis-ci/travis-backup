@@ -29,10 +29,10 @@ describe Backup::RemoveSpecified do
       FactoryBot.create(:repository)
     }
 
-    it 'processes repository builds' do
-      expect(remove_specified).to receive(:remove_repo_builds).once.with(repository)
-      remove_specified.remove_heavy_data_for_repo(repository)
-    end
+    # it 'processes repository builds' do
+    #   expect(remove_specified).to receive(:remove_repo_builds).once.with(repository)
+    #   remove_specified.remove_heavy_data_for_repo(repository)
+    # end
 
     it 'processes repository requests' do
       expect(remove_specified).to receive(:remove_repo_requests).once.with(repository)
@@ -40,100 +40,100 @@ describe Backup::RemoveSpecified do
     end
   end
 
-  describe 'remove_repo_builds' do
-    before(:each) do
-      BeforeTests.new.run
-    end
+  # describe 'remove_repo_builds' do
+  #   before(:each) do
+  #     BeforeTests.new.run
+  #   end
 
-    let!(:repository) {
-      FactoryBot.rewind_sequences
+  #   let!(:repository) {
+  #     FactoryBot.rewind_sequences
 
-      db_helper.do_without_triggers do
-        FactoryBot.create(
-          :repository_for_removing_heavy_data,
-          created_at: datetime,
-          updated_at: datetime
-        )
-      end
-    }
+  #     db_helper.do_without_triggers do
+  #       FactoryBot.create(
+  #         :repository_for_removing_heavy_data,
+  #         created_at: datetime,
+  #         updated_at: datetime
+  #       )
+  #     end
+  #   }
 
-    shared_context 'removing builds with dependencies' do
-      it 'removes builds with all its dependencies' do
-        dependency_tree = repository.dependency_tree
-        remove_specified.remove_repo_builds(repository)
-        expect(dependency_tree.status_tree_condensed).to eql(ExpectedDependencyTrees.remove_repo_builds)
-      end
+  #   shared_context 'removing builds with dependencies' do
+  #     it 'removes builds with all its dependencies' do
+  #       dependency_tree = repository.dependency_tree
+  #       remove_specified.remove_repo_builds(repository)
+  #       expect(dependency_tree.status_tree_condensed).to eql(ExpectedDependencyTrees.remove_repo_builds)
+  #     end
 
-      it 'removes intended number of rows from the database' do
-        expect {
-          remove_specified.remove_repo_builds(repository)
-        }.to change { Model.sum_of_subclasses_rows }.by(-40)
-      end
+  #     it 'removes intended number of rows from the database' do
+  #       expect {
+  #         remove_specified.remove_repo_builds(repository)
+  #       }.to change { Model.sum_of_subclasses_rows }.by(-40)
+  #     end
 
-      it 'nullifies orphaned builds dependencies' do
-        expect(
-          nullifies_all_orphaned_builds_dependencies? do
-            remove_specified.remove_repo_builds(repository)
-          end
-        ).to eql(true)
-      end
-    end
+  #     it 'nullifies orphaned builds dependencies' do
+  #       expect(
+  #         nullifies_all_orphaned_builds_dependencies? do
+  #           remove_specified.remove_repo_builds(repository)
+  #         end
+  #       ).to eql(true)
+  #     end
+  #   end
 
-    shared_context 'not saving files' do
-      it 'does not save files' do
-        expect_any_instance_of(File).not_to receive(:write)
-        remove_specified.remove_repo_builds(repository)
-      end
-    end
+  #   shared_context 'not saving files' do
+  #     it 'does not save files' do
+  #       expect_any_instance_of(File).not_to receive(:write)
+  #       remove_specified.remove_repo_builds(repository)
+  #     end
+  #   end
 
-    context 'when if_backup config is set to true' do
-      it_behaves_like 'removing builds with dependencies'
+  #   context 'when if_backup config is set to true' do
+  #     it_behaves_like 'removing builds with dependencies'
 
-      it 'saves removed data to files in proper format' do
-        expect_method_calls_on(
-          File, :write,
-          get_expected_files('remove_repo_builds', datetime),
-          allow_instances: true,
-          arguments_to_check: :first
-        ) do
-          remove_specified.remove_repo_builds(repository)
-        end
-      end
+  #     it 'saves removed data to files in proper format' do
+  #       expect_method_calls_on(
+  #         File, :write,
+  #         get_expected_files('remove_repo_builds', datetime),
+  #         allow_instances: true,
+  #         arguments_to_check: :first
+  #       ) do
+  #         remove_specified.remove_repo_builds(repository)
+  #       end
+  #     end
 
-      context 'when path with nonexistent folders is given' do
-        let(:random_files_location) { "dump/tests/#{rand(100000)}" }
-        let!(:config) { Config.new(files_location: random_files_location, limit: 2) }
-        let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
+  #     context 'when path with nonexistent folders is given' do
+  #       let(:random_files_location) { "dump/tests/#{rand(100000)}" }
+  #       let!(:config) { Config.new(files_location: random_files_location, limit: 2) }
+  #       let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
 
-        it 'creates needed folders' do
-          path_regexp = Regexp.new("#{random_files_location}/.+")
-          expect(FileUtils).to receive(:mkdir_p).once.with(path_regexp).and_call_original
-          remove_specified.remove_repo_builds(repository)
-        end
-      end
-    end
+  #       it 'creates needed folders' do
+  #         path_regexp = Regexp.new("#{random_files_location}/.+")
+  #         expect(FileUtils).to receive(:mkdir_p).once.with(path_regexp).and_call_original
+  #         remove_specified.remove_repo_builds(repository)
+  #       end
+  #     end
+  #   end
 
-    context 'when if_backup config is set to false' do
-      let!(:config) { Config.new(files_location: files_location, limit: 2, if_backup: false) }
-      let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
+  #   context 'when if_backup config is set to false' do
+  #     let!(:config) { Config.new(files_location: files_location, limit: 2, if_backup: false) }
+  #     let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
 
-      it_behaves_like 'not saving files'
-      it_behaves_like 'removing builds with dependencies'
-    end
+  #     it_behaves_like 'not saving files'
+  #     it_behaves_like 'removing builds with dependencies'
+  #   end
 
-    context 'when dry_run config is set to true' do
-      let!(:config) { Config.new(files_location: files_location, limit: 2, dry_run: true) }
-      let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
+  #   context 'when dry_run config is set to true' do
+  #     let!(:config) { Config.new(files_location: files_location, limit: 2, dry_run: true) }
+  #     let!(:remove_specified) { Backup::RemoveSpecified.new(config, DryRunReporter.new) }
 
-      it_behaves_like 'not saving files'
+  #     it_behaves_like 'not saving files'
 
-      it 'does not remove entries from db' do
-        expect {
-          remove_specified.remove_repo_builds(repository)
-        }.not_to change { Model.sum_of_subclasses_rows }
-      end
-    end
-  end
+  #     it 'does not remove entries from db' do
+  #       expect {
+  #         remove_specified.remove_repo_builds(repository)
+  #       }.not_to change { Model.sum_of_subclasses_rows }
+  #     end
+  #   end
+  # end
 
   describe 'remove_repo_requests' do
     before(:each) do
@@ -161,7 +161,7 @@ describe Backup::RemoveSpecified do
         db_helper.do_without_triggers do
           expect {
             remove_specified.remove_repo_requests(repository)
-          }.to change { Model.sum_of_subclasses_rows }.by(-29)
+          }.to change { Model.sum_of_subclasses_rows }.by(-86)
         end
       end
 

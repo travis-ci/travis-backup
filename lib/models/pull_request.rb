@@ -3,6 +3,8 @@
 require 'model'
 
 class PullRequest < Model
+  self.inheritance_column = :_type_disabled
+
   belongs_to :repository
   has_many :requests
   has_many :builds

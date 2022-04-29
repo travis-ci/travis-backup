@@ -18,19 +18,21 @@ describe Backup do
 
   describe 'run' do
     let!(:unassigned_repositories) {
-      FactoryBot.create_list(:repository_with_requests, 3)
+      DbHelper.do_without_triggers do
+        FactoryBot.create_list(:repository_for_removing_heavy_data, 3)
+      end
     }
     let!(:user1) {
-      FactoryBot.create(:user_with_repos)
+      FactoryBot.create(:user)
     }
     let!(:user2) {
-      FactoryBot.create(:user_with_repos)
+      FactoryBot.create(:user)
     }
     let!(:organization1) {
-      FactoryBot.create(:organization_with_repos)
+      FactoryBot.create(:organization)
     }
     let!(:organization2) {
-      FactoryBot.create(:organization_with_repos)
+      FactoryBot.create(:organization)
     }
 
     context 'when threshold for heavy data is given' do
@@ -84,50 +86,50 @@ describe Backup do
       end
     end
 
-    # context 'when threshold for heavy data is not given' do
-    #   context 'when user_id is given' do
-    #     let!(:backup) { Backup.new(
-    #       files_location: files_location,
-    #       limit: 5,
-    #       threshold: false,
-    #       user_id: user1.id
-    #     ) }
-    #     it 'removes the user with all dependencies' do  
-    #       expect_any_instance_of(Backup::RemoveSpecified)
-    #         .to receive(:remove_user_with_dependencies).once.with(user1.id)
-    #       backup.run(user_id: user1.id)
-    #     end
-    #   end
+    context 'when threshold for heavy data is not given' do
+      context 'when user_id is given' do
+        let!(:backup) { Backup.new(
+          files_location: files_location,
+          limit: 5,
+          threshold: false,
+          user_id: user1.id
+        ) }
+        it 'removes the user with all dependencies' do  
+          expect_any_instance_of(Backup::RemoveSpecified)
+            .to receive(:remove_user_with_dependencies).once.with(user1.id)
+          backup.run(user_id: user1.id)
+        end
+      end
   
-    #   context 'when org_id is given' do
-    #     let!(:backup) { Backup.new(
-    #       files_location: files_location,
-    #       limit: 5,
-    #       threshold: false,
-    #       org_id: user1.id
-    #     ) }
-    #     it 'removes the organisation with all dependencies' do
-    #       expect_any_instance_of(Backup::RemoveSpecified)
-    #         .to receive(:remove_org_with_dependencies).once.with(organization1.id)
-    #       backup.run(org_id: organization1.id)
-    #     end
-    #   end
+      context 'when org_id is given' do
+        let!(:backup) { Backup.new(
+          files_location: files_location,
+          limit: 5,
+          threshold: false,
+          org_id: user1.id
+        ) }
+        it 'removes the organisation with all dependencies' do
+          expect_any_instance_of(Backup::RemoveSpecified)
+            .to receive(:remove_org_with_dependencies).once.with(organization1.id)
+          backup.run(org_id: organization1.id)
+        end
+      end
   
-    #   context 'when repo_id is given' do
-    #     let!(:backup) { Backup.new(
-    #       files_location: files_location,
-    #       limit: 5,
-    #       threshold: false,
-    #       repo_id: user1.id
-    #     ) }
-    #     it 'removes the repo with all dependencies' do
-    #       repo = Repository.first
-    #       expect_any_instance_of(Backup::RemoveSpecified)
-    #         .to receive(:remove_repo_with_dependencies).once.with(repo.id)
-    #       backup.run(repo_id: repo.id)
-    #     end
-    #   end
-    # end
+      context 'when repo_id is given' do
+        let!(:backup) { Backup.new(
+          files_location: files_location,
+          limit: 5,
+          threshold: false,
+          repo_id: user1.id
+        ) }
+        it 'removes the repo with all dependencies' do
+          repo = Repository.first
+          expect_any_instance_of(Backup::RemoveSpecified)
+            .to receive(:remove_repo_with_dependencies).once.with(repo.id)
+          backup.run(repo_id: repo.id)
+        end
+      end
+    end
 
     context 'when dry run mode is on' do
       let!(:backup) { Backup.new(files_location: files_location, limit: 10, dry_run: true, threshold: 0) }
@@ -139,8 +141,8 @@ describe Backup do
       it 'prepares proper dry run report' do
         backup.run
         expect(backup.dry_run_report[:builds].size).to eql 24
-        expect(backup.dry_run_report[:jobs].size).to eql 48
-        expect(backup.dry_run_report[:requests].size).to eql 6
+        expect(backup.dry_run_report[:jobs].size).to eql 36
+        expect(backup.dry_run_report[:requests].size).to eql 24
       end
 
       it 'prints dry run report' do

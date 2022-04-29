@@ -13,7 +13,6 @@ module SaveIdHashToFile
 
   def save_ids_batch_to_file(name, ids_batch)
     model = Model.get_model(name)
-
     export = {}
     export[:table_name] = model.table_name
     export[:data] = ids_batch.map do |id|

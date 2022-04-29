@@ -17,30 +17,30 @@ class Backup
       end
 
       def remove_heavy_data_for_repo(repository)
-        remove_repo_builds(repository)
+        # remove_repo_builds(repository)
         remove_repo_requests(repository)
       end
 
-      def remove_repo_builds(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-        threshold = @config.threshold.to_i.months.ago.to_datetime
-        builds_to_remove = repository.builds.where('created_at < ?', threshold)
+      # def remove_repo_builds(repository) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      #   threshold = @config.threshold.to_i.months.ago.to_datetime
+      #   builds_to_remove = repository.builds.where('created_at < ?', threshold)
 
-        builds_dependencies = builds_to_remove.map do |build|
-          result = build.ids_of_all_dependencies(dependencies_to_filter, :without_parents)
-          result.add(:build, build.id)
-          result
-        end.compact
+      #   builds_dependencies = builds_to_remove.map do |build|
+      #     result = build.ids_of_all_dependencies(dependencies_to_filter, :without_parents)
+      #     result.add(:build, build.id)
+      #     result
+      #   end.compact
 
-        ids_to_remove = IdHash.join(*builds_dependencies)
-        @subfolder = "repository_#{repository.id}_old_builds_#{current_time_for_subfolder}"
+      #   ids_to_remove = IdHash.join(*builds_dependencies)
+      #   @subfolder = "repository_#{repository.id}_old_builds_#{current_time_for_subfolder}"
 
-        unless @config.dry_run
-          nullified_rels = builds_to_remove&.map(&:nullify_default_dependencies)&.flatten
-          save_nullified_rels_to_file(build: nullified_rels) if @config.if_backup
-        end
+      #   unless @config.dry_run
+      #     nullified_rels = builds_to_remove&.map(&:nullify_default_dependencies)&.flatten
+      #     save_nullified_rels_to_file(build: nullified_rels) if @config.if_backup
+      #   end
 
-        process_ids_to_remove(ids_to_remove)
-      end
+      #   process_ids_to_remove(ids_to_remove)
+      # end
 
       def remove_repo_requests(repository)
         threshold = @config.threshold.to_i.months.ago.to_datetime
@@ -61,10 +61,96 @@ class Backup
         end
 
         ids_to_remove = IdHash.join(*(requests_dependencies))
+        orphaned_ids = orphaned_configs_to_remove(repository, ids_to_remove)
+        ids_to_remove.join(orphaned_ids)
         process_ids_to_remove(ids_to_remove)
       end
 
       private
+
+      def find_config_ids_orphaned_now(model1:, model2:, repository:, foreign_key:, ids_to_remove:)
+        ids_to_exclude = ids_to_remove[model2.table_name.singularize.to_sym].join(', ')
+
+        orphaned_earlier = model1.find_by_sql(%{
+          select a.id
+          from #{model1.table_name} as a
+          left join #{model2.table_name} as b on
+          a.id = b.#{foreign_key}
+          where a.repository_id = #{repository.id}
+          group by a.id
+          having count(b.id) = 0;
+        }).map { |x| x.id }
+
+
+        all_orphaned = model1.find_by_sql(%{
+          select a.id
+          from #{model1.table_name} as a
+          left join #{model2.table_name} as b on
+          a.id = b.#{foreign_key} and b.id not in (#{ids_to_exclude})
+          where a.repository_id = #{repository.id}
+          group by a.id
+          having count(b.id) = 0;
+        }).map { |x| x.id }
+
+        all_orphaned - orphaned_earlier
+      end
+
+      def orphaned_configs_to_remove(repository, ids_to_remove)
+        if ids_to_remove[:request]
+          request_config_ids = find_config_ids_orphaned_now(
+            model1: RequestConfig,
+            model2: Request,
+            repository: repository,
+            foreign_key: 'config_id',
+            ids_to_remove: ids_to_remove
+          )
+          request_yaml_config_ids = find_config_ids_orphaned_now(
+            model1: RequestYamlConfig,
+            model2: Request,
+            repository: repository,
+            foreign_key: 'yaml_config_id',
+            ids_to_remove: ids_to_remove
+          )
+        end
+
+        if ids_to_remove[:request_raw_configuration]
+          request_raw_config_ids = find_config_ids_orphaned_now(
+            model1: RequestRawConfig,
+            model2: RequestRawConfiguration,
+            repository: repository,
+            foreign_key: 'request_raw_config_id',
+            ids_to_remove: ids_to_remove
+          )
+        end
+
+        if ids_to_remove[:build]
+          build_config_ids = find_config_ids_orphaned_now(
+            model1: BuildConfig,
+            model2: Build,
+            repository: repository,
+            foreign_key: 'config_id',
+            ids_to_remove: ids_to_remove
+          )
+        end
+
+        if ids_to_remove[:job]
+          job_config_ids = find_config_ids_orphaned_now(
+            model1: JobConfig,
+            model2: Job,
+            repository: repository,
+            foreign_key: 'config_id',
+            ids_to_remove: ids_to_remove
+          )
+        end
+
+        orphaned_ids = IdHash.new
+        orphaned_ids.add(:request_config, *request_config_ids)
+        orphaned_ids.add(:request_yaml_config, *request_yaml_config_ids)
+        orphaned_ids.add(:request_raw_config, *request_raw_config_ids)
+        orphaned_ids.add(:build_config, *build_config_ids)
+        orphaned_ids.add(:job_config, *job_config_ids)
+        orphaned_ids
+      end
 
       def process_ids_to_remove(ids_to_remove)
         if @config.dry_run

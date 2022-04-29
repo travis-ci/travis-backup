@@ -129,7 +129,7 @@ class Config
   end
 
   def check_values
-    if !@move_logs && !@remove_orphans && !@threshold && !@user_id && !@org_id && !@repo_id && !@load_from_files
+    if !@threshold && !@user_id && !@org_id && !@repo_id && !@load_from_files
       message = abort_message("Please provide the threshold argument. Data younger than it will be omitted. " +
         "Threshold defines number of months from now. Alternatively you can define user_id, org_id or repo_id " +
         "to remove whole user, organization or repository with all dependencies.")
@@ -140,20 +140,12 @@ class Config
       message = abort_message("Please provide proper database URL.")
       abort message
     end
-
-    if (@move_logs && !@destination_db_url)
-      abort "\nFor moving logs you need to specify your destination database. Example usage:\n" +
-      "\n  $ bin/travis_backup 'postgres://source_url' --move_logs --destination_db_url 'postgres://destination_url'\n" +
-      "\nor using in code:\n" +
-      "\n  Backup.new(database_url: 'postgres://source_url', destination_db_url: 'postgres://destination_url', move_logs: true)\n" +
-      "\nYou can also set it using environment variables or configuration files.\n"  
-    end
   end
 
   def abort_message(intro)
     "\n#{intro}\n\nExample usage:\n"+
-    "\n  $ bin/travis_backup 'postgres://my_database_url' --threshold 6" +
-    "\n  $ bin/travis_backup 'postgres://my_database_url' --user_id 1\n" +
+    "\n  $ travis_backup_for_v3 'postgres://my_database_url' --threshold 6" +
+    "\n  $ travis_backup_for_v3 'postgres://my_database_url' --user_id 1\n" +
     "\nor using in code:\n" +
     "\n  Backup.new(database_url: 'postgres://my_database_url', threshold: 6)" +
     "\n  Backup.new(database_url: 'postgres://my_database_url', user_id: 1)\n" +
