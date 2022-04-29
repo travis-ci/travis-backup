@@ -21,67 +21,6 @@ end
 
 FactoryBot.define do
   factory :repository do
-    factory :repository_with_builds_jobs_and_logs do
-      transient do
-        builds_count { 2 }
-      end
-      after(:create) do |repository, evaluator|
-        create_list(
-          :build_with_jobs,
-          evaluator.builds_count,
-          repository: repository,
-          created_at: repository.created_at,
-          updated_at: repository.updated_at
-        )
-      end
-    end
-
-    factory :repository_with_builds do
-      transient do
-        builds_count { 2 }
-      end
-      after(:create) do |repository, evaluator|
-        create_list(
-          :build,
-          evaluator.builds_count,
-          repository: repository,
-          created_at: repository.created_at,
-          updated_at: repository.updated_at
-        )
-      end
-    end
-
-    factory :repository_orphaned_on_current_build_id do
-      current_build_id { 2_000_000_000 }
-    end
-
-    factory :repository_with_current_build_id do
-      current_build_id { Build.first.id }
-    end
-
-    factory :repository_orphaned_on_last_build_id do
-      last_build_id { 2_000_000_000 }
-    end
-
-    factory :repository_with_last_build_id do
-      last_build_id { Build.first.id }
-    end
-
-    factory :repository_with_requests do
-      transient do
-        requests_count { 2 }
-      end
-      after(:create) do |repository, evaluator|
-        create_list(
-          :request,
-          evaluator.requests_count,
-          repository: repository,
-          created_at: repository.created_at,
-          updated_at: repository.updated_at
-        )
-      end
-    end
-
     factory :repository_with_all_dependencies do
       after(:create) do |repository|
         create_for_repo(repository, :build_with_all_dependencies_and_sibling)
@@ -129,9 +68,6 @@ FactoryBot.define do
       updated_at { 12.months.ago.to_time.utc }
 
       after(:create) do |repository|
-        # create_for_repo(repository, :build_for_removing_heavy_data)
-        # create_for_repo_without_timestamps(repository, :build_for_removing_heavy_data)
-        # last_build = create_for_repo(repository, :build_for_removing_heavy_data).last
         create_for_repo(repository, :request_with_all_dependencies_and_sibling)
         create_for_repo_without_timestamps(repository, :request_with_all_dependencies_and_sibling)
 
@@ -141,10 +77,10 @@ FactoryBot.define do
         create_for_repo(repository, :request_yaml_config_with_all_dependencies_and_sibling)
         create_for_repo_without_timestamps(repository, :request_raw_config_with_all_dependencies_and_sibling)
 
-        Repository.record_timestamps = false
-        Request.record_timestamps = false
+        Model.record_timestamps = false
 
-        # repository.update(last_build_id: repository.id)
+        # TODO
+        # repository.update(last_build_id: )
 
         repository.request_configs.each do |config|
           config.requests.each do |request|
@@ -152,6 +88,7 @@ FactoryBot.define do
           end
         end
 
+        # TODO
         # repository.request_raw_configs.each do |config|
         #   config.request_raw_configurations.each do |configuration|
         #     configuration.requests.each do |request|
@@ -184,8 +121,7 @@ FactoryBot.define do
           end
         end
 
-        Repository.record_timestamps = true
-        Request.record_timestamps = true
+        Model.record_timestamps = true
       end
     end
 

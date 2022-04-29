@@ -18,7 +18,9 @@ describe Backup do
 
   describe 'run' do
     let!(:unassigned_repositories) {
-      FactoryBot.create_list(:repository, 3)
+      DbHelper.do_without_triggers do
+        FactoryBot.create_list(:repository_for_removing_heavy_data, 3)
+      end
     }
     let!(:user1) {
       FactoryBot.create(:user)
@@ -139,8 +141,8 @@ describe Backup do
       it 'prepares proper dry run report' do
         backup.run
         expect(backup.dry_run_report[:builds].size).to eql 24
-        expect(backup.dry_run_report[:jobs].size).to eql 48
-        expect(backup.dry_run_report[:requests].size).to eql 6
+        expect(backup.dry_run_report[:jobs].size).to eql 36
+        expect(backup.dry_run_report[:requests].size).to eql 24
       end
 
       it 'prints dry run report' do
