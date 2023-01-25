@@ -8,6 +8,7 @@ class Config
     :threshold,
     :files_location,
     :database_url,
+    :logs_database_url,
     :user_id,
     :repo_id,
     :org_id,
@@ -63,6 +64,12 @@ class Config
       argv_opts[:database_url],
       ENV['DATABASE_URL'],
       connection_details.dig(ENV['RAILS_ENV'])
+    )
+
+    @logs_database_url = first_not_nil(
+      args[:logs_database_url],
+      argv_opts[:logs_database_url],
+      ENV['LOGS_DATABASE_URL'],
     )
     @user_id = first_not_nil(
       args[:user_id],
@@ -148,6 +155,7 @@ class Config
       opt.on('--move_logs') { |o| options[:move_logs] = o }
       opt.on('--remove_orphans') { |o| options[:remove_orphans] = o }
       opt.on('--destination_db_url X') { |o| options[:destination_db_url] = o }
+      opt.on('--logsdb_url X') { |o| options[:logs_database_url] = o }
     end.parse!
 
     options[:database_url] = ARGV.shift if ARGV[0]

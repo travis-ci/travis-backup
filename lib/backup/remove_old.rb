@@ -61,7 +61,7 @@ class Backup
         else
           destroy_builds_batch(builds_batch)
         end
-      end.compact.reduce(&:&)
+      end
     end
   
     def process_repo_requests(repository)
@@ -76,6 +76,8 @@ class Backup
   
     def save_and_destroy_builds_batch(builds_batch, file_prefix)
       builds_export = builds_batch.map(&:attributes)
+
+      destroy_logs(builds_batch, @config.dry_run) if @config.logs_database_url
   
       dependencies_saved = builds_batch.map do |build|
         save_build_jobs_and_logs(build, file_prefix)
@@ -99,10 +101,16 @@ class Backup
   
     def save_jobs_batch(jobs_batch, file_prefix)
       jobs_export = jobs_batch.map(&:attributes)
-  
-      logs_saved = jobs_batch.map do |job|
-        save_job_logs(job, file_prefix)
-      end.reduce(&:&)
+      if @config.logs_database_url
+        jobs_batch.map do |job|
+          save_job_logs_ext(job, file_prefix)
+        end
+        logs_saved = true
+      else
+        logs_saved = jobs_batch.map do |job|
+          save_job_logs(job, file_prefix)
+        end.reduce(&:&)
+      end
   
       if logs_saved
         file_name = "#{file_prefix}_jobs_#{jobs_batch.first.id}-#{jobs_batch.last.id}.json"
@@ -119,6 +127,17 @@ class Backup
         save_logs_batch(logs_batch, file_prefix)
       end.compact.reduce(&:&)
     end
+
+    def save_job_logs_ext(job, file_prefix)
+      saved_config = ActiveRecord::Base.connection_db_config
+      ActiveRecord::Base.establish_connection(@config.logs_database_url)
+      logs = Log.where(job_id: job.id)
+      logs.each do |l|
+        l.destroy if l && !@config.dry_run
+      end if logs
+      ActiveRecord::Base.establish_connection(saved_config)
+      true
+    end
   
     def save_logs_batch(logs_batch, file_prefix)
       logs_export = logs_batch.map(&:attributes)
@@ -128,6 +147,7 @@ class Backup
     end
   
     def destroy_builds_batch(builds_batch)
+      destroy_logs(builds_batch, @config.dry_run) if @config.logs_database_url
       return destroy_builds_batch_dry(builds_batch) if @config.dry_run
   
       builds_batch.each(&:destroy)
@@ -141,14 +161,18 @@ class Backup
       end.flatten
   
       @dry_run_reporter.add_to_report(:jobs, *jobs_ids)
-  
-      logs_ids = builds_batch.map do |build|
-        build.jobs.map do |job|
-          job.logs.map(&:id) || []
-        end.flatten || []
-      end.flatten
-  
-      @dry_run_reporter.add_to_report(:logs, *logs_ids)
+
+      if @config.logs_database_url
+        destroy_logs(builds_batch, @config.dry_run)
+      else
+        logs_ids = builds_batch.map do |build|
+          build.jobs.map do |job|
+            job.logs.map(&:id) || []
+          end.flatten || []
+        end.flatten
+    
+        @dry_run_reporter.add_to_report(:logs, *logs_ids)
+      end
     end
   
     def save_and_destroy_requests_batch(requests_batch, repository)
@@ -200,5 +224,26 @@ class Backup
         request.attributes
       end
     end    
+
+    def destroy_logs(builds_batch, dry = false)
+      job_ids = builds_batch.map do |build|
+        build.jobs.map(&:id) || []
+      end.flatten
+      saved_config = ActiveRecord::Base.connection_db_config
+      ActiveRecord::Base.establish_connection(@config.logs_database_url)
+      job_ids.each do |jid|
+         logs = Log.where(job_id: jid)
+         next unless logs
+         if dry
+           ids = (logs.pluck(:id) || []).flatten
+           @dry_run_reporter.add_to_report(:logs, *ids)
+         else
+           logs.each do |l|
+             l.destroy if l && !dry
+           end
+        end
+      end
+      ActiveRecord::Base.establish_connection(saved_config)
+    end
   end
 end
