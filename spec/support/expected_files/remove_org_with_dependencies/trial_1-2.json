@@ -5,23 +5,19 @@
       "id": 1,
       "owner_type": "Organization",
       "owner_id": 1,
-      "chartmogul_customer_uuids": [
-
-      ],
+      "chartmogul_customer_uuids": [],
       "status": "new",
-      "created_at": "2021-09-01 15:06:56 UTC",
-      "updated_at": "2021-09-01 15:06:56 UTC"
+      "created_at": "2024-06-15 09:17:18 UTC",
+      "updated_at": "2024-06-15 09:17:18 UTC"
     },
     {
       "id": 2,
       "owner_type": "Organization",
       "owner_id": 1,
-      "chartmogul_customer_uuids": [
-
-      ],
+      "chartmogul_customer_uuids": [],
       "status": "new",
-      "created_at": "2021-09-01 15:06:56 UTC",
-      "updated_at": "2021-09-01 15:06:56 UTC"
+      "created_at": "2024-06-15 09:17:18 UTC",
+      "updated_at": "2024-06-15 09:17:18 UTC"
     }
   ]
 }

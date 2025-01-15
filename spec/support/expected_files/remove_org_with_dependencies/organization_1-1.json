@@ -6,8 +6,8 @@
       "name": null,
       "login": null,
       "github_id": null,
-      "created_at": "2021-09-01 15:06:56 UTC",
-      "updated_at": "2021-09-01 15:06:56 UTC",
+      "created_at": "2024-06-15 09:17:18 UTC",
+      "updated_at": "2024-06-15 09:17:18 UTC",
       "avatar_url": null,
       "location": null,
       "email": null,
@@ -18,8 +18,7 @@
       "com_id": null,
       "migrating": null,
       "migrated_at": null,
-      "preferences": {
-      },
+      "preferences": {},
       "beta_migration_request_id": null,
       "vcs_type": "GithubOrganization",
       "vcs_id": null

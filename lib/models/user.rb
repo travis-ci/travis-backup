@@ -10,6 +10,7 @@ class User < Model
   has_many :requests_for_that_this_user_is_owner, as: :owner, class_name: 'Request'
   has_many :abuses, as: :owner
   has_many :subscriptions, as: :owner
+  has_many :installations, as: :owner
   has_many :owner_groups, as: :owner
   has_many :trials, as: :owner
   has_many :trial_allowances, as: :creator

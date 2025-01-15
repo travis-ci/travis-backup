@@ -14,6 +14,7 @@ class Backup
       include Shared
 
       def remove_user_with_dependencies(user_id)
+        fix_installations(user_id)
         remove_entry_with_dependencies(:user, user_id)
       end
 
@@ -26,6 +27,11 @@ class Backup
       end
 
       private
+
+      def fix_installations(user_id)
+        Installation.where(added_by_id: user_id).update!(added_by_id: 0)
+        Installation.where(removed_by_id: user_id).update!(removed_by_id: 0)
+      end
 
       def remove_entry_with_dependencies(model_name, id)
         @subfolder = "#{model_name}_#{id}_#{current_time_for_subfolder}"
