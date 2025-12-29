@@ -112,4 +112,34 @@ describe Model do
       end
     end
   end
+
+  describe 'Message STI handling' do
+    it 'does not raise STI error when message has type column set to config' do
+      # Create a message with type='config' which triggers STI issue
+      message = Message.create!(
+        subject_id: 1,
+        subject_type: 'Owner',
+        type: 'config',
+        level: 'info',
+        key: 'test_key'
+      )
+
+      # This should not raise ActiveRecord::SubclassNotFound
+      expect { Message.find(message.id) }.not_to raise_error
+      expect(message.type).to eq('config')
+    end
+
+    it 'handles message type column as a regular attribute' do
+      message = Message.create!(
+        subject_id: 1,
+        subject_type: 'Owner',
+        type: 'config',
+        level: 'info',
+        key: 'test_message'
+      )
+
+      expect(message.type).to eq('config')
+      expect(message.reload.type).to eq('config')
+    end
+  end
 end
