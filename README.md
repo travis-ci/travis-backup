@@ -99,4 +99,4 @@ To make tests working properly you should also ensure database connection string
 
 ### Ruby version
 
-2.7.2
+3.2.0
